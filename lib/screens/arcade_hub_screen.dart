@@ -17,6 +17,16 @@ import 'arcade/impulse_control_screen.dart';
 import 'arcade/tap_rain_screen.dart';
 import 'arcade/brain_duel_screen.dart';
 import 'arcade/pattern_master_screen.dart';
+import 'games/orbit_sync_screen.dart';
+import 'games/laser_gate_screen.dart';
+import 'games/timing_stack_screen.dart';
+import 'games/pulse_stop_screen.dart';
+import 'games/balance_bar_screen.dart';
+import 'games/dart_focus_screen.dart';
+import 'games/sky_shot_screen.dart';
+import 'games/target_lock_screen.dart';
+import 'games/split_second_screen.dart';
+import 'games/swipe_dodge_screen.dart';
 
 class _GameInfo {
   final String id;
@@ -152,6 +162,76 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
         category: 'Special',
         color: const Color(0xFFE91E63),
         screenBuilder: () => const BrainDuelScreen()),
+    _GameInfo(
+        id: 'orbit_sync',
+        name: 'Orbit Sync',
+        emoji: '🔵',
+        category: 'Timing',
+        color: const Color(0xFFBB86FC),
+        screenBuilder: () => const OrbitSyncScreen()),
+    _GameInfo(
+        id: 'laser_gate',
+        name: 'Laser Gate',
+        emoji: '⚡',
+        category: 'Timing',
+        color: const Color(0xFF00B4FF),
+        screenBuilder: () => const LaserGateScreen()),
+    _GameInfo(
+        id: 'timing_stack',
+        name: 'Timing Stack',
+        emoji: '📦',
+        category: 'Timing',
+        color: const Color(0xFF03DAC6),
+        screenBuilder: () => const TimingStackScreen()),
+    _GameInfo(
+        id: 'pulse_stop',
+        name: 'Pulse Stop',
+        emoji: '⏱️',
+        category: 'Timing',
+        color: const Color(0xFFFDD835),
+        screenBuilder: () => const PulseStopScreen()),
+    _GameInfo(
+        id: 'balance_bar',
+        name: 'Balance Bar',
+        emoji: '⚖️',
+        category: 'Timing',
+        color: const Color(0xFF00C853),
+        screenBuilder: () => const BalanceBarScreen()),
+    _GameInfo(
+        id: 'dart_focus',
+        name: 'Dart Focus',
+        emoji: '🎯',
+        category: 'Aim',
+        color: const Color(0xFFFF7043),
+        screenBuilder: () => const DartFocusScreen()),
+    _GameInfo(
+        id: 'sky_shot',
+        name: 'Sky Shot',
+        emoji: '🚀',
+        category: 'Aim',
+        color: const Color(0xFF00B4FF),
+        screenBuilder: () => const SkyShotScreen()),
+    _GameInfo(
+        id: 'target_lock',
+        name: 'Target Lock',
+        emoji: '🎖️',
+        category: 'Aim',
+        color: const Color(0xFFBB86FC),
+        screenBuilder: () => const TargetLockScreen()),
+    _GameInfo(
+        id: 'split_second',
+        name: 'Split Second',
+        emoji: '⚡',
+        category: 'Reflex',
+        color: const Color(0xFFFF7043),
+        screenBuilder: () => const SplitSecondScreen()),
+    _GameInfo(
+        id: 'swipe_dodge',
+        name: 'Swipe Dodge',
+        emoji: '💨',
+        category: 'Reflex',
+        color: const Color(0xFF00C853),
+        screenBuilder: () => const SwipeDodgeScreen()),
   ];
 
   static const _categoryOrder = [
@@ -161,6 +241,8 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
     'Impulse',
     'Logic',
     'Special',
+    'Timing',
+    'Aim',
   ];
 
   static const _categoryColors = {
@@ -170,6 +252,8 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
     'Impulse': Color(0xFF03DAC6),
     'Logic': Color(0xFFFDD835),
     'Special': Color(0xFFE91E63),
+    'Timing': Color(0xFFBB86FC),
+    'Aim': Color(0xFFFF7043),
   };
 
   @override
@@ -193,7 +277,7 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
               _buildHeader(),
               const CinHost(size: 70),
               const SizedBox(height: 4),
-              const Text('15 mini oyun • 6 kategori',
+              const Text('25 mini oyun • 8 kategori',
                   style: TextStyle(color: Colors.white54, fontSize: 13)),
               const SizedBox(height: 12),
               Expanded(
@@ -234,7 +318,7 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
                   letterSpacing: 1)),
         ),
         SizedBox(
-          height: 150,
+          height: 200,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: games.length,
@@ -247,6 +331,8 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
 
   Widget _buildGameCard(_GameInfo game) {
     final best = _storage?.arcadeBestScore(game.id) ?? 0;
+    final iconPath = 'assets/arcade_icons/${game.id}.png';
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -255,40 +341,68 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
         ).then((_) => _load());
       },
       child: Container(
-        width: 170,
-        height: 140,
-        margin: const EdgeInsets.only(right: 10),
+        width: 160,
+        height: 190,
+        margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFF0D1B2A),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: game.color.withValues(alpha: 0.4)),
+          color: const Color(0xFF0A1628),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: game.color.withValues(alpha: 0.45), width: 1.5),
           boxShadow: [
             BoxShadow(
-                color: game.color.withValues(alpha: 0.08),
-                blurRadius: 12,
+                color: game.color.withValues(alpha: 0.15),
+                blurRadius: 16,
                 spreadRadius: 1)
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(game.emoji, style: const TextStyle(fontSize: 36)),
-              const SizedBox(height: 6),
-              Text(game.name,
-                  style: TextStyle(
-                      color: game.color,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis),
-              const Spacer(),
-              Text('En İyi: $best',
-                  style: const TextStyle(
-                      color: Colors.white38, fontSize: 10)),
-            ],
-          ),
+        child: Column(
+          children: [
+            // Icon image (fills top ~60% of card)
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Image.asset(
+                  iconPath,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: game.color.withValues(alpha: 0.06),
+                    child: Center(
+                      child: Text(game.emoji,
+                          style: const TextStyle(fontSize: 48)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Name + best score row
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              decoration: BoxDecoration(
+                color: game.color.withValues(alpha: 0.08),
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(16)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(game.name,
+                      style: TextStyle(
+                          color: game.color,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.3),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 2),
+                  Text('En İyi: $best',
+                      style: const TextStyle(
+                          color: Colors.white38, fontSize: 10)),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
