@@ -37,13 +37,18 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
   int _timeLeft = 30;
   int _score = 0;
   final List<_Target> _targets = [];
-  bool _started = false;
   bool _gameEnded = false;
   Timer? _countdownTimer;
   Timer? _spawnTimer;
   Timer? _despawnTimer;
   int _nextId = 0;
   final _rand = Random();
+
+  @override
+  void initState() {
+    super.initState();
+    _startGame();
+  }
 
   @override
   void dispose() {
@@ -53,8 +58,7 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
     super.dispose();
   }
 
-  void _start() {
-    setState(() => _started = true);
+  void _startGame() {
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
       setState(() => _timeLeft--);
@@ -153,10 +157,10 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
       _timeLeft = 30;
       _score = 0;
       _targets.clear();
-      _started = false;
       _gameEnded = false;
       _nextId = 0;
     });
+    _startGame();
   }
 
   @override
@@ -199,79 +203,54 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
                 ),
               ),
               Expanded(
-                child: _started
-                    ? Stack(
-                        children: [
-                          for (final t in List.from(_targets))
-                            Positioned(
-                              left: t.x - t.radius,
-                              top: t.y - t.radius,
-                              child: GestureDetector(
-                                onTap: () => _tapTarget(t),
-                                child: t.isDecoy
-                                    ? Container(
-                                        width: t.radius * 2,
-                                        height: t.radius * 2,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.red.withValues(alpha: 0.85),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: Colors.red
-                                                    .withValues(alpha: 0.5),
-                                                blurRadius: 10)
-                                          ],
-                                        ),
-                                        child: const Center(
-                                          child: Text('✗',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 22,
-                                                  fontWeight:
-                                                      FontWeight.bold)),
-                                        ),
-                                      )
-                                    : Container(
-                                        width: t.radius * 2,
-                                        height: t.radius * 2,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: const Color(0xFF00C853)
-                                              .withValues(alpha: 0.85),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: const Color(0xFF00C853)
-                                                    .withValues(alpha: 0.5),
-                                                blurRadius: 14)
-                                          ],
-                                        ),
-                                      ),
-                              ),
-                            ),
-                        ],
-                      )
-                    : Center(
+                child: Stack(
+                  children: [
+                    for (final t in List.from(_targets))
+                      Positioned(
+                        left: t.x - t.radius,
+                        top: t.y - t.radius,
                         child: GestureDetector(
-                          onTap: _start,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF)
-                                  .withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
-                          ),
+                          onTap: () => _tapTarget(t),
+                          child: t.isDecoy
+                              ? Container(
+                                  width: t.radius * 2,
+                                  height: t.radius * 2,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.red.withValues(alpha: 0.85),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.red.withValues(alpha: 0.5),
+                                          blurRadius: 10)
+                                    ],
+                                  ),
+                                  child: const Center(
+                                    child: Text('✗',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                )
+                              : Container(
+                                  width: t.radius * 2,
+                                  height: t.radius * 2,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: const Color(0xFF00C853)
+                                        .withValues(alpha: 0.85),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: const Color(0xFF00C853)
+                                              .withValues(alpha: 0.5),
+                                          blurRadius: 14)
+                                    ],
+                                  ),
+                                ),
                         ),
                       ),
+                  ],
+                ),
               ),
             ],
           ),

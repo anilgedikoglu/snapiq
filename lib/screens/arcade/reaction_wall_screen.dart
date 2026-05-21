@@ -31,12 +31,17 @@ class _ReactionWallScreenState extends State<ReactionWallScreen> {
   int _score = 0;
   int _lives = 3;
   final List<_Wall> _walls = [];
-  bool _started = false;
   bool _gameEnded = false;
   Timer? _moveTimer;
   Timer? _spawnTimer;
   final _rand = Random();
   static const double _wallSpeed = 0.008; // fraction per tick
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimers();
+  }
 
   @override
   void dispose() {
@@ -45,8 +50,7 @@ class _ReactionWallScreenState extends State<ReactionWallScreen> {
     super.dispose();
   }
 
-  void _start() {
-    setState(() => _started = true);
+  void _startTimers() {
     _spawnTimer = Timer.periodic(const Duration(milliseconds: 1800), (_) {
       if (!mounted || _gameEnded) return;
       setState(() {
@@ -88,12 +92,12 @@ class _ReactionWallScreenState extends State<ReactionWallScreen> {
   }
 
   void _moveLeft() {
-    if (_gameEnded || !_started) return;
+    if (_gameEnded) return;
     setState(() => _playerLane = max(0, _playerLane - 1));
   }
 
   void _moveRight() {
-    if (_gameEnded || !_started) return;
+    if (_gameEnded) return;
     setState(() => _playerLane = min(2, _playerLane + 1));
   }
 
@@ -137,9 +141,9 @@ class _ReactionWallScreenState extends State<ReactionWallScreen> {
       _score = 0;
       _lives = 3;
       _walls.clear();
-      _started = false;
       _gameEnded = false;
     });
+    _startTimers();
   }
 
   @override
@@ -171,132 +175,107 @@ class _ReactionWallScreenState extends State<ReactionWallScreen> {
                 ),
               ),
               Expanded(
-                child: _started
-                    ? LayoutBuilder(builder: (ctx, constraints) {
-                        final laneW = constraints.maxWidth / 3;
-                        return Stack(
-                          children: [
-                            // Lane dividers
-                            Positioned(
-                              left: laneW,
-                              top: 0,
-                              bottom: 0,
-                              child: Container(
-                                  width: 1,
-                                  color: Colors.white12),
-                            ),
-                            Positioned(
-                              left: laneW * 2,
-                              top: 0,
-                              bottom: 0,
-                              child: Container(
-                                  width: 1,
-                                  color: Colors.white12),
-                            ),
-                            // Walls
-                            for (final w in List.from(_walls))
-                              ..._buildWall(w, constraints.maxWidth,
-                                  constraints.maxHeight, laneW),
-                            // Player
-                            Positioned(
-                              bottom: 20,
-                              left: _playerLane * laneW + laneW / 2 - 20,
-                              child: Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF00B4FF),
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: const Color(0xFF00B4FF)
-                                            .withValues(alpha: 0.6),
-                                        blurRadius: 12)
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      })
-                    : Center(
-                        child: GestureDetector(
-                          onTap: _start,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF)
-                                  .withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                      ),
-              ),
-              if (_started) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 32, vertical: 12),
-                  child: Row(
+                child: LayoutBuilder(builder: (ctx, constraints) {
+                  final laneW = constraints.maxWidth / 3;
+                  return Stack(
                     children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: _moveLeft,
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFBB86FC)
-                                  .withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                  color: const Color(0xFFBB86FC)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Center(
-                              child: Text('←',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 28)),
-                            ),
-                          ),
-                        ),
+                      // Lane dividers
+                      Positioned(
+                        left: laneW,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                            width: 1,
+                            color: Colors.white12),
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: _moveRight,
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFBB86FC)
-                                  .withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                  color: const Color(0xFFBB86FC)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Center(
-                              child: Text('→',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 28)),
-                            ),
+                      Positioned(
+                        left: laneW * 2,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                            width: 1,
+                            color: Colors.white12),
+                      ),
+                      // Walls
+                      for (final w in List.from(_walls))
+                        ..._buildWall(w, constraints.maxWidth,
+                            constraints.maxHeight, laneW),
+                      // Player
+                      Positioned(
+                        bottom: 20,
+                        left: _playerLane * laneW + laneW / 2 - 20,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF00B4FF),
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: const Color(0xFF00B4FF)
+                                      .withValues(alpha: 0.6),
+                                  blurRadius: 12)
+                            ],
                           ),
                         ),
                       ),
                     ],
-                  ),
+                  );
+                }),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 32, vertical: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: _moveLeft,
+                        child: Container(
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFBB86FC)
+                                .withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                                color: const Color(0xFFBB86FC)
+                                    .withValues(alpha: 0.5)),
+                          ),
+                          child: const Center(
+                            child: Text('←',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: _moveRight,
+                        child: Container(
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFBB86FC)
+                                .withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                                color: const Color(0xFFBB86FC)
+                                    .withValues(alpha: 0.5)),
+                          ),
+                          child: const Center(
+                            child: Text('→',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ],
           ),
         ),

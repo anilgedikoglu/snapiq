@@ -33,7 +33,6 @@ class _DontTapRedScreenState extends State<DontTapRedScreen> {
   int _score = 0;
   int _speed = 1200;
   List<Color> _grid = [];
-  bool _started = false;
   bool _gameEnded = false;
   Timer? _autoTimer;
   final _rand = Random();
@@ -42,6 +41,7 @@ class _DontTapRedScreenState extends State<DontTapRedScreen> {
   void initState() {
     super.initState();
     _generateGrid();
+    _startAutoTimer();
   }
 
   @override
@@ -67,13 +67,8 @@ class _DontTapRedScreenState extends State<DontTapRedScreen> {
     });
   }
 
-  void _start() {
-    setState(() => _started = true);
-    _startAutoTimer();
-  }
-
   void _tap(int index) {
-    if (_gameEnded || !_started) return;
+    if (_gameEnded) return;
     _autoTimer?.cancel();
     final color = _grid[index];
     if (color == Colors.red) {
@@ -134,10 +129,10 @@ class _DontTapRedScreenState extends State<DontTapRedScreen> {
       _lives = 3;
       _score = 0;
       _speed = 1200;
-      _started = false;
       _gameEnded = false;
       _generateGrid();
     });
+    _startAutoTimer();
   }
 
   @override
@@ -177,55 +172,35 @@ class _DontTapRedScreenState extends State<DontTapRedScreen> {
                       letterSpacing: 1)),
               const SizedBox(height: 20),
               Expanded(
-                child: _started
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: GridView.count(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(6, (i) {
-                            return GestureDetector(
-                              onTap: () => _tap(i),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: _grid[i].withValues(alpha: 0.85),
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: _grid[i].withValues(alpha: 0.4),
-                                        blurRadius: 10)
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      )
-                    : Center(
-                        child: GestureDetector(
-                          onTap: _start,
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      childAspectRatio: 1.1,
+                      children: List.generate(6, (i) {
+                        return GestureDetector(
+                          onTap: () => _tap(i),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF)
-                                  .withValues(alpha: 0.15),
+                              color: _grid[i].withValues(alpha: 0.85),
                               borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: _grid[i].withValues(alpha: 0.4),
+                                    blurRadius: 12)
+                              ],
                             ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

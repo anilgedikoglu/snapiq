@@ -33,13 +33,15 @@ class _MemoryFlashScreenState extends State<MemoryFlashScreen> {
   Timer? _watchTimer;
 
   @override
+  void initState() {
+    super.initState();
+    _nextRound();
+  }
+
+  @override
   void dispose() {
     _watchTimer?.cancel();
     super.dispose();
-  }
-
-  void _start() {
-    _nextRound();
   }
 
   void _nextRound() {
@@ -131,7 +133,6 @@ class _MemoryFlashScreenState extends State<MemoryFlashScreen> {
   void _restart() {
     _watchTimer?.cancel();
     setState(() {
-      _phase = _Phase.idle;
       _level = 1;
       _gridSize = 3;
       _patternSize = 2;
@@ -141,6 +142,7 @@ class _MemoryFlashScreenState extends State<MemoryFlashScreen> {
       _lives = 3;
       _gameEnded = false;
     });
+    _nextRound();
   }
 
   @override
@@ -173,30 +175,7 @@ class _MemoryFlashScreenState extends State<MemoryFlashScreen> {
               _buildPhaseText(),
               const SizedBox(height: 16),
               Expanded(
-                child: _phase == _Phase.idle
-                    ? Center(
-                        child: GestureDetector(
-                          onTap: _start,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF)
-                                  .withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                      )
-                    : Center(child: _buildGrid()),
+                child: Center(child: _buildGrid()),
               ),
             ],
           ),

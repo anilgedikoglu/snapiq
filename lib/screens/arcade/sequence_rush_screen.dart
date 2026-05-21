@@ -34,24 +34,22 @@ class _SequenceRushScreenState extends State<SequenceRushScreen> {
   int _score = 0;
   int _lives = 3;
   int _litIndex = -1;
-  bool _started = false;
   bool _gameEnded = false;
   bool _inputEnabled = false;
   Timer? _watchTimer;
   final _rand = Random();
 
   @override
+  void initState() {
+    super.initState();
+    _sequence = [_rand.nextInt(4)];
+    _playSequence();
+  }
+
+  @override
   void dispose() {
     _watchTimer?.cancel();
     super.dispose();
-  }
-
-  void _start() {
-    setState(() {
-      _started = true;
-      _sequence = [_rand.nextInt(4)];
-    });
-    _playSequence();
   }
 
   void _playSequence() {
@@ -167,17 +165,17 @@ class _SequenceRushScreenState extends State<SequenceRushScreen> {
   void _restart() {
     _watchTimer?.cancel();
     setState(() {
-      _sequence = [];
+      _sequence = [_rand.nextInt(4)];
       _userInput = [];
       _isWatching = false;
       _level = 1;
       _score = 0;
       _lives = 3;
       _litIndex = -1;
-      _started = false;
       _gameEnded = false;
       _inputEnabled = false;
     });
+    _playSequence();
   }
 
   @override
@@ -207,77 +205,53 @@ class _SequenceRushScreenState extends State<SequenceRushScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              if (_started)
-                Text(
-                  _isWatching ? 'İZLE!' : (_inputEnabled ? 'TEKRARLA!' : ''),
-                  style: TextStyle(
-                      color: _isWatching
-                          ? const Color(0xFFFDD835)
-                          : const Color(0xFF00B4FF),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
+              Text(
+                _isWatching ? 'İZLE!' : (_inputEnabled ? 'TEKRARLA!' : ''),
+                style: TextStyle(
+                    color: _isWatching
+                        ? const Color(0xFFFDD835)
+                        : const Color(0xFF00B4FF),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
               Expanded(
-                child: _started
-                    ? Center(
-                        child: Wrap(
-                          spacing: 12,
-                          runSpacing: 12,
-                          alignment: WrapAlignment.center,
-                          children: List.generate(4, (i) {
-                            final isLit = _litIndex == i;
-                            final color = _btnColors[i];
-                            return GestureDetector(
-                              onTap: () => _tap(i),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 150),
-                                width: 130,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  color: isLit
-                                      ? color
-                                      : color.withValues(alpha: 0.25),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                      color: isLit
-                                          ? color
-                                          : color.withValues(alpha: 0.4),
-                                      width: 2),
-                                  boxShadow: isLit
-                                      ? [
-                                          BoxShadow(
-                                              color: color.withValues(alpha: 0.6),
-                                              blurRadius: 20)
-                                        ]
-                                      : null,
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      )
-                    : Center(
-                        child: GestureDetector(
-                          onTap: _start,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF)
-                                  .withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
+                child: Center(
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.center,
+                    children: List.generate(4, (i) {
+                      final isLit = _litIndex == i;
+                      final color = _btnColors[i];
+                      return GestureDetector(
+                        onTap: () => _tap(i),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          width: 130,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: isLit
+                                ? color
+                                : color.withValues(alpha: 0.25),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                                color: isLit
+                                    ? color
+                                    : color.withValues(alpha: 0.4),
+                                width: 2),
+                            boxShadow: isLit
+                                ? [
+                                    BoxShadow(
+                                        color: color.withValues(alpha: 0.6),
+                                        blurRadius: 20)
+                                  ]
+                                : null,
                           ),
                         ),
-                      ),
+                      );
+                    }),
+                  ),
+                ),
               ),
             ],
           ),

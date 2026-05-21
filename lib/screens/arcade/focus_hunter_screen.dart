@@ -37,10 +37,15 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
   List<String> _emojis = [];
   int _oddIndex = -1;
   double _timeLeft = 5.0;
-  bool _started = false;
   bool _gameEnded = false;
   Timer? _timer;
   final _rand = Random();
+
+  @override
+  void initState() {
+    super.initState();
+    _nextRound();
+  }
 
   @override
   void dispose() {
@@ -52,11 +57,6 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
     if (_round < 3) return 4;
     if (_round < 6) return 5;
     return 6;
-  }
-
-  void _start() {
-    setState(() => _started = true);
-    _nextRound();
   }
 
   void _nextRound() {
@@ -91,7 +91,7 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
   }
 
   void _tap(int index) {
-    if (_gameEnded || !_started) return;
+    if (_gameEnded) return;
     _timer?.cancel();
     if (index == _oddIndex) {
       setState(() => _score++);
@@ -146,9 +146,9 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
       _emojis = [];
       _oddIndex = -1;
       _timeLeft = 5.0;
-      _started = false;
       _gameEnded = false;
     });
+    _nextRound();
   }
 
   @override
@@ -176,74 +176,49 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
                   ],
                 ),
               ),
-              if (_started) ...[
-                const SizedBox(height: 6),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: (_timeLeft / 5.0).clamp(0.0, 1.0),
-                      backgroundColor: Colors.white12,
-                      valueColor:
-                          const AlwaysStoppedAnimation(Color(0xFF00C853)),
-                      minHeight: 6,
-                    ),
+              const SizedBox(height: 6),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: (_timeLeft / 5.0).clamp(0.0, 1.0),
+                    backgroundColor: Colors.white12,
+                    valueColor:
+                        const AlwaysStoppedAnimation(Color(0xFF00C853)),
+                    minHeight: 6,
                   ),
                 ),
-                const SizedBox(height: 6),
-                const Text('Farklı olanı bul!',
-                    style: TextStyle(color: Colors.white54, fontSize: 13)),
-              ],
+              ),
+              const SizedBox(height: 6),
+              const Text('Farklı olanı bul!',
+                  style: TextStyle(color: Colors.white54, fontSize: 13)),
               Expanded(
-                child: _started
-                    ? Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: GridView.count(
-                          crossAxisCount: gs,
-                          mainAxisSpacing: 4,
-                          crossAxisSpacing: 4,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(_emojis.length, (i) {
-                            return GestureDetector(
-                              onTap: () => _tap(i),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF0D1B2A),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: Colors.white12),
-                                ),
-                                child: Center(
-                                  child: Text(_emojis[i],
-                                      style: const TextStyle(fontSize: 22)),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      )
-                    : Center(
-                        child: GestureDetector(
-                          onTap: _start,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF)
-                                  .withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: GridView.count(
+                    crossAxisCount: gs,
+                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 4,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: List.generate(_emojis.length, (i) {
+                      return GestureDetector(
+                        onTap: () => _tap(i),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0D1B2A),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.white12),
+                          ),
+                          child: Center(
+                            child: Text(_emojis[i],
+                                style: const TextStyle(fontSize: 22)),
                           ),
                         ),
-                      ),
+                      );
+                    }),
+                  ),
+                ),
               ),
             ],
           ),

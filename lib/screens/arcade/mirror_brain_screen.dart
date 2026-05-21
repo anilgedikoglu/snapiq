@@ -29,20 +29,20 @@ class _MirrorBrainScreenState extends State<MirrorBrainScreen> {
   int _round = 0;
   double _timeLeft = 3.0;
   String _arrow = '←';
-  bool _started = false;
   bool _gameEnded = false;
   Timer? _timer;
   final _rand = Random();
 
   @override
+  void initState() {
+    super.initState();
+    _nextRound();
+  }
+
+  @override
   void dispose() {
     _timer?.cancel();
     super.dispose();
-  }
-
-  void _start() {
-    setState(() => _started = true);
-    _nextRound();
   }
 
   void _nextRound() {
@@ -74,7 +74,7 @@ class _MirrorBrainScreenState extends State<MirrorBrainScreen> {
   }
 
   void _tap(String direction) {
-    if (_gameEnded || !_started) return;
+    if (_gameEnded) return;
     _timer?.cancel();
     final correct = _opposites[_arrow];
     if (direction == correct) {
@@ -141,9 +141,9 @@ class _MirrorBrainScreenState extends State<MirrorBrainScreen> {
       _lives = 3;
       _round = 0;
       _timeLeft = 3.0;
-      _started = false;
       _gameEnded = false;
     });
+    _nextRound();
   }
 
   Widget _dirButton(String dir) {
@@ -199,66 +199,43 @@ class _MirrorBrainScreenState extends State<MirrorBrainScreen> {
                 ),
               ),
               Expanded(
-                child: _started
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: (_timeLeft / 3.0).clamp(0.0, 1.0),
-                              backgroundColor: Colors.white12,
-                              valueColor: const AlwaysStoppedAnimation(
-                                  Color(0xFFFDD835)),
-                              minHeight: 6,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          const Text('TERSİNE DOKUN!',
-                              style: TextStyle(
-                                  color: Colors.white54,
-                                  fontSize: 14,
-                                  letterSpacing: 1)),
-                          const SizedBox(height: 24),
-                          Text(_arrow,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 80,
-                                  fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 32),
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            children: [
-                              _dirButton('↑'),
-                              _dirButton('↓'),
-                              _dirButton('←'),
-                              _dirButton('→'),
-                            ],
-                          ),
-                        ],
-                      )
-                    : Center(
-                        child: GestureDetector(
-                          onTap: _start,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF)
-                                  .withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: (_timeLeft / 3.0).clamp(0.0, 1.0),
+                        backgroundColor: Colors.white12,
+                        valueColor: const AlwaysStoppedAnimation(
+                            Color(0xFFFDD835)),
+                        minHeight: 6,
                       ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text('TERSİNE DOKUN!',
+                        style: TextStyle(
+                            color: Colors.white54,
+                            fontSize: 14,
+                            letterSpacing: 1)),
+                    const SizedBox(height: 24),
+                    Text(_arrow,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 80,
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 32),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        _dirButton('↑'),
+                        _dirButton('↓'),
+                        _dirButton('←'),
+                        _dirButton('→'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

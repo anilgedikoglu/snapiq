@@ -1,34 +1,93 @@
+// Full-test version of Pattern Master (Test 29/29).
+// 10 questions — same as arcade. Auto-starts.
+// Score = clamp(score / 10 * 100, 0, 100).
+// LAST SCREEN — creates TestResult, saves, navigates to ResultScreen.
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../models/game_session.dart';
+import '../../models/test_result.dart';
 import '../../services/storage_service.dart';
-import '../../services/xp_service.dart';
-import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
-import '../../widgets/arcade_result_overlay.dart';
+import '../result_screen.dart';
 
 class _PQ {
   final String series;
   final List<String> options;
   final String answer;
-  const _PQ(
-      {required this.series,
-      required this.options,
-      required this.answer});
+  const _PQ({required this.series, required this.options, required this.answer});
 }
 
-class PatternMasterScreen extends StatefulWidget {
-  const PatternMasterScreen({super.key});
+class PatternMasterTestScreen extends StatefulWidget {
+  final GameSession session;
+  final int reactionScore;
+  final int stroopScore;
+  final int memoryScore;
+  final int sequenceScore;
+  final int impulseScore;
+  final int patternScore;
+  final int circleScore;
+  final int laserScore;
+  final int timingScore;
+  final int pulseScore;
+  final int balanceScore;
+  final int dartScore;
+  final int skyScore;
+  final int targetLockScore;
+  final int swipeDodgeScore;
+  final int colorPanicScore;
+  final int dontTapRedScore;
+  final int tapTargetScore;
+  final int shapeStrikeScore;
+  final int memoryFlashScore;
+  final int mirrorBrainScore;
+  final int sequenceRushScore;
+  final int reactionWallScore;
+  final int focusHunterScore;
+  final int impulseControlScore;
+  final int tapRainScore;
+  final int speedMathScore;
+  final int numberHunterScore;
+
+  const PatternMasterTestScreen({
+    super.key,
+    required this.session,
+    required this.reactionScore,
+    required this.stroopScore,
+    required this.memoryScore,
+    required this.sequenceScore,
+    required this.impulseScore,
+    required this.patternScore,
+    required this.circleScore,
+    required this.laserScore,
+    required this.timingScore,
+    required this.pulseScore,
+    required this.balanceScore,
+    required this.dartScore,
+    required this.skyScore,
+    required this.targetLockScore,
+    required this.swipeDodgeScore,
+    required this.colorPanicScore,
+    required this.dontTapRedScore,
+    required this.tapTargetScore,
+    required this.shapeStrikeScore,
+    required this.memoryFlashScore,
+    required this.mirrorBrainScore,
+    required this.sequenceRushScore,
+    required this.reactionWallScore,
+    required this.focusHunterScore,
+    required this.impulseControlScore,
+    required this.tapRainScore,
+    required this.speedMathScore,
+    required this.numberHunterScore,
+  });
 
   @override
-  State<PatternMasterScreen> createState() => _PatternMasterScreenState();
+  State<PatternMasterTestScreen> createState() => _PMTState();
 }
 
-class _PatternMasterScreenState extends State<PatternMasterScreen> {
-  static const _gameId  = 'pattern_master';
-  static const _xpReward = 35;
-  static const _gameName = 'Pattern Master';
-  static const _totalQ  = 10;
+class _PMTState extends State<PatternMasterTestScreen> {
+  static const _totalQ = 10;
   static const _ptsPerQ = 10;
 
   static const _allQuestions = [
@@ -54,12 +113,12 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
     _PQ(series: '10  8  6  4  ?', options: ['1', '2', '3', '0'], answer: '2'),
   ];
 
-  int _qIndex  = 0;
-  int _score   = 0;
+  int _qIndex = 0;
+  int _score = 0;
   List<_PQ> _questions = [];
   double _timeLeft = 15.0;
-  String? _flash;   // 'correct' | 'wrong'
-  bool _gameEnded  = false;
+  String? _flash;
+  bool _gameEnded = false;
   Timer? _timer;
   Timer? _flashTimer;
 
@@ -114,7 +173,7 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
     final correct = _questions[_qIndex].answer == option;
     setState(() {
       if (correct) _score++;
-      _flash  = correct ? 'correct' : 'wrong';
+      _flash = correct ? 'correct' : 'wrong';
       _qIndex++;
     });
     _flashTimer = Timer(const Duration(milliseconds: 500), () {
@@ -129,68 +188,105 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
     if (_gameEnded) return;
     _timer?.cancel();
     setState(() => _gameEnded = true);
-    _gameOver(_score * _ptsPerQ);
+    _finish();
   }
 
-  Future<void> _gameOver(int score) async {
-    final s = await StorageService.getInstance();
-    final prevBest = s.arcadeBestScore(_gameId);
-    final isNewBest = score > prevBest;
-    await s.saveArcadeBestScore(_gameId, score);
-    await s.saveXP(_xpReward);
-    final newLevel = XpService.levelForXp(s.xp);
-    await s.saveLevel(newLevel);
-    await AchievementService.checkArcadeAchievements(_gameId, _score, s);
-    await AdService().incrementGameCountAndMaybeShow();
-    if (!mounted) return;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => ArcadeResultOverlay(
-        gameName: _gameName,
-        score: score,
-        bestScore: isNewBest ? score : prevBest,
-        xpGained: _xpReward,
-        isNewBest: isNewBest,
-        onReplay: () {
-          Navigator.pop(context);
-          _restart();
-        },
-        onBack: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
-      ),
+  Future<void> _finish() async {
+    final patternMasterScore = (_score / _totalQ * 100).round().clamp(0, 100);
+
+    final result = TestResult(
+      reactionScore:       widget.reactionScore,
+      stroopScore:         widget.stroopScore,
+      memoryScore:         widget.memoryScore,
+      sequenceScore:       widget.sequenceScore,
+      impulseScore:        widget.impulseScore,
+      patternScore:        widget.patternScore,
+      circleScore:         widget.circleScore,
+      laserScore:          widget.laserScore,
+      timingScore:         widget.timingScore,
+      pulseScore:          widget.pulseScore,
+      balanceScore:        widget.balanceScore,
+      dartScore:           widget.dartScore,
+      skyScore:            widget.skyScore,
+      targetLockScore:     widget.targetLockScore,
+      swipeDodgeScore:     widget.swipeDodgeScore,
+      colorPanicScore:     widget.colorPanicScore,
+      dontTapRedScore:     widget.dontTapRedScore,
+      tapTargetScore:      widget.tapTargetScore,
+      shapeStrikeScore:    widget.shapeStrikeScore,
+      memoryFlashScore:    widget.memoryFlashScore,
+      mirrorBrainScore:    widget.mirrorBrainScore,
+      sequenceRushScore:   widget.sequenceRushScore,
+      reactionWallScore:   widget.reactionWallScore,
+      focusHunterScore:    widget.focusHunterScore,
+      impulseControlScore: widget.impulseControlScore,
+      tapRainScore:        widget.tapRainScore,
+      speedMathScore:      widget.speedMathScore,
+      numberHunterScore:   widget.numberHunterScore,
+      patternMasterScore:  patternMasterScore,
     );
-  }
+    widget.session.result = result;
 
-  void _restart() {
-    _timer?.cancel();
-    _flashTimer?.cancel();
-    setState(() {
-      _qIndex    = 0;
-      _score     = 0;
-      _questions = [];
-      _timeLeft  = 15.0;
-      _flash     = null;
-      _gameEnded = false;
-    });
-    _startGame();
+    final storage = await StorageService.getInstance();
+    await storage.saveResult(result);
+    await AdService().incrementGameCountAndMaybeShow();
+
+    if (!mounted) return;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => ResultScreen(result: result)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF050816),
       body: AnimatedBackground(
         child: SafeArea(
           child: Stack(
             children: [
-              // ── Main content ──────────────────────────────────────
               Column(
                 children: [
-                  _buildHeader(),
+                  // Progress header
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
+                    child: Row(
+                      children: [
+                        Text('Test 29 / 29',
+                            style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.45),
+                                fontSize: 13)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: LinearProgressIndicator(
+                              value: _qIndex / _totalQ,
+                              backgroundColor:
+                                  Colors.white.withValues(alpha: 0.1),
+                              color: const Color(0xFF00C853),
+                              minHeight: 4,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text('${_qIndex + 1}/$_totalQ',
+                            style: const TextStyle(
+                                color: Color(0xFF00C853), fontSize: 13)),
+                      ],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 4),
+                    child: Text(
+                      'Pattern Master — Sıradaki ne?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white54, fontSize: 12),
+                    ),
+                  ),
                   if (_qIndex < _totalQ && _questions.isNotEmpty) ...[
-                    // Question counter + score
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Row(
@@ -208,7 +304,6 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    // Per-question timer bar
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: ClipRRect(
@@ -229,7 +324,6 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Series card
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 24),
@@ -258,7 +352,6 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
                               ),
                             ),
                             const SizedBox(height: 24),
-                            // Answer options
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20),
@@ -309,8 +402,7 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
                     const Expanded(child: SizedBox()),
                 ],
               ),
-
-              // ── Feedback pill (floats at top center) ──────────────
+              // Feedback pill
               if (_flash != null)
                 Positioned(
                   top: 70,
@@ -368,30 +460,6 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.white70, size: 20),
-            onPressed: () => Navigator.pop(context),
-          ),
-          const Expanded(
-            child: Text('Pattern Master',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(width: 48),
-        ],
       ),
     );
   }

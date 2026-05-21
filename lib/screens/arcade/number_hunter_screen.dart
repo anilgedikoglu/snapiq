@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
@@ -15,62 +16,68 @@ class NumberHunterScreen extends StatefulWidget {
 }
 
 class _NumberHunterScreenState extends State<NumberHunterScreen> {
-  static const _gameId = 'number_hunter';
+  static const _gameId   = 'number_hunter';
   static const _xpReward = 25;
   static const _gameName = 'Number Hunter';
-  static const _totalRounds = 10;
+  static const _duration = 30;
 
-  int _round = 0;
-  int _score = 0;
-  int _target = 0;
+  int _timeLeft   = _duration;
+  int _score      = 0;
+  int _target     = 0;
   List<int> _numbers = [];
-  bool _started = false;
   bool _gameEnded = false;
-  DateTime? _roundStart;
   int? _flashIndex;
   Timer? _flashTimer;
+  Timer? _countdownTimer;
+  final _rand = Random();
+
+  @override
+  void initState() {
+    super.initState();
+    _startGame();
+  }
 
   @override
   void dispose() {
     _flashTimer?.cancel();
+    _countdownTimer?.cancel();
     super.dispose();
   }
 
-  void _start() {
-    setState(() => _started = true);
-    _nextRound();
+  void _startGame() {
+    _nextTarget();
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted || _gameEnded) return;
+      setState(() => _timeLeft--);
+      if (_timeLeft <= 0) {
+        _countdownTimer?.cancel();
+        setState(() => _gameEnded = true);
+        _gameOver(_score);
+      }
+    });
   }
 
-  void _nextRound() {
-    if (_round >= _totalRounds) {
-      setState(() => _gameEnded = true);
-      _gameOver(_score);
-      return;
-    }
-    final nums = List.generate(20, (i) => i + 1)..shuffle();
-    final t = nums[0]; // guaranteed to be in list
+  void _nextTarget() {
+    final nums = List.generate(20, (i) => i + 1)..shuffle(_rand);
+    // Pick target from a random position so it appears anywhere in the grid
+    final targetPos = _rand.nextInt(nums.length);
     setState(() {
-      _numbers = nums;
-      _target = t;
-      _roundStart = DateTime.now();
+      _numbers   = nums;
+      _target    = nums[targetPos];
       _flashIndex = null;
     });
   }
 
   void _tap(int index) {
-    if (_gameEnded || !_started) return;
-    final num = _numbers[index];
-    if (num == _target) {
-      final elapsed = DateTime.now().difference(_roundStart!).inMilliseconds;
-      final pts = (10 - (elapsed ~/ 500)).clamp(1, 10);
+    if (_gameEnded) return;
+    if (_numbers[index] == _target) {
       _flashTimer?.cancel();
       setState(() {
-        _score += pts;
+        _score++;
         _flashIndex = index;
-        _round++;
       });
-      _flashTimer = Timer(const Duration(milliseconds: 300), () {
-        if (mounted) _nextRound();
+      _flashTimer = Timer(const Duration(milliseconds: 250), () {
+        if (mounted) _nextTarget();
       });
     }
   }
@@ -109,13 +116,14 @@ class _NumberHunterScreenState extends State<NumberHunterScreen> {
 
   void _restart() {
     _flashTimer?.cancel();
+    _countdownTimer?.cancel();
     setState(() {
-      _round = 0;
-      _score = 0;
-      _started = false;
+      _timeLeft  = _duration;
+      _score     = 0;
       _gameEnded = false;
       _flashIndex = null;
     });
+    _startGame();
   }
 
   @override
@@ -126,95 +134,103 @@ class _NumberHunterScreenState extends State<NumberHunterScreen> {
           child: Column(
             children: [
               _buildHeader(),
-              if (_started) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Tur: ${_round + 1}/$_totalRounds',
-                          style: const TextStyle(
-                              color: Colors.white54, fontSize: 13)),
-                      Text('$_score puan',
-                          style: const TextStyle(
-                              color: Color(0xFF00B4FF),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold)),
-                    ],
+              // Timer progress bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: _timeLeft / _duration,
+                    backgroundColor: Colors.white.withValues(alpha: 0.1),
+                    color: _timeLeft > 10
+                        ? const Color(0xFF00B4FF)
+                        : Colors.redAccent,
+                    minHeight: 6,
                   ),
                 ),
-                const SizedBox(height: 12),
-                Text('$_target\'i bul!',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: GridView.count(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: List.generate(_numbers.length, (i) {
-                        final isFlash = _flashIndex == i;
-                        return GestureDetector(
-                          onTap: () => _tap(i),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            decoration: BoxDecoration(
+              ),
+              // Score + time row
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('$_timeLeft s',
+                        style: TextStyle(
+                            color: _timeLeft > 10
+                                ? Colors.white54
+                                : Colors.redAccent,
+                            fontSize: 14)),
+                    Text('$_score bulundu',
+                        style: const TextStyle(
+                            color: Color(0xFF00B4FF),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+              // Target label
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  'Bulunacak: $_target',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      shadows: [Shadow(color: Color(0xFF00B4FF), blurRadius: 12)]),
+                ),
+              ),
+              // Grid
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: GridView.count(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: List.generate(_numbers.length, (i) {
+                      final isFlash = _flashIndex == i;
+                      final isTarget = _numbers[i] == _target;
+                      return GestureDetector(
+                        onTap: () => _tap(i),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          decoration: BoxDecoration(
+                            color: isFlash
+                                ? const Color(0xFF00C853).withValues(alpha: 0.4)
+                                : const Color(0xFF0D1B2A),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
                               color: isFlash
-                                  ? const Color(0xFF00C853).withValues(alpha: 0.4)
-                                  : const Color(0xFF0D1B2A),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: isFlash
-                                    ? const Color(0xFF00C853)
-                                    : const Color(0xFF00B4FF)
-                                        .withValues(alpha: 0.3),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text('${_numbers[i]}',
-                                  style: TextStyle(
-                                      color: isFlash
-                                          ? const Color(0xFF00C853)
-                                          : Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
+                                  ? const Color(0xFF00C853)
+                                  : const Color(0xFF00B4FF)
+                                      .withValues(alpha: 0.3),
                             ),
                           ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-              ] else
-                Expanded(
-                  child: Center(
-                    child: GestureDetector(
-                      onTap: _start,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF00B4FF).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                              color:
-                                  const Color(0xFF00B4FF).withValues(alpha: 0.5)),
+                          child: Center(
+                            child: Text(
+                              '${_numbers[i]}',
+                              style: TextStyle(
+                                color: isFlash
+                                    ? const Color(0xFF00C853)
+                                    : isTarget
+                                        ? Colors.white
+                                        : Colors.white70,
+                                fontSize: 18,
+                                fontWeight: isTarget
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ),
                         ),
-                        child: const Text('BAŞLA',
-                            style: TextStyle(
-                                color: Color(0xFF00B4FF),
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ),
+                      );
+                    }),
                   ),
                 ),
+              ),
             ],
           ),
         ),

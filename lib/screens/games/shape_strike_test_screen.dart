@@ -1,12 +1,14 @@
+// Full-test version of Shape Strike (Test 19/29).
+// 30 seconds or until 3 lives gone.
+// Target shapes that fall off screen cost 1 life; wrong taps cost 1 life.
+// Score = clamp(correctTaps / 15 * 100, 0, 100).
+// Mid-chain screen — navigates to MemoryFlashTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../services/storage_service.dart';
-import '../../services/xp_service.dart';
-import '../../services/achievement_service.dart';
-import '../../services/ad_service.dart';
+import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
-import '../../widgets/arcade_result_overlay.dart';
+import 'memory_flash_test_screen.dart';
 
 enum _ShapeType { circle, square, triangle, star }
 
@@ -24,42 +26,84 @@ class _FallingShape {
   });
 }
 
-class ShapeStrikeScreen extends StatefulWidget {
-  const ShapeStrikeScreen({super.key});
+class ShapeStrikeTestScreen extends StatefulWidget {
+  final GameSession session;
+  final int reactionScore;
+  final int stroopScore;
+  final int memoryScore;
+  final int sequenceScore;
+  final int impulseScore;
+  final int patternScore;
+  final int circleScore;
+  final int laserScore;
+  final int timingScore;
+  final int pulseScore;
+  final int balanceScore;
+  final int dartScore;
+  final int skyScore;
+  final int targetLockScore;
+  final int swipeDodgeScore;
+  final int colorPanicScore;
+  final int dontTapRedScore;
+  final int tapTargetScore;
+
+  const ShapeStrikeTestScreen({
+    super.key,
+    required this.session,
+    required this.reactionScore,
+    required this.stroopScore,
+    required this.memoryScore,
+    required this.sequenceScore,
+    required this.impulseScore,
+    required this.patternScore,
+    required this.circleScore,
+    required this.laserScore,
+    required this.timingScore,
+    required this.pulseScore,
+    required this.balanceScore,
+    required this.dartScore,
+    required this.skyScore,
+    required this.targetLockScore,
+    required this.swipeDodgeScore,
+    required this.colorPanicScore,
+    required this.dontTapRedScore,
+    required this.tapTargetScore,
+  });
 
   @override
-  State<ShapeStrikeScreen> createState() => _ShapeStrikeScreenState();
+  State<ShapeStrikeTestScreen> createState() => _SSTState();
 }
 
-class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
-  static const _gameId = 'shape_strike';
-  static const _xpReward = 30;
-  static const _gameName = 'Shape Strike';
+class _SSTState extends State<ShapeStrikeTestScreen> {
+  static const _maxScore = 15; // 15 correct taps = 100%
+  static const _duration = 30;
 
   int _lives = 3;
   int _score = 0;
   int _correctInRow = 0;
+  int _timeLeft = _duration;
   _ShapeType _targetShape = _ShapeType.circle;
   final List<_FallingShape> _shapes = [];
   bool _gameEnded = false;
   Timer? _spawnTimer;
   Timer? _moveTimer;
+  Timer? _countdownTimer;
   int _nextId = 0;
   final _rand = Random();
-  double _fallSpeed = 0.006; // fraction per tick (50ms ticks)
+  double _fallSpeed = 0.006;
 
   static const _shapeNames = {
-    _ShapeType.circle: 'DAİRE',
+    _ShapeType.circle:   'DAİRE',
     _ShapeType.triangle: 'ÜÇGEN',
-    _ShapeType.square: 'KARE',
-    _ShapeType.star: 'YİLDİZ',
+    _ShapeType.square:   'KARE',
+    _ShapeType.star:     'YİLDİZ',
   };
 
   static const _shapeColors = {
-    _ShapeType.circle: Color(0xFF00B4FF),
+    _ShapeType.circle:   Color(0xFF00B4FF),
     _ShapeType.triangle: Color(0xFF00C853),
-    _ShapeType.square: Color(0xFFBB86FC),
-    _ShapeType.star: Color(0xFFFDD835),
+    _ShapeType.square:   Color(0xFFBB86FC),
+    _ShapeType.star:     Color(0xFFFDD835),
   };
 
   @override
@@ -72,12 +116,24 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
   void dispose() {
     _spawnTimer?.cancel();
     _moveTimer?.cancel();
+    _countdownTimer?.cancel();
     super.dispose();
   }
 
   void _startGame() {
     setState(() {
       _targetShape = _ShapeType.values[_rand.nextInt(_ShapeType.values.length)];
+    });
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted || _gameEnded) return;
+      setState(() => _timeLeft--);
+      if (_timeLeft <= 0) {
+        _spawnTimer?.cancel();
+        _moveTimer?.cancel();
+        _countdownTimer?.cancel();
+        setState(() => _gameEnded = true);
+        _finish();
+      }
     });
     _spawnTimer = Timer.periodic(const Duration(milliseconds: 600), (_) {
       if (!mounted || _gameEnded) return;
@@ -97,15 +153,16 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
         for (final s in _shapes) {
           s.topFraction += _fallSpeed;
         }
-        // Target shapes that fell off → lose a life
-        _lives -= _shapes.where((s) => s.topFraction > 1.0 && s.type == _targetShape).length;
+        _lives -= _shapes.where(
+            (s) => s.topFraction > 1.0 && s.type == _targetShape).length;
         _shapes.removeWhere((s) => s.topFraction > 1.0);
       });
       if (_lives <= 0 && !_gameEnded) {
         _spawnTimer?.cancel();
         _moveTimer?.cancel();
+        _countdownTimer?.cancel();
         setState(() => _gameEnded = true);
-        _gameOver(_score);
+        _finish();
       }
     });
   }
@@ -128,57 +185,44 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
       if (_lives <= 0) {
         _spawnTimer?.cancel();
         _moveTimer?.cancel();
+        _countdownTimer?.cancel();
         setState(() => _gameEnded = true);
-        _gameOver(_score);
+        _finish();
       }
     }
   }
 
-  Future<void> _gameOver(int score) async {
-    final s = await StorageService.getInstance();
-    final prevBest = s.arcadeBestScore(_gameId);
-    final isNewBest = score > prevBest;
-    await s.saveArcadeBestScore(_gameId, score);
-    await s.saveXP(_xpReward);
-    final newLevel = XpService.levelForXp(s.xp);
-    await s.saveLevel(newLevel);
-    await AchievementService.checkArcadeAchievements(_gameId, score, s);
-    await AdService().incrementGameCountAndMaybeShow();
+  Future<void> _finish() async {
+    final shapeStrikeScore = (_score / _maxScore * 100).round().clamp(0, 100);
+
     if (!mounted) return;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => ArcadeResultOverlay(
-        gameName: _gameName,
-        score: score,
-        bestScore: isNewBest ? score : prevBest,
-        xpGained: _xpReward,
-        isNewBest: isNewBest,
-        onReplay: () {
-          Navigator.pop(context);
-          _restart();
-        },
-        onBack: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MemoryFlashTestScreen(
+          session:          widget.session,
+          reactionScore:    widget.reactionScore,
+          stroopScore:      widget.stroopScore,
+          memoryScore:      widget.memoryScore,
+          sequenceScore:    widget.sequenceScore,
+          impulseScore:     widget.impulseScore,
+          patternScore:     widget.patternScore,
+          circleScore:      widget.circleScore,
+          laserScore:       widget.laserScore,
+          timingScore:      widget.timingScore,
+          pulseScore:       widget.pulseScore,
+          balanceScore:     widget.balanceScore,
+          dartScore:        widget.dartScore,
+          skyScore:         widget.skyScore,
+          targetLockScore:  widget.targetLockScore,
+          swipeDodgeScore:  widget.swipeDodgeScore,
+          colorPanicScore:  widget.colorPanicScore,
+          dontTapRedScore:  widget.dontTapRedScore,
+          tapTargetScore:   widget.tapTargetScore,
+          shapeStrikeScore: shapeStrikeScore,
+        ),
       ),
     );
-  }
-
-  void _restart() {
-    _spawnTimer?.cancel();
-    _moveTimer?.cancel();
-    setState(() {
-      _lives = 3;
-      _score = 0;
-      _correctInRow = 0;
-      _shapes.clear();
-      _gameEnded = false;
-      _nextId = 0;
-      _fallSpeed = 0.006;
-    });
-    _startGame();
   }
 
   Widget _buildShape(_ShapeType type, Color color) {
@@ -219,32 +263,67 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
   Widget build(BuildContext context) {
     final targetColor = _shapeColors[_targetShape]!;
     return Scaffold(
+      backgroundColor: const Color(0xFF050816),
       body: AnimatedBackground(
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(),
+              // Progress header
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: [
+                    Text('Test 19 / 29',
+                        style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.45),
+                            fontSize: 13)),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: _timeLeft / _duration,
+                          backgroundColor: Colors.white.withValues(alpha: 0.1),
+                          color: const Color(0xFFFDD835),
+                          minHeight: 4,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('$_timeLeft s',
+                        style: const TextStyle(
+                            color: Color(0xFFFDD835), fontSize: 13)),
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Text(
+                  'Shape Strike — Doğru şekle dokun!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                ),
+              ),
+              // Lives + score
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      children: List.generate(
-                        3,
-                        (i) => Text(i < _lives ? '❤️' : '🖤',
-                            style: const TextStyle(fontSize: 18)),
-                      ),
+                      children: List.generate(3,
+                          (i) => Text(i < _lives ? '❤️' : '🖤',
+                              style: const TextStyle(fontSize: 18))),
                     ),
                     Text('$_score',
                         style: const TextStyle(
                             color: Color(0xFF00B4FF),
-                            fontSize: 24,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
-              const SizedBox(height: 8),
+              // Target indicator
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -261,6 +340,7 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
                           fontWeight: FontWeight.bold)),
                 ],
               ),
+              // Game area
               Expanded(
                 child: LayoutBuilder(builder: (ctx, constraints) {
                   return Stack(
@@ -281,30 +361,6 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.white70, size: 20),
-            onPressed: () => Navigator.pop(context),
-          ),
-          const Expanded(
-            child: Text('Shape Strike',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(width: 48),
-        ],
       ),
     );
   }
@@ -341,13 +397,14 @@ class _StarPainter extends CustomPainter {
     final paint = Paint()
       ..color = color.withValues(alpha: 0.85)
       ..style = PaintingStyle.fill;
-    final path = _starPath(size.width / 2, size.height / 2, 5, size.width / 2,
-        size.width / 4);
+    final path = _starPath(
+        size.width / 2, size.height / 2, 5, size.width / 2, size.width / 4);
     canvas.drawPath(path, paint);
     canvas.drawShadow(path, color, 8, false);
   }
 
-  Path _starPath(double cx, double cy, int points, double outerR, double innerR) {
+  Path _starPath(
+      double cx, double cy, int points, double outerR, double innerR) {
     final path = Path();
     final step = pi / points;
     for (int i = 0; i < points * 2; i++) {

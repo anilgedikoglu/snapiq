@@ -42,7 +42,6 @@ class _TapRainScreenState extends State<TapRainScreen> {
   int _lives = 3;
   String _targetType = '🍎';
   final List<_RainItem> _items = [];
-  bool _started = false;
   bool _gameEnded = false;
   Timer? _countdownTimer;
   Timer? _spawnTimer;
@@ -53,6 +52,13 @@ class _TapRainScreenState extends State<TapRainScreen> {
   static const double _fallSpeed = 0.006;
 
   @override
+  void initState() {
+    super.initState();
+    _targetType = _types[_rand.nextInt(_types.length - 1)];
+    _startTimers();
+  }
+
+  @override
   void dispose() {
     _countdownTimer?.cancel();
     _spawnTimer?.cancel();
@@ -61,11 +67,7 @@ class _TapRainScreenState extends State<TapRainScreen> {
     super.dispose();
   }
 
-  void _start() {
-    setState(() {
-      _started = true;
-      _targetType = _types[_rand.nextInt(_types.length - 1)]; // exclude ❌
-    });
+  void _startTimers() {
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
       setState(() => _timeLeft--);
@@ -103,7 +105,7 @@ class _TapRainScreenState extends State<TapRainScreen> {
   }
 
   void _tap(_RainItem item) {
-    if (_gameEnded || !_started) return;
+    if (_gameEnded) return;
     setState(() => _items.removeWhere((i) => i.id == item.id));
     if (item.emoji == _targetType) {
       setState(() => _score++);
@@ -167,10 +169,11 @@ class _TapRainScreenState extends State<TapRainScreen> {
       _score = 0;
       _lives = 3;
       _items.clear();
-      _started = false;
       _gameEnded = false;
       _nextId = 0;
+      _targetType = _types[_rand.nextInt(_types.length - 1)];
     });
+    _startTimers();
   }
 
   @override
@@ -201,78 +204,53 @@ class _TapRainScreenState extends State<TapRainScreen> {
                   ],
                 ),
               ),
-              if (_started) ...[
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('TAP: ',
-                        style:
-                            TextStyle(color: Colors.white54, fontSize: 16)),
-                    Text(_targetType,
-                        style: const TextStyle(fontSize: 28)),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: _timeLeft / 30.0,
-                      backgroundColor: Colors.white12,
-                      valueColor: const AlwaysStoppedAnimation(
-                          Color(0xFF00B4FF)),
-                      minHeight: 6,
-                    ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('TAP: ',
+                      style:
+                          TextStyle(color: Colors.white54, fontSize: 16)),
+                  Text(_targetType,
+                      style: const TextStyle(fontSize: 28)),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: _timeLeft / 30.0,
+                    backgroundColor: Colors.white12,
+                    valueColor: const AlwaysStoppedAnimation(
+                        Color(0xFF00B4FF)),
+                    minHeight: 6,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text('$_timeLeft s',
-                    style: const TextStyle(
-                        color: Colors.white38, fontSize: 11)),
-              ],
+              ),
+              const SizedBox(height: 4),
+              Text('$_timeLeft s',
+                  style: const TextStyle(
+                      color: Colors.white38, fontSize: 11)),
               Expanded(
-                child: _started
-                    ? LayoutBuilder(builder: (ctx, constraints) {
-                        return Stack(
-                          children: [
-                            for (final item in List.from(_items))
-                              Positioned(
-                                left: item.x,
-                                top: item.topFraction *
-                                    constraints.maxHeight,
-                                child: GestureDetector(
-                                  onTap: () => _tap(item),
-                                  child: Text(item.emoji,
-                                      style: const TextStyle(fontSize: 30)),
-                                ),
-                              ),
-                          ],
-                        );
-                      })
-                    : Center(
-                        child: GestureDetector(
-                          onTap: _start,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF)
-                                  .withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
+                child: LayoutBuilder(builder: (ctx, constraints) {
+                  return Stack(
+                    children: [
+                      for (final item in List.from(_items))
+                        Positioned(
+                          left: item.x,
+                          top: item.topFraction *
+                              constraints.maxHeight,
+                          child: GestureDetector(
+                            onTap: () => _tap(item),
+                            child: Text(item.emoji,
+                                style: const TextStyle(fontSize: 30)),
                           ),
                         ),
-                      ),
+                    ],
+                  );
+                }),
               ),
             ],
           ),

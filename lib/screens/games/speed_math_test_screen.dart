@@ -1,24 +1,79 @@
+// Full-test version of Speed Math (Test 27/29).
+// 10 questions — same as arcade. Auto-starts.
+// Score = clamp(score / 10 * 100, 0, 100).
+// Mid-chain screen — navigates to NumberHunterTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../services/storage_service.dart';
-import '../../services/xp_service.dart';
-import '../../services/achievement_service.dart';
-import '../../services/ad_service.dart';
+import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
-import '../../widgets/arcade_result_overlay.dart';
+import 'number_hunter_test_screen.dart';
 
-class SpeedMathScreen extends StatefulWidget {
-  const SpeedMathScreen({super.key});
+class SpeedMathTestScreen extends StatefulWidget {
+  final GameSession session;
+  final int reactionScore;
+  final int stroopScore;
+  final int memoryScore;
+  final int sequenceScore;
+  final int impulseScore;
+  final int patternScore;
+  final int circleScore;
+  final int laserScore;
+  final int timingScore;
+  final int pulseScore;
+  final int balanceScore;
+  final int dartScore;
+  final int skyScore;
+  final int targetLockScore;
+  final int swipeDodgeScore;
+  final int colorPanicScore;
+  final int dontTapRedScore;
+  final int tapTargetScore;
+  final int shapeStrikeScore;
+  final int memoryFlashScore;
+  final int mirrorBrainScore;
+  final int sequenceRushScore;
+  final int reactionWallScore;
+  final int focusHunterScore;
+  final int impulseControlScore;
+  final int tapRainScore;
+
+  const SpeedMathTestScreen({
+    super.key,
+    required this.session,
+    required this.reactionScore,
+    required this.stroopScore,
+    required this.memoryScore,
+    required this.sequenceScore,
+    required this.impulseScore,
+    required this.patternScore,
+    required this.circleScore,
+    required this.laserScore,
+    required this.timingScore,
+    required this.pulseScore,
+    required this.balanceScore,
+    required this.dartScore,
+    required this.skyScore,
+    required this.targetLockScore,
+    required this.swipeDodgeScore,
+    required this.colorPanicScore,
+    required this.dontTapRedScore,
+    required this.tapTargetScore,
+    required this.shapeStrikeScore,
+    required this.memoryFlashScore,
+    required this.mirrorBrainScore,
+    required this.sequenceRushScore,
+    required this.reactionWallScore,
+    required this.focusHunterScore,
+    required this.impulseControlScore,
+    required this.tapRainScore,
+  });
 
   @override
-  State<SpeedMathScreen> createState() => _SpeedMathScreenState();
+  State<SpeedMathTestScreen> createState() => _SMTState();
 }
 
-class _SpeedMathScreenState extends State<SpeedMathScreen> {
-  static const _gameId = 'speed_math';
-  static const _xpReward = 30;
-  static const _gameName = 'Speed Math';
+class _SMTState extends State<SpeedMathTestScreen> {
   static const _totalQ = 10;
 
   int _qIndex = 0;
@@ -106,62 +161,95 @@ class _SpeedMathScreenState extends State<SpeedMathScreen> {
     if (_gameEnded) return;
     _timer?.cancel();
     setState(() => _gameEnded = true);
-    _gameOver(_score * 10);
+    _finish();
   }
 
-  Future<void> _gameOver(int score) async {
-    final s = await StorageService.getInstance();
-    final prevBest = s.arcadeBestScore(_gameId);
-    final isNewBest = score > prevBest;
-    await s.saveArcadeBestScore(_gameId, score);
-    await s.saveXP(_xpReward);
-    final newLevel = XpService.levelForXp(s.xp);
-    await s.saveLevel(newLevel);
-    await AchievementService.checkArcadeAchievements(_gameId, _score, s);
-    await AdService().incrementGameCountAndMaybeShow();
+  Future<void> _finish() async {
+    final speedMathScore = (_score / _totalQ * 100).round().clamp(0, 100);
     if (!mounted) return;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => ArcadeResultOverlay(
-        gameName: _gameName,
-        score: score,
-        bestScore: isNewBest ? score : prevBest,
-        xpGained: _xpReward,
-        isNewBest: isNewBest,
-        onReplay: () {
-          Navigator.pop(context);
-          _restart();
-        },
-        onBack: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => NumberHunterTestScreen(
+          session:             widget.session,
+          reactionScore:       widget.reactionScore,
+          stroopScore:         widget.stroopScore,
+          memoryScore:         widget.memoryScore,
+          sequenceScore:       widget.sequenceScore,
+          impulseScore:        widget.impulseScore,
+          patternScore:        widget.patternScore,
+          circleScore:         widget.circleScore,
+          laserScore:          widget.laserScore,
+          timingScore:         widget.timingScore,
+          pulseScore:          widget.pulseScore,
+          balanceScore:        widget.balanceScore,
+          dartScore:           widget.dartScore,
+          skyScore:            widget.skyScore,
+          targetLockScore:     widget.targetLockScore,
+          swipeDodgeScore:     widget.swipeDodgeScore,
+          colorPanicScore:     widget.colorPanicScore,
+          dontTapRedScore:     widget.dontTapRedScore,
+          tapTargetScore:      widget.tapTargetScore,
+          shapeStrikeScore:    widget.shapeStrikeScore,
+          memoryFlashScore:    widget.memoryFlashScore,
+          mirrorBrainScore:    widget.mirrorBrainScore,
+          sequenceRushScore:   widget.sequenceRushScore,
+          reactionWallScore:   widget.reactionWallScore,
+          focusHunterScore:    widget.focusHunterScore,
+          impulseControlScore: widget.impulseControlScore,
+          tapRainScore:        widget.tapRainScore,
+          speedMathScore:      speedMathScore,
+        ),
       ),
     );
-  }
-
-  void _restart() {
-    _timer?.cancel();
-    setState(() {
-      _qIndex = 0;
-      _score = 0;
-      _timeLeft = 4.0;
-      _gameEnded = false;
-    });
-    _nextQuestion();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF050816),
       body: AnimatedBackground(
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(),
+              // Progress header
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Row(
+                  children: [
+                    Text('Test 27 / 29',
+                        style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.45),
+                            fontSize: 13)),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: _qIndex / _totalQ,
+                          backgroundColor: Colors.white.withValues(alpha: 0.1),
+                          color: const Color(0xFF03DAC6),
+                          minHeight: 4,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('${_qIndex + 1}/$_totalQ',
+                        style: const TextStyle(
+                            color: Color(0xFF03DAC6), fontSize: 13)),
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 4),
+                child: Text(
+                  'Speed Math — Doğru mu yanlış mı?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -204,7 +292,8 @@ class _SpeedMathScreenState extends State<SpeedMathScreen> {
                           color: const Color(0xFF0D1B2A),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                              color: const Color(0xFF00B4FF).withValues(alpha: 0.3)),
+                              color: const Color(0xFF00B4FF)
+                                  .withValues(alpha: 0.3)),
                         ),
                         child: Text(_question,
                             textAlign: TextAlign.center,
@@ -227,7 +316,8 @@ class _SpeedMathScreenState extends State<SpeedMathScreen> {
                                     color: Colors.green.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
-                                        color: Colors.green.withValues(alpha: 0.6)),
+                                        color: Colors.green
+                                            .withValues(alpha: 0.6)),
                                   ),
                                   child: const Center(
                                     child: Text('✓ DOĞRU',
@@ -249,7 +339,8 @@ class _SpeedMathScreenState extends State<SpeedMathScreen> {
                                     color: Colors.red.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
-                                        color: Colors.red.withValues(alpha: 0.6)),
+                                        color: Colors.red
+                                            .withValues(alpha: 0.6)),
                                   ),
                                   child: const Center(
                                     child: Text('✗ YANLIŞ',
@@ -271,30 +362,6 @@ class _SpeedMathScreenState extends State<SpeedMathScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.white70, size: 20),
-            onPressed: () => Navigator.pop(context),
-          ),
-          const Expanded(
-            child: Text('Speed Math',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(width: 48),
-        ],
       ),
     );
   }

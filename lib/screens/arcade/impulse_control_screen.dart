@@ -28,22 +28,22 @@ class _ImpulseControlScreenState extends State<ImpulseControlScreen> {
   bool _showing = false;
   bool _tapped = false;
   String _message = '';
-  bool _started = false;
   bool _gameEnded = false;
   Timer? _showTimer;
   Timer? _waitTimer;
   final _rand = Random();
 
   @override
+  void initState() {
+    super.initState();
+    _nextRound();
+  }
+
+  @override
   void dispose() {
     _showTimer?.cancel();
     _waitTimer?.cancel();
     super.dispose();
-  }
-
-  void _start() {
-    setState(() => _started = true);
-    _nextRound();
   }
 
   void _nextRound() {
@@ -89,7 +89,7 @@ class _ImpulseControlScreenState extends State<ImpulseControlScreen> {
   }
 
   void _onTap() {
-    if (_gameEnded || !_started || !_showing || _tapped) return;
+    if (_gameEnded || !_showing || _tapped) return;
     _tapped = true;
     _showTimer?.cancel();
     if (_isGo) {
@@ -170,9 +170,9 @@ class _ImpulseControlScreenState extends State<ImpulseControlScreen> {
       _showing = false;
       _tapped = false;
       _message = '';
-      _started = false;
       _gameEnded = false;
     });
+    _nextRound();
   }
 
   @override
@@ -213,80 +213,57 @@ class _ImpulseControlScreenState extends State<ImpulseControlScreen> {
                   ),
                 ),
                 Expanded(
-                  child: _started
-                      ? GestureDetector(
-                          onTap: _onTap,
-                          behavior: HitTestBehavior.opaque,
-                          child: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (_showing)
-                                  Text(
-                                    _isGo ? 'GO' : 'BEKLE',
-                                    style: TextStyle(
-                                      color: _isGo
-                                          ? const Color(0xFF00C853)
-                                          : Colors.red,
-                                      fontSize: 80,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: [
-                                        Shadow(
-                                          color: _isGo
-                                              ? const Color(0xFF00C853)
-                                              : Colors.red,
-                                          blurRadius: 30,
-                                        )
-                                      ],
-                                    ),
+                  child: GestureDetector(
+                    onTap: _onTap,
+                    behavior: HitTestBehavior.opaque,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (_showing)
+                            Text(
+                              _isGo ? 'GO' : 'BEKLE',
+                              style: TextStyle(
+                                color: _isGo
+                                    ? const Color(0xFF00C853)
+                                    : Colors.red,
+                                fontSize: 80,
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  Shadow(
+                                    color: _isGo
+                                        ? const Color(0xFF00C853)
+                                        : Colors.red,
+                                    blurRadius: 30,
                                   )
-                                else if (_message.isNotEmpty)
-                                  Text(_message,
-                                      style: TextStyle(
-                                          color: _message == '✓'
-                                              ? const Color(0xFF00C853)
-                                              : _message == 'Kaçırdın!'
-                                                  ? const Color(0xFFFDD835)
-                                                  : Colors.red,
-                                          fontSize: 48,
-                                          fontWeight: FontWeight.bold))
-                                else
-                                  const Text('...',
-                                      style: TextStyle(
-                                          color: Colors.white24,
-                                          fontSize: 48)),
-                                const SizedBox(height: 20),
-                                if (!_showing)
-                                  const Text('Ekrana dokun',
-                                      style: TextStyle(
-                                          color: Colors.white24,
-                                          fontSize: 14)),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Center(
-                          child: GestureDetector(
-                            onTap: _start,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 32, vertical: 16),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF00B4FF)
-                                    .withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    color: const Color(0xFF00B4FF)
-                                        .withValues(alpha: 0.5)),
+                                ],
                               ),
-                              child: const Text('BAŞLA',
-                                  style: TextStyle(
-                                      color: Color(0xFF00B4FF),
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                        ),
+                            )
+                          else if (_message.isNotEmpty)
+                            Text(_message,
+                                style: TextStyle(
+                                    color: _message == '✓'
+                                        ? const Color(0xFF00C853)
+                                        : _message == 'Kaçırdın!'
+                                            ? const Color(0xFFFDD835)
+                                            : Colors.red,
+                                    fontSize: 48,
+                                    fontWeight: FontWeight.bold))
+                          else
+                            const Text('...',
+                                style: TextStyle(
+                                    color: Colors.white24,
+                                    fontSize: 48)),
+                          const SizedBox(height: 20),
+                          if (!_showing)
+                            const Text('Ekrana dokun',
+                                style: TextStyle(
+                                    color: Colors.white24,
+                                    fontSize: 14)),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

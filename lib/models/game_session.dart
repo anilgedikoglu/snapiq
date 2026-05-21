@@ -6,5 +6,5 @@ class GameSession {
 
   bool get isComplete => result != null;
 
-  static const int totalTests = 6;
+  static const int totalTests = 29;
 }

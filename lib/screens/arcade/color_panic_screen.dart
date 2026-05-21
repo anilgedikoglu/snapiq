@@ -36,7 +36,6 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
   String _word = 'KIRMIZI';
   Color _inkColor = Colors.red;
   bool _isMatch = false;
-  bool _started = false;
   bool _gameEnded = false;
   Timer? _timer;
   final _rand = Random();
@@ -45,6 +44,7 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
   void initState() {
     super.initState();
     _generateRound();
+    _startTimer();
   }
 
   @override
@@ -73,13 +73,8 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
     });
   }
 
-  void _start() {
-    setState(() => _started = true);
-    _startTimer();
-  }
-
   void _answer(bool userSaysMatch) {
-    if (_gameEnded || !_started) return;
+    if (_gameEnded) return;
     _timer?.cancel();
     if (userSaysMatch == _isMatch) {
       setState(() {
@@ -144,10 +139,10 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
       _lives = 3;
       _score = 0;
       _intervalMs = 1200;
-      _started = false;
       _gameEnded = false;
       _generateRound();
     });
+    _startTimer();
   }
 
   @override
@@ -162,91 +157,73 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
               const SizedBox(height: 24),
               Expanded(
                 child: Center(
-                  child: _started
-                      ? Text(
-                          _word,
-                          style: TextStyle(
-                            color: _inkColor,
-                            fontSize: 52,
-                            fontWeight: FontWeight.bold,
-                            shadows: [Shadow(color: _inkColor, blurRadius: 16)],
-                          ),
-                        )
-                      : GestureDetector(
-                          onTap: _start,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF00B4FF).withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: const Color(0xFF00B4FF)
-                                      .withValues(alpha: 0.5)),
-                            ),
-                            child: const Text('BAŞLA',
-                                style: TextStyle(
-                                    color: Color(0xFF00B4FF),
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ),
-                ),
-              ),
-              if (_started) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => _answer(true),
-                          child: Container(
-                            height: 72,
-                            decoration: BoxDecoration(
-                              color: Colors.green.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: Colors.green.withValues(alpha: 0.6)),
-                            ),
-                            child: const Center(
-                              child: Text('✓ EŞLEŞME',
-                                  style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ),
+                      Text(
+                        _word,
+                        style: TextStyle(
+                          color: _inkColor,
+                          fontSize: 52,
+                          fontWeight: FontWeight.bold,
+                          shadows: [Shadow(color: _inkColor, blurRadius: 16)],
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => _answer(false),
-                          child: Container(
-                            height: 72,
-                            decoration: BoxDecoration(
-                              color: Colors.red.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                  color: Colors.red.withValues(alpha: 0.6)),
+                      const SizedBox(height: 48),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => _answer(true),
+                                child: Container(
+                                  height: 72,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                        color: Colors.green.withValues(alpha: 0.6)),
+                                  ),
+                                  child: const Center(
+                                    child: Text('✓ EŞLEŞME',
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ),
+                              ),
                             ),
-                            child: const Center(
-                              child: Text('✗ FARKLI',
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => _answer(false),
+                                child: Container(
+                                  height: 72,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                        color: Colors.red.withValues(alpha: 0.6)),
+                                  ),
+                                  child: const Center(
+                                    child: Text('✗ FARKLI',
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
-              ] else
-                const SizedBox(height: 120),
+              ),
             ],
           ),
         ),
