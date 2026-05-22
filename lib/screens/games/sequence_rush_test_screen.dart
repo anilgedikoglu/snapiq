@@ -1,11 +1,10 @@
-// Full-test version of Sequence Rush (Test 22/29).
-// 8 sequences correct OR 3 lives — whichever first.
+﻿// Full-test version of Sequence Rush (Test 22/29).
+// 8 sequences correct OR 3 lives â€” whichever first.
 // Score = clamp(score / 8 * 100, 0, 100).
-// Mid-chain screen — navigates to ReactionWallTestScreen.
+// Mid-chain screen â€” navigates to ReactionWallTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'reaction_wall_test_screen.dart';
@@ -254,7 +253,7 @@ class _SRTState extends State<SequenceRushTestScreen> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Sequence Rush — Sırayı tekrarla!',
+                  'Sequence Rush â€” SÄ±rayÄ± tekrarla!',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
@@ -266,7 +265,7 @@ class _SRTState extends State<SequenceRushTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? '❤️' : '🖤',
+                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text('Seviye $_level',
@@ -278,7 +277,7 @@ class _SRTState extends State<SequenceRushTestScreen> {
               const SizedBox(height: 8),
               if (_started)
                 Text(
-                  _isWatching ? 'İZLE!' : (_inputEnabled ? 'TEKRARLA!' : ''),
+                  _isWatching ? 'Ä°ZLE!' : (_inputEnabled ? 'TEKRARLA!' : ''),
                   style: TextStyle(
                       color: _isWatching
                           ? const Color(0xFFFDD835)
@@ -337,7 +336,7 @@ class _SRTState extends State<SequenceRushTestScreen> {
                                   color: const Color(0xFF00B4FF)
                                       .withValues(alpha: 0.5)),
                             ),
-                            child: const Text('BAŞLA',
+                            child: const Text('BAÅLA',
                                 style: TextStyle(
                                     color: Color(0xFF00B4FF),
                                     fontSize: 24,

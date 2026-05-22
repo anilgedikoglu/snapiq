@@ -1,11 +1,10 @@
-// Full-test version of Tap Rain (Test 26/29).
+﻿// Full-test version of Tap Rain (Test 26/29).
 // 30 seconds, 3 lives. Auto-starts.
 // Score = clamp(score / 15 * 100, 0, 100).
-// Mid-chain screen — navigates to SpeedMathTestScreen.
+// Mid-chain screen â€” navigates to SpeedMathTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'speed_math_test_screen.dart';
@@ -88,13 +87,13 @@ class TapRainTestScreen extends StatefulWidget {
 
 class _TRTState extends State<TapRainTestScreen> {
   static const _maxScore = 15;
-  static const _types = ['🍎', '🍊', '⭐', '🔵', '❌'];
+  static const _types = ['ğŸ', 'ğŸŠ', 'â­', 'ğŸ”µ', 'âŒ'];
   static const _changeTargetEvery = 8;
 
   int _timeLeft = 30;
   int _score = 0;
   int _lives = 3;
-  String _targetType = '🍎';
+  String _targetType = 'ğŸ';
   final List<_RainItem> _items = [];
   bool _gameEnded = false;
   Timer? _countdownTimer;
@@ -259,7 +258,7 @@ class _TRTState extends State<TapRainTestScreen> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Tap Rain — Doğru emojiye dokun!',
+                  'Tap Rain â€” DoÄŸru emojiye dokun!',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
@@ -271,7 +270,7 @@ class _TRTState extends State<TapRainTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? '❤️' : '🖤',
+                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text('$_score',

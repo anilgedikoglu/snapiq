@@ -1,11 +1,10 @@
-// Full-test version of Impulse Control (Test 25/29).
+﻿// Full-test version of Impulse Control (Test 25/29).
 // 20 rounds, 3 lives.
 // Score = clamp(score / 20 * 100, 0, 100).
-// Mid-chain screen — navigates to TapRainTestScreen.
+// Mid-chain screen â€” navigates to TapRainTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'tap_rain_test_screen.dart';
@@ -126,7 +125,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
       _showTimer = Timer(Duration(milliseconds: displayMs), () {
         if (!mounted || _gameEnded) return;
         if (_isGo && !_tapped) {
-          setState(() => _message = 'Kaçırdın!');
+          setState(() => _message = 'KaÃ§Ä±rdÄ±n!');
         }
         setState(() {
           _showing = false;
@@ -146,7 +145,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
     if (_isGo) {
       setState(() {
         _score++;
-        _message = '✓';
+        _message = 'âœ“';
         _showing = false;
         _round++;
       });
@@ -156,7 +155,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
     } else {
       setState(() {
         _lives--;
-        _message = '✗';
+        _message = 'âœ—';
         _showing = false;
         _round++;
       });
@@ -264,7 +263,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 4),
                   child: Text(
-                    'Impulse Control — GO mu BEKLE mi?',
+                    'Impulse Control â€” GO mu BEKLE mi?',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white54, fontSize: 12),
                   ),
@@ -276,7 +275,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                     children: [
                       Row(
                         children: List.generate(3,
-                            (i) => Text(i < _lives ? '❤️' : '🖤',
+                            (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
                                 style: const TextStyle(fontSize: 18))),
                       ),
                       Text('$_score/$_totalRounds',
@@ -318,9 +317,9 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                                 else if (_message.isNotEmpty)
                                   Text(_message,
                                       style: TextStyle(
-                                          color: _message == '✓'
+                                          color: _message == 'âœ“'
                                               ? const Color(0xFF00C853)
-                                              : _message == 'Kaçırdın!'
+                                              : _message == 'KaÃ§Ä±rdÄ±n!'
                                                   ? const Color(0xFFFDD835)
                                                   : Colors.red,
                                           fontSize: 48,
@@ -354,7 +353,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                                     color: const Color(0xFF00B4FF)
                                         .withValues(alpha: 0.5)),
                               ),
-                              child: const Text('BAŞLA',
+                              child: const Text('BAÅLA',
                                   style: TextStyle(
                                       color: Color(0xFF00B4FF),
                                       fontSize: 24,

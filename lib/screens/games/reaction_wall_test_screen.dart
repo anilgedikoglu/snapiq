@@ -1,11 +1,10 @@
-// Full-test version of Reaction Wall (Test 23/29).
+﻿// Full-test version of Reaction Wall (Test 23/29).
 // 30 seconds OR 3 lives lost.
 // Score = clamp(score / 15 * 100, 0, 100).
-// Mid-chain screen — navigates to FocusHunterTestScreen.
+// Mid-chain screen â€” navigates to FocusHunterTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'focus_hunter_test_screen.dart';
@@ -254,7 +253,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Reaction Wall — Doğru şeritte dur!',
+                  'Reaction Wall â€” DoÄŸru ÅŸeritte dur!',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
@@ -266,7 +265,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? '❤️' : '🖤',
+                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text('$_score',
@@ -333,7 +332,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
                                   color: const Color(0xFF00B4FF)
                                       .withValues(alpha: 0.5)),
                             ),
-                            child: const Text('BAŞLA',
+                            child: const Text('BAÅLA',
                                 style: TextStyle(
                                     color: Color(0xFF00B4FF),
                                     fontSize: 24,
@@ -362,7 +361,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
                                       .withValues(alpha: 0.5)),
                             ),
                             child: const Center(
-                              child: Text('←',
+                              child: Text('â†',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 28)),
                             ),
@@ -384,7 +383,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
                                       .withValues(alpha: 0.5)),
                             ),
                             child: const Center(
-                              child: Text('→',
+                              child: Text('â†’',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 28)),
                             ),

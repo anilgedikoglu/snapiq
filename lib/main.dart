@@ -23,7 +23,12 @@ void main() async {
   await AdService().initialize();
 
   // Load saved language preference before anything renders
-  await LocaleService.instance.load();
+  try {
+    await LocaleService.instance.load().timeout(const Duration(seconds: 2));
+  } catch (e) {
+    // If load fails or times out, continue with default (Turkish)
+    debugPrint('LocaleService load timeout/error: $e');
+  }
 
   runApp(const ReflexIQApp());
 }

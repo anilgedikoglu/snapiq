@@ -336,10 +336,10 @@ class _CTTState extends State<CircleTapTestScreen>
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 6),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
                 child: Text(
-                  S.circleInstr,
+                  'Daire ust ortaya geldiginde tap et!',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),

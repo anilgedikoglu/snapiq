@@ -1,11 +1,10 @@
-// Full-test version of Focus Hunter (Test 24/29).
-// 10 rounds — same as arcade.
+﻿// Full-test version of Focus Hunter (Test 24/29).
+// 10 rounds â€” same as arcade.
 // Score = clamp(score / 10 * 100, 0, 100).
-// Mid-chain screen — navigates to ImpulseControlTestScreen.
+// Mid-chain screen â€” navigates to ImpulseControlTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'impulse_control_test_screen.dart';
@@ -72,14 +71,14 @@ class _FHTState extends State<FocusHunterTestScreen> {
   static const _totalRounds = 10;
 
   static const _pairs = [
-    ['😊', '😄'],
-    ['🐱', '🐶'],
-    ['🍎', '🍊'],
-    ['⭐', '🌟'],
-    ['🎯', '🎪'],
-    ['❤️', '💛'],
-    ['🚗', '🚕'],
-    ['🌸', '🌺'],
+    ['ğŸ˜Š', 'ğŸ˜„'],
+    ['ğŸ±', 'ğŸ¶'],
+    ['ğŸ', 'ğŸŠ'],
+    ['â­', 'ğŸŒŸ'],
+    ['ğŸ¯', 'ğŸª'],
+    ['â¤ï¸', 'ğŸ’›'],
+    ['ğŸš—', 'ğŸš•'],
+    ['ğŸŒ¸', 'ğŸŒº'],
   ];
 
   int _score = 0;
@@ -234,7 +233,7 @@ class _FHTState extends State<FocusHunterTestScreen> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Focus Hunter — Farklı olanı bul!',
+                  'Focus Hunter â€” FarklÄ± olanÄ± bul!',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
@@ -312,7 +311,7 @@ class _FHTState extends State<FocusHunterTestScreen> {
                                   color: const Color(0xFF00B4FF)
                                       .withValues(alpha: 0.5)),
                             ),
-                            child: const Text('BAŞLA',
+                            child: const Text('BAÅLA',
                                 style: TextStyle(
                                     color: Color(0xFF00B4FF),
                                     fontSize: 24,

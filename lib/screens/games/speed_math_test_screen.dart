@@ -1,11 +1,10 @@
-// Full-test version of Speed Math (Test 27/29).
-// 10 questions — same as arcade. Auto-starts.
+﻿// Full-test version of Speed Math (Test 27/29).
+// 10 questions â€” same as arcade. Auto-starts.
 // Score = clamp(score / 10 * 100, 0, 100).
-// Mid-chain screen — navigates to NumberHunterTestScreen.
+// Mid-chain screen â€” navigates to NumberHunterTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'number_hunter_test_screen.dart';
@@ -106,7 +105,7 @@ class _SMTState extends State<SpeedMathTestScreen> {
     final a = 2 + _rand.nextInt(14);
     final b = 2 + _rand.nextInt(8);
     final opIdx = _rand.nextInt(3);
-    final ops = ['+', '-', '×'];
+    final ops = ['+', '-', 'Ã—'];
     final op = ops[opIdx];
     int correct;
     if (op == '+') {
@@ -244,7 +243,7 @@ class _SMTState extends State<SpeedMathTestScreen> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Speed Math — Doğru mu yanlış mı?',
+                  'Speed Math â€” DoÄŸru mu yanlÄ±ÅŸ mÄ±?',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
@@ -321,7 +320,7 @@ class _SMTState extends State<SpeedMathTestScreen> {
                                             .withValues(alpha: 0.6)),
                                   ),
                                   child: const Center(
-                                    child: Text('✓ DOĞRU',
+                                    child: Text('âœ“ DOÄRU',
                                         style: TextStyle(
                                             color: Colors.green,
                                             fontSize: 18,
@@ -344,7 +343,7 @@ class _SMTState extends State<SpeedMathTestScreen> {
                                             .withValues(alpha: 0.6)),
                                   ),
                                   child: const Center(
-                                    child: Text('✗ YANLIŞ',
+                                    child: Text('âœ— YANLIÅ',
                                         style: TextStyle(
                                             color: Colors.red,
                                             fontSize: 18,

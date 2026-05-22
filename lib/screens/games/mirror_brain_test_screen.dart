@@ -1,11 +1,10 @@
-// Full-test version of Mirror Brain (Test 21/29).
-// 15 rounds, 3 lives — same mechanics as arcade.
+﻿// Full-test version of Mirror Brain (Test 21/29).
+// 15 rounds, 3 lives â€” same mechanics as arcade.
 // Score = clamp(score / 15 * 100, 0, 100).
-// Mid-chain screen — navigates to SequenceRushTestScreen.
+// Mid-chain screen â€” navigates to SequenceRushTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'sequence_rush_test_screen.dart';
@@ -64,14 +63,14 @@ class MirrorBrainTestScreen extends StatefulWidget {
 
 class _MBTState extends State<MirrorBrainTestScreen> {
   static const _totalRounds = 15;
-  static const _arrows = ['←', '→', '↑', '↓'];
-  static const _opposites = {'←': '→', '→': '←', '↑': '↓', '↓': '↑'};
+  static const _arrows = ['â†', 'â†’', 'â†‘', 'â†“'];
+  static const _opposites = {'â†': 'â†’', 'â†’': 'â†', 'â†‘': 'â†“', 'â†“': 'â†‘'};
 
   int _score = 0;
   int _lives = 3;
   int _round = 0;
   double _timeLeft = 3.0;
-  String _arrow = '←';
+  String _arrow = 'â†';
   bool _started = false;
   bool _gameEnded = false;
   Timer? _timer;
@@ -242,7 +241,7 @@ class _MBTState extends State<MirrorBrainTestScreen> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Mirror Brain — Tersine dokun!',
+                  'Mirror Brain â€” Tersine dokun!',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
@@ -254,7 +253,7 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? '❤️' : '🖤',
+                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text('$_score/$_totalRounds',
@@ -284,7 +283,7 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          const Text('TERSİNE DOKUN!',
+                          const Text('TERSÄ°NE DOKUN!',
                               style: TextStyle(
                                   color: Colors.white54,
                                   fontSize: 14,
@@ -299,10 +298,10 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                           Wrap(
                             alignment: WrapAlignment.center,
                             children: [
-                              _dirButton('↑'),
-                              _dirButton('↓'),
-                              _dirButton('←'),
-                              _dirButton('→'),
+                              _dirButton('â†‘'),
+                              _dirButton('â†“'),
+                              _dirButton('â†'),
+                              _dirButton('â†’'),
                             ],
                           ),
                         ],
@@ -321,7 +320,7 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                                   color: const Color(0xFF00B4FF)
                                       .withValues(alpha: 0.5)),
                             ),
-                            child: const Text('BAŞLA',
+                            child: const Text('BAÅLA',
                                 style: TextStyle(
                                     color: Color(0xFF00B4FF),
                                     fontSize: 24,

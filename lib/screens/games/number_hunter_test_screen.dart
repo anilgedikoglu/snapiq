@@ -1,11 +1,10 @@
-// Full-test version of Number Hunter (Test 28/29).
-// 30 seconds — same as arcade. Auto-starts.
+﻿// Full-test version of Number Hunter (Test 28/29).
+// 30 seconds â€” same as arcade. Auto-starts.
 // Score = clamp(score / 15 * 100, 0, 100).
-// Mid-chain screen — navigates to PatternMasterTestScreen.
+// Mid-chain screen â€” navigates to PatternMasterTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'pattern_master_test_screen.dart';
@@ -225,7 +224,7 @@ class _NHTState extends State<NumberHunterTestScreen> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Number Hunter — Sayıyı bul!',
+                  'Number Hunter â€” SayÄ±yÄ± bul!',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),

@@ -1,10 +1,9 @@
-// Full-test version of Memory Flash (Test 20/29).
-// 5 rounds OR 3 lives — whichever first.
+﻿// Full-test version of Memory Flash (Test 20/29).
+// 5 rounds OR 3 lives â€” whichever first.
 // Score = clamp(correct / 5 * 100, 0, 100).
-// Mid-chain screen — navigates to MirrorBrainTestScreen.
+// Mid-chain screen â€” navigates to MirrorBrainTestScreen.
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'mirror_brain_test_screen.dart';
@@ -225,7 +224,7 @@ class _MFTState extends State<MemoryFlashTestScreen> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Memory Flash — Hangi kareler?',
+                  'Memory Flash â€” Hangi kareler?',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
@@ -237,10 +236,10 @@ class _MFTState extends State<MemoryFlashTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? '❤️' : '🖤',
+                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
                               style: const TextStyle(fontSize: 18))),
                     ),
-                    Text('$_score doğru',
+                    Text('$_score doÄŸru',
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 13)),
                   ],
