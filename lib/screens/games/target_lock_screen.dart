@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -16,39 +17,52 @@ class TargetLockScreen extends StatefulWidget {
 }
 
 class _TargetLockScreenState extends State<TargetLockScreen>
-    with SingleTickerProviderStateMixin {
-  static const _gameId = 'target_lock';
-  static const _xpReward = 35;
-  static const _gameName = 'Target Lock';
+    with TickerProviderStateMixin {
+  static const _gameId    = 'target_lock';
+  static const _xpReward  = 35;
+  static const _gameName  = 'Target Lock';
   static const _totalToLock = 10;
-  static const _tolerance = 15 * pi / 180; // 15 degrees
+  static const _tolerance = 40 * pi / 180; // 40° — matches visual bright zone
 
-  late AnimationController _sweepCtrl;
   final _rand = Random();
 
+  // ── Sweep via Ticker — guarantees render & detection use same value ─────────
+  Ticker? _sweepTicker;
+  double _sweepAngle  = 0.0;
+  double _sweepSpeed  = 0.4; // rotations per second
+  int    _prevMs      = 0;
+
+  // ── Game state ───────────────────────────────────────────────────────────────
   List<double> _targetAngles = [];
-  List<bool> _targetLocked = [];
-  int _totalLocked = 0;
-  int _totalScore = 0;
-  String _feedback = '';
-  Color _feedbackColor = Colors.white;
-  bool _showFeedback = false;
-  bool _gameEnded = false;
-  double _sweepSpeed = 1.0; // rotations/sec
+  List<bool>   _targetLocked = [];
+  int    _totalLocked  = 0;
+  int    _totalScore   = 0;
+  String _feedback     = '';
+  Color  _feedbackColor = Colors.white;
+  bool   _showFeedback = false;
+  bool   _gameEnded    = false;
 
   @override
   void initState() {
     super.initState();
-    _sweepCtrl = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: (1000 / _sweepSpeed).round()),
-    )..repeat();
     _spawnTargets();
+    _sweepTicker = createTicker(_onSweepTick)..start();
+  }
+
+  void _onSweepTick(Duration elapsed) {
+    if (!mounted) return;
+    final ms = elapsed.inMilliseconds;
+    final dt = ms - _prevMs;
+    _prevMs = ms;
+    if (dt <= 0) return;
+    setState(() {
+      _sweepAngle = (_sweepAngle + dt / 1000.0 * _sweepSpeed * 2 * pi) % (2 * pi);
+    });
   }
 
   @override
   void dispose() {
-    _sweepCtrl.dispose();
+    _sweepTicker?.dispose();
     super.dispose();
   }
 
@@ -57,59 +71,48 @@ class _TargetLockScreenState extends State<TargetLockScreen>
     _targetLocked = List.filled(3, false);
   }
 
-  double get _currentSweepAngle => _sweepCtrl.value * 2 * pi;
-
   void _onTap() {
     if (_gameEnded) return;
 
     bool lockedAny = false;
     for (int i = 0; i < _targetAngles.length; i++) {
       if (_targetLocked[i]) continue;
-      final diff = (_currentSweepAngle - _targetAngles[i]).abs();
+      final diff    = (_sweepAngle - _targetAngles[i]).abs();
       final minDiff = min(diff, (2 * pi - diff).abs());
       if (minDiff <= _tolerance) {
+        final accuracyScore = (100 * (1 - minDiff / _tolerance)).round().clamp(0, 100);
         setState(() {
           _targetLocked[i] = true;
           _totalLocked++;
+          _totalScore += accuracyScore;
+          _feedback     = '+$accuracyScore';
+          _feedbackColor = const Color(0xFF00C853);
+          _showFeedback  = true;
           lockedAny = true;
         });
-
-        final accuracyScore = (100 * (1 - minDiff / _tolerance)).round().clamp(0, 100);
-        setState(() {
-          _totalScore += accuracyScore;
-          _feedback = '+$accuracyScore';
-          _feedbackColor = const Color(0xFF00C853);
-          _showFeedback = true;
-        });
-        Future.delayed(const Duration(milliseconds: 600), () {
-          if (mounted) setState(() => _showFeedback = false);
-        });
+        Future.delayed(const Duration(milliseconds: 600),
+            () { if (mounted) setState(() => _showFeedback = false); });
         break;
       }
     }
 
     if (!lockedAny) {
       setState(() {
-        _feedback = 'Kaçırdın';
+        _feedback     = 'Kaçırdın!';
         _feedbackColor = const Color(0xFFFF7043);
-        _showFeedback = true;
+        _showFeedback  = true;
       });
-      Future.delayed(const Duration(milliseconds: 600), () {
-        if (mounted) setState(() => _showFeedback = false);
-      });
+      Future.delayed(const Duration(milliseconds: 600),
+          () { if (mounted) setState(() => _showFeedback = false); });
     }
 
-    // Check if all locked
+    // All locked → next round or game over
     if (_targetLocked.every((l) => l)) {
       if (_totalLocked >= _totalToLock) {
         setState(() => _gameEnded = true);
         _gameOver(_totalScore);
       } else {
-        // New round, speed up
-        _sweepSpeed += 0.3;
-        _sweepCtrl.duration = Duration(milliseconds: (1000 / _sweepSpeed).round());
-        _sweepCtrl.reset();
-        _sweepCtrl.repeat();
+        _sweepSpeed += 0.15;
         _spawnTargets();
         setState(() {});
       }
@@ -118,7 +121,7 @@ class _TargetLockScreenState extends State<TargetLockScreen>
 
   Future<void> _gameOver(int score) async {
     final s = await StorageService.getInstance();
-    final prevBest = s.arcadeBestScore(_gameId);
+    final prevBest  = s.arcadeBestScore(_gameId);
     final isNewBest = score > prevBest;
     await s.saveArcadeBestScore(_gameId, score);
     await s.saveXP(_xpReward);
@@ -136,30 +139,23 @@ class _TargetLockScreenState extends State<TargetLockScreen>
         bestScore: isNewBest ? score : prevBest,
         xpGained: _xpReward,
         isNewBest: isNewBest,
-        onReplay: () {
-          Navigator.pop(context);
-          _restart();
-        },
-        onBack: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
+        onReplay: () { Navigator.pop(context); _restart(); },
+        onBack:   () { Navigator.pop(context); Navigator.pop(context); },
       ),
     );
   }
 
   void _restart() {
-    _sweepSpeed = 1.0;
-    _sweepCtrl.duration = const Duration(milliseconds: 1000);
-    _sweepCtrl.reset();
-    _sweepCtrl.repeat();
+    _sweepSpeed  = 0.4;
+    _sweepAngle  = 0.0;
+    _prevMs      = 0;
     _spawnTargets();
     setState(() {
-      _totalLocked = 0;
-      _totalScore = 0;
-      _feedback = '';
+      _totalLocked  = 0;
+      _totalScore   = 0;
+      _feedback     = '';
       _showFeedback = false;
-      _gameEnded = false;
+      _gameEnded    = false;
     });
   }
 
@@ -169,7 +165,7 @@ class _TargetLockScreenState extends State<TargetLockScreen>
       body: AnimatedBackground(
         child: SafeArea(
           child: GestureDetector(
-            onTap: _onTap,
+            onTapDown: (_) => _onTap(),
             behavior: HitTestBehavior.opaque,
             child: Column(
               children: [
@@ -178,18 +174,14 @@ class _TargetLockScreenState extends State<TargetLockScreen>
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      AnimatedBuilder(
-                        animation: _sweepCtrl,
-                        builder: (ctx, _) {
-                          return CustomPaint(
-                            painter: RadarPainter(
-                              sweepAngle: _currentSweepAngle,
-                              targetAngles: _targetAngles,
-                              targetLocked: _targetLocked,
-                            ),
-                            size: const Size(300, 300),
-                          );
-                        },
+                      CustomPaint(
+                        painter: RadarPainter(
+                          sweepAngle:   _sweepAngle,
+                          targetAngles: _targetAngles,
+                          targetLocked: _targetLocked,
+                          tolerance:    _tolerance,
+                        ),
+                        size: const Size(300, 300),
                       ),
                       if (_showFeedback)
                         Positioned(
@@ -214,18 +206,14 @@ class _TargetLockScreenState extends State<TargetLockScreen>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Kilitli: $_totalLocked/$_totalToLock',
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 16),
-                      ),
-                      Text(
-                        'Puan: $_totalScore',
-                        style: const TextStyle(
-                            color: Color(0xFFBB86FC),
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      Text('Kilitli: $_totalLocked/$_totalToLock',
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 16)),
+                      Text('Puan: $_totalScore',
+                          style: const TextStyle(
+                              color: Color(0xFFBB86FC),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),

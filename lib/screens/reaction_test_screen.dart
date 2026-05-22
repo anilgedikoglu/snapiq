@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
 import '../widgets/animated_background.dart';
 import 'stroop_test_screen.dart';
@@ -143,8 +144,8 @@ class _ReactionTestScreenState extends State<ReactionTestScreen> {
           const Text('Test 1/6',
               style: TextStyle(color: Colors.white70, fontSize: 13)),
           const Spacer(),
-          const Text('Reaksiyon Hızı',
-              style: TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(S.reactionTestLabel,
+              style: const TextStyle(color: Colors.white54, fontSize: 12)),
         ],
       ),
     );
@@ -153,8 +154,8 @@ class _ReactionTestScreenState extends State<ReactionTestScreen> {
   Widget _buildContent() {
     switch (_phase) {
       case _Phase.waiting:
-        return const Text('Hazırlan...',
-            style: TextStyle(color: Colors.white54, fontSize: 22));
+        return Text(S.reactionGetReady,
+            style: const TextStyle(color: Colors.white54, fontSize: 22));
       case _Phase.ready:
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -169,16 +170,16 @@ class _ReactionTestScreenState extends State<ReactionTestScreen> {
               ),
             ),
             const SizedBox(height: 28),
-            const Text(
-              'Yeşil olunca dokun!',
-              style: TextStyle(
+            Text(
+              S.reactionWhenGreen,
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text('(Erken dokunma!)',
-                style: TextStyle(color: Colors.white38, fontSize: 13)),
+            Text(S.reactionEarlyNote,
+                style: const TextStyle(color: Colors.white38, fontSize: 13)),
           ],
         );
       case _Phase.green:
@@ -201,8 +202,8 @@ class _ReactionTestScreenState extends State<ReactionTestScreen> {
               ),
             ),
             const SizedBox(height: 28),
-            const Text('DOKUN!',
-                style: TextStyle(
+            Text(S.reactionTap,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 32,
                     fontWeight: FontWeight.bold)),
@@ -221,26 +222,26 @@ class _ReactionTestScreenState extends State<ReactionTestScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Skor: $_score / 100',
+              S.reactionScore(_score),
               style: const TextStyle(color: Colors.white70, fontSize: 18),
             ),
           ],
         );
       case _Phase.falseStart:
-        return const Column(
+        return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.warning_amber_rounded,
+            const Icon(Icons.warning_amber_rounded,
                 color: Colors.redAccent, size: 64),
-            SizedBox(height: 16),
-            Text('Erken Dokundun!',
-                style: TextStyle(
+            const SizedBox(height: 16),
+            Text(S.reactionTooEarly,
+                style: const TextStyle(
                     color: Colors.redAccent,
                     fontSize: 26,
                     fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            Text('Bu test 0 puan.',
-                style: TextStyle(color: Colors.white54, fontSize: 14)),
+            const SizedBox(height: 8),
+            Text(S.reactionZero,
+                style: const TextStyle(color: Colors.white54, fontSize: 14)),
           ],
         );
     }

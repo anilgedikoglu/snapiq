@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
 import '../widgets/animated_background.dart';
 import 'sequence_test_screen.dart';
@@ -114,17 +115,17 @@ class _MemoryTestScreenState extends State<MemoryTestScreen> {
               const SizedBox(height: 12),
               Text(
                 'Round ${_round + 1} / ${_rounds.length}  •  '
-                '${_rounds[_round]} kutu',
+                '${S.memBoxCount(_rounds[_round])}',
                 style:
                     const TextStyle(color: Colors.white54, fontSize: 13),
               ),
               const SizedBox(height: 8),
               Text(
                 _phase == _MemPhase.showing
-                    ? 'Hangi kutular yandı?'
+                    ? S.memWhichBoxes
                     : _phase == _MemPhase.selecting
-                        ? 'Yanan kutuları seç'
-                        : 'Kontrol ediliyor...',
+                        ? S.memSelectBoxes
+                        : S.memChecking,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -210,8 +211,8 @@ class _MemoryTestScreenState extends State<MemoryTestScreen> {
           const Text('Test 3/6',
               style: TextStyle(color: Colors.white70, fontSize: 13)),
           const Spacer(),
-          const Text('Hafıza Kutuları',
-              style: TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(S.memTestLabel,
+              style: const TextStyle(color: Colors.white54, fontSize: 12)),
         ],
       ),
     );

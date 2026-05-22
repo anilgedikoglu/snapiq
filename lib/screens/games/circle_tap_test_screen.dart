@@ -9,6 +9,7 @@ import '../../models/game_session.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
 import '../../painters/circle_tap_reflex_painter.dart';
+import '../../l10n/app_strings.dart';
 import 'laser_gate_test_screen.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -232,29 +233,29 @@ class _CTTState extends State<CircleTapTestScreen>
 
   _R _score(double tapMs) {
     if (tapMs == double.infinity) {
-      return const _R(score: 0, errorMs: 9999, isEarly: false,
-          label: 'Kaçtı!', isMiss: true);
+      return _R(score: 0, errorMs: 9999, isEarly: false,
+          label: S.missed, isMiss: true);
     }
     final double err = tapMs - _targetHitMs;
     final int abs = err.abs().round();
     final bool early = err < 0;
     if (abs > 220) {
       return _R(score: 0, errorMs: abs, isEarly: early,
-          label: 'Kaçtı!', isMiss: true);
+          label: S.missed, isMiss: true);
     }
     final String label;
     final int base;
     if (abs <= _perfectMs) {
-      label = 'Mükemmel!'; base = 100;
+      label = S.excellent; base = 100;
     } else if (abs <= 50) {
-      label = 'Harika!';
+      label = S.great;
       base = 85 + ((50 - abs) * 14 ~/ (50 - _perfectMs).clamp(1, 30));
     } else if (abs <= 90) {
-      label = 'İyi!'; base = 65 + ((90 - abs) * 19 ~/ 40);
+      label = S.good; base = 65 + ((90 - abs) * 19 ~/ 40);
     } else if (abs <= 140) {
-      label = 'Az farkla!'; base = 40 + ((140 - abs) * 24 ~/ 50);
+      label = S.slightlyOff; base = 40 + ((140 - abs) * 24 ~/ 50);
     } else {
-      label = 'Zayıf!'; base = 10 + ((220 - abs) * 29 ~/ 79);
+      label = S.weak; base = 10 + ((220 - abs) * 29 ~/ 79);
     }
     final double mult = _combo >= 9 ? 1.35 : _combo >= 6 ? 1.2 : _combo >= 3 ? 1.1 : 1.0;
     final int final_ = (base * mult).round().clamp(0, 135);
@@ -263,13 +264,11 @@ class _CTTState extends State<CircleTapTestScreen>
   }
 
   Color _colorFor(String label) {
-    switch (label) {
-      case 'Mükemmel!': return _yellow;
-      case 'Harika!': return _cyan;
-      case 'İyi!': return _green;
-      case 'Az farkla!': return _magenta;
-      default: return _red;
-    }
+    if (label == S.excellent) return _yellow;
+    if (label == S.great) return _cyan;
+    if (label == S.good) return _green;
+    if (label == S.slightlyOff) return _magenta;
+    return _red;
   }
 
   double _angDist(double a, double b) {
@@ -340,9 +339,9 @@ class _CTTState extends State<CircleTapTestScreen>
               const Padding(
                 padding: EdgeInsets.only(bottom: 6),
                 child: Text(
-                  'Çember Refleks — Top hedef alana gelince dokun',
+                  S.circleInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Expanded(
@@ -384,7 +383,7 @@ class _CTTState extends State<CircleTapTestScreen>
                           if (_phase == 'warming' || _phase == 'done')
                             Center(
                               child: Text(
-                                _phase == 'done' ? 'Tamamlandı!' : 'Hazır ol...',
+                                _phase == 'done' ? S.done : S.ready,
                                 style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.5),
                                     fontSize: 16),

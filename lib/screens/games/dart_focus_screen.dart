@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -16,72 +17,83 @@ class DartFocusScreen extends StatefulWidget {
 }
 
 class _DartFocusScreenState extends State<DartFocusScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   static const _gameId = 'dart_focus';
   static const _xpReward = 35;
   static const _gameName = 'Dart Focus';
 
-  late AnimationController _ctrl;
-  final _rand = Random();
+  static const List<Color> _hitColors = [
+    Color(0xFF00C853),
+    Color(0xFF00B4FF),
+    Color(0xFFBB86FC),
+    Color(0xFFFDD835),
+    Color(0xFFFF7043),
+  ];
 
-  List<Offset> _dartHits = []; // normalized -1..1
-  List<int> _dartScores = [];
-  int _shotsLeft = 5;
+  // ── Crosshair movement via Ticker + continuous time ─────────────────────────
+  Ticker? _crossTicker;
+  double _elapsedSec = 0;
+  double _realSec    = 0; // wall-clock time for speed modulation
+  int    _prevTickMs = 0;
   double _crossX = 0;
   double _crossY = 0;
-  double _noiseX = 0;
-  double _noiseY = 0;
-  int _lastScore = 0;
+
+  // ── Game state ───────────────────────────────────────────────────────────────
+  final List<Offset> _dartHits   = [];
+  final List<int>    _dartScores = [];
+  int  _shotsLeft     = 5;
+  int  _lastScore     = 0;
   bool _showLastScore = false;
-  bool _gameEnded = false;
+  bool _gameEnded     = false;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
-    )..repeat();
-    _ctrl.addListener(_updateCross);
-
-    // Periodic noise
-    Future.doWhile(() async {
-      await Future.delayed(const Duration(milliseconds: 800));
-      if (!mounted || _gameEnded) return false;
-      setState(() {
-        _noiseX = (_rand.nextDouble() - 0.5) * 0.2;
-        _noiseY = (_rand.nextDouble() - 0.5) * 0.2;
-      });
-      return true;
-    });
+    _crossTicker = createTicker(_onTick)..start();
   }
 
-  void _updateCross() {
+  // Continuously-accumulating time → three irrational frequency components.
+  // Frequencies chosen so no pair has a rational ratio → path never repeats
+  // in any reasonable session.
+  void _onTick(Duration elapsed) {
     if (!mounted) return;
-    final t = _ctrl.value * 2 * pi;
+    final ms = elapsed.inMilliseconds;
+    final dt = ms - _prevTickMs;
+    _prevTickMs = ms;
+    if (dt <= 0) return;
+    final dtSec = dt / 1000.0;
+    _realSec    += dtSec;
+    // Speed oscillates 0.3x … 1.8x, period ≈ 6 s
+    final speedMul = 1.05 + 0.75 * sin(_realSec * 1.05);
+    _elapsedSec += dtSec * speedMul;
+
+    final t = _elapsedSec;
+    // Spirograph: outer arm R=0.45, inner arm r=0.38 (ratio ≈ 4.3:1)
+    // → big sweeping arcs (max radius 0.88) intersecting near center (min 0.02)
+    // + tiny 3rd harmonic for texture.  All continuous — no loop jump.
     setState(() {
-      _crossX = sin(t * 2.3 + 0.5) * 0.4 + _noiseX;
-      _crossY = sin(t * 1.7) * 0.4 + _noiseY;
+      _crossX =  0.45 * cos(2.5 * t) + 0.38 * cos(10.75 * t) + 0.05 * cos(17.3 * t);
+      _crossY =  0.45 * sin(2.5 * t) - 0.38 * sin(10.75 * t) - 0.05 * sin(17.3 * t);
     });
   }
 
   @override
   void dispose() {
-    _ctrl.dispose();
+    _crossTicker?.dispose();
     super.dispose();
   }
 
   void _shoot(double boardRadius) {
     if (_shotsLeft <= 0 || _gameEnded) return;
 
-    final dist = sqrt(_crossX * _crossX + _crossY * _crossY);
+    final dist  = sqrt(_crossX * _crossX + _crossY * _crossY);
     final score = (100 - dist * 200).round().clamp(0, 100);
 
     setState(() {
       _dartHits.add(Offset(_crossX, _crossY));
       _dartScores.add(score);
       _shotsLeft--;
-      _lastScore = score;
+      _lastScore     = score;
       _showLastScore = true;
     });
 
@@ -116,29 +128,22 @@ class _DartFocusScreenState extends State<DartFocusScreen>
         bestScore: isNewBest ? score : prevBest,
         xpGained: _xpReward,
         isNewBest: isNewBest,
-        onReplay: () {
-          Navigator.pop(context);
-          _restart();
-        },
-        onBack: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
+        onReplay: () { Navigator.pop(context); _restart(); },
+        onBack:   () { Navigator.pop(context); Navigator.pop(context); },
       ),
     );
   }
 
   void _restart() {
+    _dartHits.clear();
+    _dartScores.clear();
     setState(() {
-      _dartHits = [];
-      _dartScores = [];
-      _shotsLeft = 5;
-      _lastScore = 0;
+      _shotsLeft     = 5;
+      _lastScore     = 0;
       _showLastScore = false;
-      _gameEnded = false;
-      _noiseX = 0;
-      _noiseY = 0;
+      _gameEnded     = false;
     });
+    // Continue from current phase — no reset, no jump.
   }
 
   @override
@@ -152,86 +157,38 @@ class _DartFocusScreenState extends State<DartFocusScreen>
               Expanded(
                 child: LayoutBuilder(
                   builder: (ctx, constraints) {
-                    final boardSize = min(constraints.maxWidth, constraints.maxHeight) * 0.85;
+                    final boardSize =
+                        min(constraints.maxWidth, constraints.maxHeight) * 0.85;
                     final boardRadius = boardSize / 2;
                     return GestureDetector(
                       onTap: () => _shoot(boardRadius),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          // Board
                           CustomPaint(
                             painter: DartBoardPainter(),
                             size: Size(boardSize, boardSize),
                           ),
                           // Hit marks
                           ...List.generate(_dartHits.length, (i) {
-                            final hit = _dartHits[i];
+                            final hit   = _dartHits[i];
+                            final color = _hitColors[i % _hitColors.length];
                             return Positioned(
                               left: constraints.maxWidth / 2 +
-                                  hit.dx * boardRadius -
-                                  5,
-                              top: constraints.maxHeight / 2 +
-                                  hit.dy * boardRadius -
-                                  5,
-                              child: Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFFF7043),
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(0xFFFF7043)
-                                          .withValues(alpha: 0.7),
-                                      blurRadius: 8,
-                                    )
-                                  ],
-                                ),
-                              ),
+                                  hit.dx * boardRadius - 10,
+                              top:  constraints.maxHeight / 2 +
+                                  hit.dy * boardRadius - 10,
+                              child: _PlusMark(color: color),
                             );
                           }),
                           // Crosshair
                           Positioned(
                             left: constraints.maxWidth / 2 +
-                                _crossX * boardRadius -
-                                20,
-                            top: constraints.maxHeight / 2 +
-                                _crossY * boardRadius -
-                                20,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.9),
-                                  width: 1.5,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.white.withValues(alpha: 0.3),
-                                      blurRadius: 10)
-                                ],
-                              ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 1.5,
-                                    height: 40,
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                  ),
-                                  Container(
-                                    width: 40,
-                                    height: 1.5,
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                _crossX * boardRadius - 20,
+                            top:  constraints.maxHeight / 2 +
+                                _crossY * boardRadius - 20,
+                            child: _Crosshair(),
                           ),
-                          // Score popup
                           if (_showLastScore)
                             Text(
                               '+$_lastScore',
@@ -256,11 +213,9 @@ class _DartFocusScreenState extends State<DartFocusScreen>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Atışlar: $_shotsLeft',
-                      style: const TextStyle(
-                          color: Colors.white70, fontSize: 16),
-                    ),
+                    Text('Atışlar: $_shotsLeft',
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 16)),
                     Text(
                       'Puan: ${_dartScores.fold(0, (a, b) => a + b)}',
                       style: const TextStyle(
@@ -297,6 +252,72 @@ class _DartFocusScreenState extends State<DartFocusScreen>
                     fontWeight: FontWeight.bold)),
           ),
           const SizedBox(width: 48),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Crosshair widget ─────────────────────────────────────────────────────────
+class _Crosshair extends StatelessWidget {
+  const _Crosshair();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withValues(alpha: 0.9), width: 1.5),
+        boxShadow: [
+          BoxShadow(color: Colors.white.withValues(alpha: 0.3), blurRadius: 10)
+        ],
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(width: 1.5, height: 40,
+              color: Colors.white.withValues(alpha: 0.8)),
+          Container(width: 40, height: 1.5,
+              color: Colors.white.withValues(alpha: 0.8)),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── "+" hit marker ───────────────────────────────────────────────────────────
+class _PlusMark extends StatelessWidget {
+  final Color color;
+  const _PlusMark({required this.color});
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 20,
+      height: 20,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 20, height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 8)
+              ],
+            ),
+          ),
+          Container(width: 3, height: 16,
+              decoration: BoxDecoration(
+                  color: color, borderRadius: BorderRadius.circular(2))),
+          Container(width: 16, height: 3,
+              decoration: BoxDecoration(
+                  color: color, borderRadius: BorderRadius.circular(2))),
+          Container(
+            width: 5, height: 5,
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle, color: Colors.white),
+          ),
         ],
       ),
     );

@@ -92,7 +92,7 @@ class _PulseStopScreenState extends State<PulseStopScreen>
       _showFeedback = true;
     });
 
-    if (_round >= 15) {
+    if (_round >= 5) {
       Future.delayed(const Duration(milliseconds: 800), () {
         if (mounted) {
           setState(() => _gameEnded = true);
@@ -249,7 +249,7 @@ class _PulseStopScreenState extends State<PulseStopScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Tur: ${_round.clamp(0, 15)}/15',
+                        'Tur: ${_round.clamp(0, 5)}/5',
                         style: const TextStyle(
                             color: Colors.white70, fontSize: 16),
                       ),

@@ -5,8 +5,72 @@ import '../widgets/neon_button.dart';
 import '../widgets/cin_host.dart';
 import 'reaction_test_screen.dart';
 
-class PrepScreen extends StatelessWidget {
+class PrepScreen extends StatefulWidget {
   const PrepScreen({super.key});
+
+  @override
+  State<PrepScreen> createState() => _PrepScreenState();
+}
+
+class _PrepScreenState extends State<PrepScreen>
+    with SingleTickerProviderStateMixin {
+  bool _expanded = false;
+  late final AnimationController _chevronCtrl;
+  late final Animation<double> _chevronTurn;
+
+  static const _tests = [
+    (1,  'Reaksiyon Hızı',  Icons.bolt),
+    (2,  'Stroop Renk',     Icons.color_lens),
+    (3,  'Hafıza Kutuları', Icons.grid_view),
+    (4,  'Sayı Sıralama',   Icons.sort),
+    (5,  'İmpuls Kontrolü', Icons.touch_app),
+    (6,  'Pattern IQ',      Icons.pattern),
+    (7,  'Çember Refleks',  Icons.radio_button_unchecked),
+    (8,  'Laser Gate',      Icons.track_changes),
+    (9,  'Timing Stack',    Icons.stacked_bar_chart),
+    (10, 'Pulse Stop',      Icons.radio_button_checked),
+    (11, 'Balance Bar',     Icons.horizontal_rule),
+    (12, 'Dart Focus',      Icons.adjust),
+    (13, 'Sky Shot',        Icons.rocket_launch),
+    (14, 'Target Lock',     Icons.radar),
+    (15, 'Swipe Dodge',     Icons.swipe),
+    (16, 'Color Panic',     Icons.palette),
+    (17, "Don't Tap Red",   Icons.do_not_touch),
+    (18, 'Tap Target',      Icons.my_location),
+    (19, 'Shape Strike',    Icons.category),
+    (20, 'Memory Flash',    Icons.grid_view),
+    (21, 'Mirror Brain',    Icons.compare_arrows),
+    (22, 'Sequence Rush',   Icons.format_list_numbered),
+    (23, 'Reaction Wall',   Icons.view_column),
+    (24, 'Focus Hunter',    Icons.search),
+    (25, 'Impulse Ctrl',    Icons.stop_circle_outlined),
+    (26, 'Tap Rain',        Icons.grain),
+    (27, 'Speed Math',      Icons.calculate),
+    (28, 'Number Hunter',   Icons.tag),
+    (29, 'Pattern Master',  Icons.pattern),
+  ];
+
+  static const _visibleCount = 3;
+
+  @override
+  void initState() {
+    super.initState();
+    _chevronCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 250));
+    _chevronTurn =
+        Tween<double>(begin: 0, end: 0.5).animate(_chevronCtrl);
+  }
+
+  @override
+  void dispose() {
+    _chevronCtrl.dispose();
+    super.dispose();
+  }
+
+  void _toggle() {
+    setState(() => _expanded = !_expanded);
+    _expanded ? _chevronCtrl.forward() : _chevronCtrl.reverse();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,70 +79,127 @@ class PrepScreen extends StatelessWidget {
     return Scaffold(
       body: AnimatedBackground(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(28),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Cin as host presenting the tests
-                const CinHost(size: 120),
-                const SizedBox(height: 16),
-                const Text(
-                  '29 kısa test seni bekliyor.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+          child: Column(
+            children: [
+              // ── Scrollable content ─────────────────────────────
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(28, 28, 28, 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CinHost(size: 120),
+                      const SizedBox(height: 16),
+                      const Text(
+                        '29 kısa test seni bekliyor.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Hazır olduğunda başla.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white54,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 28),
+
+                      // ── Test list ──────────────────────────────
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0D1B2A),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                              color: const Color(0xFF00B4FF)
+                                  .withValues(alpha: 0.2)),
+                        ),
+                        child: Column(
+                          children: [
+                            // Always-visible first 3
+                            ...List.generate(_visibleCount, (i) {
+                              final t = _tests[i];
+                              return _TestListItem(
+                                  n: t.$1, name: t.$2, icon: t.$3,
+                                  isLast: !_expanded && i == _visibleCount - 1);
+                            }),
+
+                            // Expandable remainder
+                            AnimatedSize(
+                              duration: const Duration(milliseconds: 280),
+                              curve: Curves.easeInOut,
+                              child: _expanded
+                                  ? Column(
+                                      children: List.generate(
+                                          _tests.length - _visibleCount,
+                                          (i) {
+                                        final t = _tests[_visibleCount + i];
+                                        return _TestListItem(
+                                            n: t.$1, name: t.$2, icon: t.$3,
+                                            isLast: i ==
+                                                _tests.length -
+                                                    _visibleCount -
+                                                    1);
+                                      }),
+                                    )
+                                  : const SizedBox.shrink(),
+                            ),
+
+                            // Expand / collapse arrow
+                            GestureDetector(
+                              onTap: _toggle,
+                              child: Container(
+                                width: double.infinity,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF00B4FF)
+                                      .withValues(alpha: 0.06),
+                                  borderRadius: const BorderRadius.vertical(
+                                      bottom: Radius.circular(14)),
+                                ),
+                                child: Center(
+                                  child: RotationTransition(
+                                    turns: _chevronTurn,
+                                    child: const Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: Color(0xFF00B4FF),
+                                        size: 26),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Hazır olduğunda başla.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white54,
-                    fontSize: 15,
+              ),
+
+              // ── Fixed Başla band ───────────────────────────────
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF050A14),
+                  border: Border(
+                    top: BorderSide(
+                        color: const Color(0xFF00B4FF).withValues(alpha: 0.15),
+                        width: 1),
                   ),
                 ),
-                const SizedBox(height: 32),
-                _TestListItem(n: 1, name: 'Reaksiyon Hızı', icon: Icons.bolt),
-                _TestListItem(n: 2, name: 'Stroop Renk', icon: Icons.color_lens),
-                _TestListItem(n: 3, name: 'Hafıza Kutuları', icon: Icons.grid_view),
-                _TestListItem(n: 4, name: 'Sayı Sıralama', icon: Icons.sort),
-                _TestListItem(n: 5, name: 'İmpuls Kontrolü', icon: Icons.touch_app),
-                _TestListItem(n: 6, name: 'Pattern IQ', icon: Icons.pattern),
-                _TestListItem(n: 7, name: 'Çember Refleks', icon: Icons.radio_button_unchecked),
-                _TestListItem(n: 8, name: 'Laser Gate', icon: Icons.track_changes),
-                _TestListItem(n: 9,  name: 'Timing Stack', icon: Icons.stacked_bar_chart),
-                _TestListItem(n: 10, name: 'Pulse Stop',   icon: Icons.radio_button_checked),
-                _TestListItem(n: 11, name: 'Balance Bar',  icon: Icons.horizontal_rule),
-                _TestListItem(n: 12, name: 'Dart Focus',   icon: Icons.adjust),
-                _TestListItem(n: 13, name: 'Sky Shot',      icon: Icons.rocket_launch),
-                _TestListItem(n: 14, name: 'Target Lock',   icon: Icons.radar),
-                _TestListItem(n: 15, name: 'Swipe Dodge',   icon: Icons.swipe),
-                _TestListItem(n: 16, name: 'Color Panic',      icon: Icons.palette),
-                _TestListItem(n: 17, name: "Don't Tap Red",   icon: Icons.do_not_touch),
-                _TestListItem(n: 18, name: 'Tap Target',       icon: Icons.my_location),
-                _TestListItem(n: 19, name: 'Shape Strike',     icon: Icons.category),
-                _TestListItem(n: 20, name: 'Memory Flash',    icon: Icons.grid_view),
-                _TestListItem(n: 21, name: 'Mirror Brain',    icon: Icons.compare_arrows),
-                _TestListItem(n: 22, name: 'Sequence Rush',   icon: Icons.format_list_numbered),
-                _TestListItem(n: 23, name: 'Reaction Wall',   icon: Icons.view_column),
-                _TestListItem(n: 24, name: 'Focus Hunter',    icon: Icons.search),
-                _TestListItem(n: 25, name: 'Impulse Ctrl',    icon: Icons.stop_circle_outlined),
-                _TestListItem(n: 26, name: 'Tap Rain',        icon: Icons.grain),
-                _TestListItem(n: 27, name: 'Speed Math',      icon: Icons.calculate),
-                _TestListItem(n: 28, name: 'Number Hunter',   icon: Icons.tag),
-                _TestListItem(n: 29, name: 'Pattern Master',  icon: Icons.pattern),
-                const SizedBox(height: 36),
-                NeonButton(
+                padding: const EdgeInsets.fromLTRB(28, 14, 28, 14),
+                child: NeonButton(
                   text: 'Başla!',
                   onPressed: () => Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) =>
-                          ReactionTestScreen(session: session),
+                      builder: (_) => ReactionTestScreen(session: session),
                     ),
                   ),
                   color: const Color(0xFF00B4FF),
@@ -86,8 +207,8 @@ class PrepScreen extends StatelessWidget {
                   height: 60,
                   icon: Icons.play_arrow_rounded,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -95,42 +216,56 @@ class PrepScreen extends StatelessWidget {
   }
 }
 
+// ── Test list row ─────────────────────────────────────────────────────────────
 class _TestListItem extends StatelessWidget {
   final int n;
   final String name;
   final IconData icon;
+  final bool isLast;
 
-  const _TestListItem({required this.n, required this.name, required this.icon});
+  const _TestListItem(
+      {required this.n,
+      required this.name,
+      required this.icon,
+      this.isLast = false});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        border: isLast
+            ? null
+            : Border(
+                bottom: BorderSide(
+                    color: const Color(0xFF00B4FF).withValues(alpha: 0.08))),
+      ),
       child: Row(
         children: [
           Container(
-            width: 32,
-            height: 32,
+            width: 30,
+            height: 30,
             decoration: BoxDecoration(
-              color: const Color(0xFF00B4FF).withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(8),
+              color: const Color(0xFF00B4FF).withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(7),
               border: Border.all(
-                  color: const Color(0xFF00B4FF).withValues(alpha: 0.4)),
+                  color: const Color(0xFF00B4FF).withValues(alpha: 0.35)),
             ),
             child: Center(
               child: Text(
                 '$n',
                 style: const TextStyle(
-                    color: Color(0xFF00B4FF), fontWeight: FontWeight.bold),
+                    color: Color(0xFF00B4FF),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
               ),
             ),
           ),
           const SizedBox(width: 12),
-          Icon(icon, color: Colors.white54, size: 18),
+          Icon(icon, color: Colors.white38, size: 16),
           const SizedBox(width: 8),
           Text(name,
-              style:
-                  const TextStyle(color: Colors.white70, fontSize: 14)),
+              style: const TextStyle(color: Colors.white70, fontSize: 13)),
         ],
       ),
     );

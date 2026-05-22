@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/language_select_screen.dart';
 
 class ReflexIQApp extends StatelessWidget {
   const ReflexIQApp({super.key});
@@ -26,7 +26,7 @@ class ReflexIQApp extends StatelessWidget {
           },
         ),
       ),
-      home: const HomeScreen(),
+      home: const LanguageSelectScreen(),
     );
   }
 }

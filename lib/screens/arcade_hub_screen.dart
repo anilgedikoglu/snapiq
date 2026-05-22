@@ -17,7 +17,7 @@ import 'arcade/impulse_control_screen.dart';
 import 'arcade/tap_rain_screen.dart';
 import 'arcade/brain_duel_screen.dart';
 import 'arcade/pattern_master_screen.dart';
-import 'games/orbit_sync_screen.dart';
+import 'games/circle_tap_reflex_screen.dart';
 import 'games/laser_gate_screen.dart';
 import 'games/timing_stack_screen.dart';
 import 'games/pulse_stop_screen.dart';
@@ -163,12 +163,12 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
         color: const Color(0xFFE91E63),
         screenBuilder: () => const BrainDuelScreen()),
     _GameInfo(
-        id: 'orbit_sync',
-        name: 'Orbit Sync',
-        emoji: '🔵',
+        id: 'circle_tap_reflex',
+        name: 'Circle Tap Reflex',
+        emoji: '🎯',
         category: 'Timing',
-        color: const Color(0xFFBB86FC),
-        screenBuilder: () => const OrbitSyncScreen()),
+        color: const Color(0xFF00E5FF),
+        screenBuilder: () => const CircleTapReflexScreen()),
     _GameInfo(
         id: 'laser_gate',
         name: 'Laser Gate',

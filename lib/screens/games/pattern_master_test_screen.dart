@@ -4,6 +4,7 @@
 // LAST SCREEN — creates TestResult, saves, navigates to ResultScreen.
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../models/test_result.dart';
 import '../../services/storage_service.dart';

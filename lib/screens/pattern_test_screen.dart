@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
-import '../models/test_result.dart';
-import '../services/storage_service.dart';
 import '../services/ad_service.dart';
 import '../widgets/animated_background.dart';
-import 'result_screen.dart';
+import 'games/circle_tap_test_screen.dart';
 
 class PatternTestScreen extends StatefulWidget {
   final GameSession session;
@@ -43,36 +42,36 @@ class _PatternQuestion {
 }
 
 class _PatternTestScreenState extends State<PatternTestScreen> {
-  static const _questions = [
+  static List<_PatternQuestion> get _questions => [
     _PatternQuestion(
       sequence: 'A  B  A  B  ?',
       options: ['A', 'B', 'C'],
       correctIndex: 0,
-      hint: 'Desen tekrar ediyor',
+      hint: S.patternHint1,
     ),
     _PatternQuestion(
       sequence: '2  4  6  8  ?',
       options: ['9', '10', '12'],
       correctIndex: 1,
-      hint: '+2 artıyor',
+      hint: S.patternHint2,
     ),
     _PatternQuestion(
       sequence: '⬜  ⬛  ⬜  ⬛  ?',
       options: ['⬛', '⬜', '🔲'],
       correctIndex: 1,
-      hint: 'Renk dönüşümlü',
+      hint: S.patternHint3,
     ),
     _PatternQuestion(
       sequence: '1  1  2  3  5  ?',
       options: ['7', '8', '9'],
       correctIndex: 1,
-      hint: 'Fibonacci dizisi',
+      hint: S.patternHint4,
     ),
     _PatternQuestion(
       sequence: '▲  ■  ▲  ■  ?',
       options: ['■', '▲', '●'],
       correctIndex: 1,
-      hint: 'Şekil dönüşümlü',
+      hint: S.patternHint5,
     ),
   ];
 
@@ -104,24 +103,21 @@ class _PatternTestScreenState extends State<PatternTestScreen> {
   }
 
   void _done() async {
-    final result = TestResult(
-      reactionScore: widget.reactionScore,
-      stroopScore: widget.stroopScore,
-      memoryScore: widget.memoryScore,
-      sequenceScore: widget.sequenceScore,
-      impulseScore: widget.impulseScore,
-      patternScore: _score.clamp(0, 100),
-    );
-    widget.session.result = result;
-
-    final storage = await StorageService.getInstance();
-    await storage.saveResult(result);
     await AdService().incrementGameCountAndMaybeShow();
-
     if (!mounted) return;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => ResultScreen(result: result)),
+      MaterialPageRoute(
+        builder: (_) => CircleTapTestScreen(
+          session: widget.session,
+          reactionScore: widget.reactionScore,
+          stroopScore: widget.stroopScore,
+          memoryScore: widget.memoryScore,
+          sequenceScore: widget.sequenceScore,
+          impulseScore: widget.impulseScore,
+          patternScore: _score.clamp(0, 100),
+        ),
+      ),
     );
   }
 
@@ -141,9 +137,9 @@ class _PatternTestScreenState extends State<PatternTestScreen> {
                     const TextStyle(color: Colors.white54, fontSize: 13),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Örüntüyü tamamla.',
-                style: TextStyle(
+              Text(
+                S.patternInstruction,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold),

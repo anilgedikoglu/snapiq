@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
 import '../widgets/animated_background.dart';
 import 'impulse_test_screen.dart';
@@ -151,9 +152,9 @@ class _SequenceTestScreenState extends State<SequenceTestScreen> {
                     const TextStyle(color: Colors.white54, fontSize: 13),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Küçükten büyüğe dokun',
-                style: TextStyle(
+              Text(
+                S.seqInstruction,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold),
@@ -203,7 +204,9 @@ class _SequenceTestScreenState extends State<SequenceTestScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Sıradaki: ${_nextToTap < _order.length ? _order[_nextToTap] : "✓"}',
+                _nextToTap < _order.length
+                    ? S.seqNext(_order[_nextToTap])
+                    : '✓',
                 style:
                     const TextStyle(color: Colors.white38, fontSize: 12),
               ),
@@ -225,8 +228,8 @@ class _SequenceTestScreenState extends State<SequenceTestScreen> {
           const Text('Test 4/6',
               style: TextStyle(color: Colors.white70, fontSize: 13)),
           const Spacer(),
-          const Text('Sayı Sıralama',
-              style: TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(S.seqTestLabel,
+              style: const TextStyle(color: Colors.white54, fontSize: 12)),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -19,32 +20,56 @@ class _SkyShotScreenState extends State<SkyShotScreen>
   static const _xpReward = 30;
   static const _gameName = 'Sky Shot';
 
-  late AnimationController _targetCtrl;
+  // ── Target continuous movement via Ticker ──────────────────────────────────
+  Ticker? _moveTicker;
+  double _targetNorm = 0.3; // 0..1 normalized X
+  double _phase = 0.3;      // 0..2 triangle-wave phase
+  int    _prevMs = 0;
+  double _speedFactor = 1.0; // increases 0.3 per shot (base period = 2400ms)
+
+  // ── Projectile ─────────────────────────────────────────────────────────────
   AnimationController? _projectileCtrl;
+  int    _pendingScore = 0; // computed at fire time, applied at anim end
 
-  int _shotsLeft = 5;
-  int _totalScore = 0;
+  // ── Layout (set in build, used in hit detection) ────────────────────────────
+  double _screenWidth = 400;
+
+  // ── Game state ──────────────────────────────────────────────────────────────
+  int  _shotsLeft  = 5;
+  int  _totalScore = 0;
   List<int> _shotScores = [];
-  bool _canShoot = true;
-  bool _gameEnded = false;
-  int _lastShotScore = 0;
+  bool _canShoot   = true;
+  bool _gameEnded  = false;
+  int  _lastShotScore = 0;
   bool _showLastScore = false;
-  double _capturedTargetX = 0.5; // target x when shot was fired
-
-  // Speed increases with each shot
-  Duration get _targetSpeed =>
-      Duration(milliseconds: 2400 - (_shotScores.length * 200).clamp(0, 1600));
+  bool _showHitEffect = false;
 
   @override
   void initState() {
     super.initState();
-    _targetCtrl = AnimationController(vsync: this, duration: _targetSpeed)
-      ..repeat(reverse: true);
+    _moveTicker = createTicker(_onMoveTick)..start();
+  }
+
+  // Smooth triangle-wave movement — never resets position.
+  void _onMoveTick(Duration elapsed) {
+    if (!mounted) return;
+    final ms = elapsed.inMilliseconds;
+    final dt = ms - _prevMs;
+    _prevMs = ms;
+    if (dt <= 0) return;
+
+    // basePeriod=2400ms for a full left→right trip; speedFactor increases per shot.
+    const basePeriod = 2400.0;
+    final advance = dt * _speedFactor / basePeriod;
+
+    _phase = (_phase + advance) % 2.0;
+    final x = _phase <= 1.0 ? _phase : 2.0 - _phase;
+    setState(() => _targetNorm = x);
   }
 
   @override
   void dispose() {
-    _targetCtrl.dispose();
+    _moveTicker?.dispose();
     _projectileCtrl?.dispose();
     super.dispose();
   }
@@ -52,61 +77,60 @@ class _SkyShotScreenState extends State<SkyShotScreen>
   void _shoot() {
     if (!_canShoot || _gameEnded) return;
     _canShoot = false;
-    _capturedTargetX = _targetCtrl.value;
+
+    // ── Score based on predicted position at anim end (200 ms from now) ─────
+    {
+      const animMs = 500.0;
+      final advance    = animMs * _speedFactor / 2400.0;
+      final futurePhase = (_phase + advance) % 2.0;
+      final futureNorm  = futurePhase <= 1.0 ? futurePhase : 2.0 - futurePhase;
+      final tl = futureNorm * (_screenWidth - 60);
+      final pl = _screenWidth / 2 - 4;
+      final pr = _screenWidth / 2 + 4;
+      final os = pl > tl      ? pl      : tl;
+      final oe = pr < tl + 60 ? pr      : tl + 60;
+      final ov = oe - os;
+      _pendingScore = ov >= 6 ? 100 : ov > 0 ? 70 : 0;
+    }
 
     _projectileCtrl?.dispose();
     _projectileCtrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 500),
     );
-
-    _projectileCtrl!.addListener(() {
-      if (mounted) setState(() {});
-    });
-
+    _projectileCtrl!.addListener(() { if (mounted) setState(() {}); });
     _projectileCtrl!.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // Calculate score based on horizontal distance
-        final dx = (_capturedTargetX - 0.5).abs(); // 0 = center, 0.5 = edge
-        int score;
-        if (dx < 0.05) {
-          score = 100;
-        } else if (dx < 0.10) {
-          score = 70;
-        } else if (dx < 0.20) {
-          score = 40;
-        } else if (dx < 0.35) {
-          score = 15;
-        } else {
-          score = 0;
-        }
+      if (status != AnimationStatus.completed) return;
 
-        if (mounted) {
-          setState(() {
-            _totalScore += score;
-            _shotScores.add(score);
-            _lastShotScore = score;
-            _showLastScore = true;
-            _shotsLeft--;
-            _canShoot = true;
-          });
+      final score = _pendingScore;
 
-          Future.delayed(const Duration(milliseconds: 800), () {
-            if (mounted) setState(() => _showLastScore = false);
-          });
+      if (!mounted) return;
+      setState(() {
+        _totalScore += score;
+        _shotScores.add(score);
+        _lastShotScore = score;
+        _showLastScore = true;
+        _shotsLeft--;
+        _canShoot = true;
+        _showHitEffect = score > 0;
+      });
 
-          if (_shotsLeft <= 0) {
-            setState(() => _gameEnded = true);
-            _gameOver(_totalScore);
-          } else {
-            // Update target speed
-            _targetCtrl.duration = _targetSpeed;
-            _targetCtrl.repeat(reverse: true);
-          }
-        }
+      // Speed up target by 30% per shot (no position reset).
+      _speedFactor += 0.3;
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) setState(() { _showHitEffect = false; });
+      });
+      Future.delayed(const Duration(milliseconds: 800), () {
+        if (mounted) setState(() => _showLastScore = false);
+      });
+
+      if (_shotsLeft <= 0) {
+        setState(() => _gameEnded = true);
+        _moveTicker?.stop();
+        _gameOver(_totalScore);
       }
     });
-
     _projectileCtrl!.forward();
   }
 
@@ -130,14 +154,8 @@ class _SkyShotScreenState extends State<SkyShotScreen>
         bestScore: isNewBest ? score : prevBest,
         xpGained: _xpReward,
         isNewBest: isNewBest,
-        onReplay: () {
-          Navigator.pop(context);
-          _restart();
-        },
-        onBack: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
+        onReplay: () { Navigator.pop(context); _restart(); },
+        onBack:   () { Navigator.pop(context); Navigator.pop(context); },
       ),
     );
   }
@@ -145,8 +163,6 @@ class _SkyShotScreenState extends State<SkyShotScreen>
   void _restart() {
     _projectileCtrl?.dispose();
     _projectileCtrl = null;
-    _targetCtrl.duration = const Duration(milliseconds: 2400);
-    _targetCtrl.repeat(reverse: true);
     setState(() {
       _shotsLeft = 5;
       _totalScore = 0;
@@ -155,7 +171,12 @@ class _SkyShotScreenState extends State<SkyShotScreen>
       _gameEnded = false;
       _lastShotScore = 0;
       _showLastScore = false;
+      _showHitEffect = false;
+      _speedFactor = 1.0;
+      _phase = 0.3;
+      _prevMs = 0;
     });
+    _moveTicker?.start();
   }
 
   @override
@@ -174,39 +195,74 @@ class _SkyShotScreenState extends State<SkyShotScreen>
                     builder: (ctx, constraints) {
                       final w = constraints.maxWidth;
                       final h = constraints.maxHeight;
-
-                      // Target x position (0..1 normalized)
-                      final targetX = _targetCtrl.value * (w - 60);
-                      // Projectile y (0=top, 1=bottom) during flight
+                      _screenWidth = w; // store for pixel-accurate hit detection
+                      final targetX = _targetNorm * (w - 60);
                       final projY = _projectileCtrl != null
                           ? h - (h * 0.9 * _projectileCtrl!.value) - 30
                           : h - 50.0;
 
                       return Stack(
                         children: [
-                          // Target UFO at top
+                          // Target UFO
                           Positioned(
                             left: targetX,
                             top: h * 0.08,
-                            child: Container(
-                              width: 60,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF00B4FF).withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(30),
-                                border: Border.all(
-                                    color: const Color(0xFF00B4FF), width: 2),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: const Color(0xFF00B4FF)
-                                          .withValues(alpha: 0.5),
-                                      blurRadius: 12)
-                                ],
-                              ),
-                              child: const Center(
-                                child: Text('🛸',
-                                    style: TextStyle(fontSize: 22)),
-                              ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Hit flash glow
+                                if (_showHitEffect)
+                                  Container(
+                                    width: 80,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: const Color(0xFFFF7043)
+                                          .withValues(alpha: 0.45),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: const Color(0xFFFF7043)
+                                              .withValues(alpha: 0.7),
+                                          blurRadius: 24,
+                                          spreadRadius: 8,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                Container(
+                                  width: 60,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: _showHitEffect
+                                        ? const Color(0xFFFF7043)
+                                            .withValues(alpha: 0.5)
+                                        : const Color(0xFF00B4FF)
+                                            .withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(
+                                      color: _showHitEffect
+                                          ? const Color(0xFFFF7043)
+                                          : const Color(0xFF00B4FF),
+                                      width: 2,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: (_showHitEffect
+                                                ? const Color(0xFFFF7043)
+                                                : const Color(0xFF00B4FF))
+                                            .withValues(alpha: 0.5),
+                                        blurRadius: 12,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      _showHitEffect ? '💥' : '🛸',
+                                      style: const TextStyle(fontSize: 22),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           // Projectile
@@ -223,10 +279,11 @@ class _SkyShotScreenState extends State<SkyShotScreen>
                                   borderRadius: BorderRadius.circular(4),
                                   boxShadow: [
                                     BoxShadow(
-                                        color: const Color(0xFFFDD835)
-                                            .withValues(alpha: 0.8),
-                                        blurRadius: 10,
-                                        spreadRadius: 2)
+                                      color: const Color(0xFFFDD835)
+                                          .withValues(alpha: 0.8),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -239,15 +296,17 @@ class _SkyShotScreenState extends State<SkyShotScreen>
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: const Color(0xFF00C853).withValues(alpha: 0.2),
+                                color: const Color(0xFF00C853)
+                                    .withValues(alpha: 0.2),
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                     color: const Color(0xFF00C853), width: 2),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: const Color(0xFF00C853)
-                                          .withValues(alpha: 0.4),
-                                      blurRadius: 10)
+                                    color: const Color(0xFF00C853)
+                                        .withValues(alpha: 0.4),
+                                    blurRadius: 10,
+                                  ),
                                 ],
                               ),
                               child: const Icon(Icons.arrow_upward,
@@ -268,8 +327,7 @@ class _SkyShotScreenState extends State<SkyShotScreen>
                                   fontSize: 36,
                                   fontWeight: FontWeight.bold,
                                   shadows: const [
-                                    Shadow(
-                                        color: Colors.black45, blurRadius: 8)
+                                    Shadow(color: Colors.black45, blurRadius: 8)
                                   ],
                                 ),
                               ),
@@ -287,10 +345,12 @@ class _SkyShotScreenState extends State<SkyShotScreen>
                   children: [
                     Row(
                       children: List.generate(
-                          5,
-                          (i) => Text(
-                              i < _shotsLeft ? '🚀' : '⭕',
-                              style: const TextStyle(fontSize: 16))),
+                        5,
+                        (i) => Text(
+                          i < _shotsLeft ? '🚀' : '⭕',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
                     ),
                     Text(
                       'Puan: $_totalScore',

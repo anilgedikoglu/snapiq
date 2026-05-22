@@ -7,6 +7,7 @@ class ArcadeResultOverlay extends StatelessWidget {
   final int bestScore;
   final int xpGained;
   final bool isNewBest;
+  final String? subtitle;
   final VoidCallback onReplay;
   final VoidCallback onBack;
 
@@ -17,6 +18,7 @@ class ArcadeResultOverlay extends StatelessWidget {
     required this.bestScore,
     required this.xpGained,
     required this.isNewBest,
+    this.subtitle,
     required this.onReplay,
     required this.onBack,
   });
@@ -55,6 +57,11 @@ class ArcadeResultOverlay extends StatelessWidget {
                     fontWeight: FontWeight.bold)),
             Text('En İyi: $bestScore',
                 style: const TextStyle(color: Colors.white38, fontSize: 12)),
+            if (subtitle != null) ...[
+              const SizedBox(height: 4),
+              Text(subtitle!,
+                  style: const TextStyle(color: Colors.white54, fontSize: 13)),
+            ],
             const SizedBox(height: 12),
             Container(
               padding:

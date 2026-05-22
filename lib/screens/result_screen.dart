@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/achievement.dart';
 import '../models/test_result.dart';
 import '../services/achievement_service.dart';
@@ -72,19 +73,19 @@ class _ResultScreenState extends State<ResultScreen>
   }
 
   static String funTitle(double score) {
-    if (score >= 90) return 'Sinapsların alev almış! 🔥';
-    if (score >= 80) return 'Rakiplerine korku salıyorsun! 💀';
-    if (score >= 70) return 'Bugün beynin espresso içmiş. ☕';
-    if (score >= 60) return 'Fena değil, ama daha var! 💪';
-    if (score >= 45) return 'Biraz uykulusun galiba... 😴';
-    return 'Bugün beyin tatilde gibi. 🏖️';
+    if (score >= 90) return S.resultFun0;
+    if (score >= 80) return S.resultFun1;
+    if (score >= 70) return S.resultFun2;
+    if (score >= 60) return S.resultFun3;
+    if (score >= 45) return S.resultFun4;
+    return S.resultFun5;
   }
 
   String _scoreComment(int score) {
-    if (score >= 80) return 'Mükemmel!';
-    if (score >= 60) return 'İyi';
-    if (score >= 40) return 'Geliştirebilirsin';
-    return 'Çalışman lazım';
+    if (score >= 80) return S.resultPerfect;
+    if (score >= 60) return S.resultGood;
+    if (score >= 40) return S.resultOk;
+    return S.resultWeak;
   }
 
   @override
@@ -140,7 +141,7 @@ class _ResultScreenState extends State<ResultScreen>
                   const SizedBox(height: 12),
                   // Cognitive age
                   Text(
-                    'Bilişsel Yaşın: ${r.cognitiveAge}',
+                    S.cognitiveAge(r.cognitiveAge),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -153,16 +154,16 @@ class _ResultScreenState extends State<ResultScreen>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'SnapIQ Skorun: ${r.reflexIQ}',
+                    S.snapIqScore(r.reflexIQ),
                     style: const TextStyle(
                         color: Color(0xFFBB86FC),
                         fontSize: 20,
                         fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    '* Bu sonuç eğlence amaçlıdır, bilimsel tanı koymaz.',
-                    style: TextStyle(color: Colors.white30, fontSize: 10),
+                  Text(
+                    S.resultDisclaimer,
+                    style: const TextStyle(color: Colors.white30, fontSize: 10),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
@@ -175,7 +176,7 @@ class _ResultScreenState extends State<ResultScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '+$_xpGained XP kazandın!',
+                      S.xpGained(_xpGained),
                       style: const TextStyle(
                           color: Color(0xFFBB86FC),
                           fontWeight: FontWeight.bold,
@@ -193,37 +194,37 @@ class _ResultScreenState extends State<ResultScreen>
                     childAspectRatio: 1.45,
                     children: [
                       ScoreCard(
-                        title: 'Reaksiyon',
+                        title: S.cardReaction,
                         score: r.reactionScore,
                         comment: _scoreComment(r.reactionScore),
                         color: const Color(0xFF00C853),
                       ),
                       ScoreCard(
-                        title: 'Dikkat',
+                        title: S.cardStroop,
                         score: r.stroopScore,
                         comment: _scoreComment(r.stroopScore),
                         color: const Color(0xFF1E88E5),
                       ),
                       ScoreCard(
-                        title: 'Hafıza',
+                        title: S.cardMemory,
                         score: r.memoryScore,
                         comment: _scoreComment(r.memoryScore),
                         color: const Color(0xFFBB86FC),
                       ),
                       ScoreCard(
-                        title: 'Sıralama',
+                        title: S.cardSequence,
                         score: r.sequenceScore,
                         comment: _scoreComment(r.sequenceScore),
                         color: const Color(0xFFFDD835),
                       ),
                       ScoreCard(
-                        title: 'İmpuls',
+                        title: S.cardImpulse,
                         score: r.impulseScore,
                         comment: _scoreComment(r.impulseScore),
                         color: const Color(0xFFFF7043),
                       ),
                       ScoreCard(
-                        title: 'Örüntü',
+                        title: S.cardPattern,
                         score: r.patternScore,
                         comment: _scoreComment(r.patternScore),
                         color: const Color(0xFF03DAC6),
@@ -323,7 +324,7 @@ class _ResultScreenState extends State<ResultScreen>
                   const SizedBox(height: 12),
                   // Buttons
                   NeonButton(
-                    text: 'Tekrar Dene',
+                    text: S.tryAgain,
                     onPressed: () => Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -336,7 +337,7 @@ class _ResultScreenState extends State<ResultScreen>
                   ),
                   const SizedBox(height: 10),
                   NeonButton(
-                    text: 'Arkadaşına Ver',
+                    text: S.resultShare,
                     onPressed: () => setState(() => _friendMode = true),
                     color: const Color(0xFFBB86FC),
                     width: double.infinity,
@@ -345,7 +346,7 @@ class _ResultScreenState extends State<ResultScreen>
                   ),
                   const SizedBox(height: 10),
                   NeonButton(
-                    text: 'Ana Menü',
+                    text: S.menu,
                     onPressed: () => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
@@ -379,8 +380,8 @@ class _ResultScreenState extends State<ResultScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Yeni Başarımlar!',
-              style: TextStyle(
+          Text(S.newAchievements,
+              style: const TextStyle(
                   color: Color(0xFFBB86FC),
                   fontWeight: FontWeight.bold,
                   fontSize: 13)),
@@ -428,31 +429,31 @@ class _ResultScreenState extends State<ResultScreen>
               children: [
                 const CinHost(size: 100),
                 const SizedBox(height: 24),
-                const Text(
-                  'Telefonu arkadaşına ver.',
+                Text(
+                  S.giveToFriend,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Bakalım seni geçebilecek mi?',
+                Text(
+                  S.canBeatYou,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 16),
+                  style: const TextStyle(color: Colors.white54, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Senin SnapIQ: ${widget.result.reflexIQ}  •  Yaş: ${widget.result.cognitiveAge}',
+                  '${S.yourSnapIQ(widget.result.reflexIQ)}  •  Yaş: ${widget.result.cognitiveAge}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: Color(0xFFBB86FC), fontSize: 14),
                 ),
                 const SizedBox(height: 40),
                 NeonButton(
-                  text: 'Teste Başla',
+                  text: S.resultStartTest,
                   onPressed: () => Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -487,8 +488,8 @@ class _AchievementPopup extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('🎉 Başarım Kazandın!',
-                style: TextStyle(
+            Text(S.achievEarned,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
@@ -522,8 +523,8 @@ class _AchievementPopup extends StatelessWidget {
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Harika!',
-                  style: TextStyle(color: Color(0xFF00B4FF))),
+              child: Text(S.awesome,
+                  style: const TextStyle(color: Color(0xFF00B4FF))),
             ),
           ],
         ),

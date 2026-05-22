@@ -4,6 +4,7 @@
 // Mid-chain screen — navigates to MirrorBrainTestScreen.
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../models/game_session.dart';
 import '../../widgets/animated_background.dart';
 import 'mirror_brain_test_screen.dart';

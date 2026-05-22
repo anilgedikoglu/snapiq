@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/game_session.dart';
 import '../widgets/animated_background.dart';
+import '../l10n/app_strings.dart';
 import 'pattern_test_screen.dart';
 
 class ImpulseTestScreen extends StatefulWidget {
@@ -173,8 +174,8 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
             children: [
               _buildProgress(),
               const SizedBox(height: 8),
-              const Text(
-                'Sadece DAİRE çıkınca dokun!',
+              Text(
+                S.impulseInstruction,
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -201,7 +202,7 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
               const SizedBox(height: 16),
               // Score
               Text(
-                'Puan: $_score',
+                S.impulseScore(_score),
                 style: const TextStyle(
                     color: Color(0xFF00B4FF),
                     fontSize: 20,
@@ -224,7 +225,7 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
                 padding: const EdgeInsets.only(bottom: 20),
                 child: _showing && _current >= 0
                     ? Text(
-                        _sequence[_current].toUpperCase(),
+                        S.shapeDisplay(_sequence[_current]),
                         style: const TextStyle(
                             color: Colors.white38, fontSize: 13),
                       )
@@ -247,8 +248,8 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
           const Text('Test 5/6',
               style: TextStyle(color: Colors.white70, fontSize: 13)),
           const Spacer(),
-          const Text('İmpuls Kontrolü',
-              style: TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(S.impulseTestLabel,
+              style: const TextStyle(color: Colors.white54, fontSize: 12)),
         ],
       ),
     );

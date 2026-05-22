@@ -174,6 +174,16 @@ class StorageService {
     }
   }
 
+  // Laser Gate: best time in ms (lower = better, 0 = never completed)
+  int get bestLaserGateMs => _prefs.getInt('laser_gate_best_ms') ?? 0;
+
+  Future<void> saveBestLaserGateMs(int ms) async {
+    final prev = bestLaserGateMs;
+    if (prev == 0 || ms < prev) {
+      await _prefs.setInt('laser_gate_best_ms', ms);
+    }
+  }
+
   Future<void> saveSoundEnabled(bool value) async {
     await _prefs.setBool(_keySoundEnabled, value);
   }

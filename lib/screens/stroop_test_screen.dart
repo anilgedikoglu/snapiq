@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/game_session.dart';
 import '../widgets/animated_background.dart';
+import '../l10n/app_strings.dart';
 import 'memory_test_screen.dart';
 
 class StroopTestScreen extends StatefulWidget {
@@ -15,56 +16,43 @@ class StroopTestScreen extends StatefulWidget {
   State<StroopTestScreen> createState() => _StroopTestScreenState();
 }
 
+/// Each item stores INDICES so the test works regardless of language.
+/// Index mapping (0-3): Red, Blue, Green, Yellow
 class _StroopItem {
-  final String word;
-  final Color textColor;
-  final String correctAnswer;
-
-  const _StroopItem(
-      {required this.word,
-      required this.textColor,
-      required this.correctAnswer});
+  final int wordIdx;   // which colour-word to display
+  final int inkIdx;    // which colour the text is rendered in (= correct answer)
+  const _StroopItem({required this.wordIdx, required this.inkIdx});
 }
 
 class _StroopTestScreenState extends State<StroopTestScreen> {
-  static const _options = ['Kırmızı', 'Mavi', 'Yeşil', 'Sarı'];
-  static const _colors = {
-    'Kırmızı': Color(0xFFE53935),
-    'Mavi': Color(0xFF1E88E5),
-    'Yeşil': Color(0xFF43A047),
-    'Sarı': Color(0xFFFDD835),
-  };
-
-  static const _items = [
-    _StroopItem(
-        word: 'MAVİ',
-        textColor: Color(0xFFE53935),
-        correctAnswer: 'Kırmızı'),
-    _StroopItem(
-        word: 'YEŞİL',
-        textColor: Color(0xFFFDD835),
-        correctAnswer: 'Sarı'),
-    _StroopItem(
-        word: 'KIRMIZI',
-        textColor: Color(0xFF43A047),
-        correctAnswer: 'Yeşil'),
-    _StroopItem(
-        word: 'SARI',
-        textColor: Color(0xFF1E88E5),
-        correctAnswer: 'Mavi'),
-    _StroopItem(
-        word: 'MAVİ',
-        textColor: Color(0xFF43A047),
-        correctAnswer: 'Yeşil'),
+  // Fixed colour values — always the same regardless of language
+  static const _colorValues = [
+    Color(0xFFE53935), // 0 Red
+    Color(0xFF1E88E5), // 1 Blue
+    Color(0xFF43A047), // 2 Green
+    Color(0xFFFDD835), // 3 Yellow
   ];
 
-  int _current = 0;
+  // word=Blue(1) ink=Red(0), word=Green(2) ink=Yellow(3),
+  // word=Red(0) ink=Green(2), word=Yellow(3) ink=Blue(1), word=Blue(1) ink=Green(2)
+  static const _items = [
+    _StroopItem(wordIdx: 1, inkIdx: 0),
+    _StroopItem(wordIdx: 2, inkIdx: 3),
+    _StroopItem(wordIdx: 0, inkIdx: 2),
+    _StroopItem(wordIdx: 3, inkIdx: 1),
+    _StroopItem(wordIdx: 1, inkIdx: 2),
+  ];
+
+  int _current    = 0;
   int _totalScore = 0;
   Timer? _questionTimer;
   DateTime? _questionStart;
-  bool _answered = false;
-  String? _lastChoice;
+  bool _answered  = false;
+  int?  _lastChoiceIdx;
   bool _lastCorrect = false;
+
+  /// Language-appropriate option labels (Red/Blue/Green/Yellow or TR equivalents)
+  List<String> get _options => S.stroopOptions;
 
   @override
   void initState() {
@@ -73,30 +61,30 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
   }
 
   void _startQuestion() {
-    _answered = false;
-    _lastChoice = null;
+    _answered      = false;
+    _lastChoiceIdx = null;
     _questionStart = DateTime.now();
     _questionTimer = Timer(const Duration(seconds: 3), () {
-      if (!_answered) _answer(null); // timed out
+      if (!_answered) _answer(null);
     });
   }
 
-  void _answer(String? choice) {
+  void _answer(int? choiceIdx) {
     if (_answered) return;
     _questionTimer?.cancel();
     final elapsed =
         DateTime.now().difference(_questionStart!).inMilliseconds;
-    final correct = choice == _items[_current].correctAnswer;
+    final correct = choiceIdx == _items[_current].inkIdx;
     int pts = 0;
     if (correct) {
       pts = 20;
       if (elapsed < 1000) pts += 3;
     }
     setState(() {
-      _answered = true;
-      _lastChoice = choice;
-      _lastCorrect = correct;
-      _totalScore += pts;
+      _answered      = true;
+      _lastChoiceIdx = choiceIdx;
+      _lastCorrect   = correct;
+      _totalScore   += pts;
     });
 
     Future.delayed(const Duration(milliseconds: 700), () {
@@ -115,9 +103,9 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
       context,
       MaterialPageRoute(
         builder: (_) => MemoryTestScreen(
-          session: widget.session,
+          session:       widget.session,
           reactionScore: widget.reactionScore,
-          stroopScore: score,
+          stroopScore:   score,
         ),
       ),
     );
@@ -132,6 +120,9 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
   @override
   Widget build(BuildContext context) {
     final item = _items[_current];
+    final displayWord = _options[item.wordIdx].toUpperCase();
+    final inkColor    = _colorValues[item.inkIdx];
+
     return Scaffold(
       body: AnimatedBackground(
         child: SafeArea(
@@ -140,8 +131,8 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
               _buildProgress(),
               const SizedBox(height: 20),
               Text(
-                'Yazının RENGİNİ seç',
-                style: TextStyle(color: Colors.white54, fontSize: 13),
+                S.stroopInstruction,
+                style: const TextStyle(color: Colors.white54, fontSize: 13),
               ),
               const SizedBox(height: 8),
               Text(
@@ -150,12 +141,12 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
               ),
               const SizedBox(height: 40),
               Text(
-                item.word,
+                displayWord,
                 style: TextStyle(
-                  color: item.textColor,
+                  color: inkColor,
                   fontSize: 52,
                   fontWeight: FontWeight.bold,
-                  shadows: [Shadow(color: item.textColor, blurRadius: 16)],
+                  shadows: [Shadow(color: inkColor, blurRadius: 16)],
                 ),
               ),
               const SizedBox(height: 48),
@@ -167,18 +158,18 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
                   childAspectRatio: 2.8,
-                  children: _options.map((opt) {
-                    final c = _colors[opt]!;
+                  children: List.generate(_options.length, (i) {
+                    final c = _colorValues[i];
                     Color borderColor = c.withValues(alpha: 0.5);
-                    if (_answered && opt == item.correctAnswer) {
+                    if (_answered && i == item.inkIdx) {
                       borderColor = const Color(0xFF00C853);
                     } else if (_answered &&
-                        opt == _lastChoice &&
+                        i == _lastChoiceIdx &&
                         !_lastCorrect) {
                       borderColor = const Color(0xFFE53935);
                     }
                     return GestureDetector(
-                      onTap: _answered ? null : () => _answer(opt),
+                      onTap: _answered ? null : () => _answer(i),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         decoration: BoxDecoration(
@@ -188,7 +179,7 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            opt,
+                            _options[i],
                             style: TextStyle(
                               color: c,
                               fontWeight: FontWeight.bold,
@@ -198,7 +189,7 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                 ),
               ),
             ],
@@ -218,8 +209,8 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
           const Text('Test 2/6',
               style: TextStyle(color: Colors.white70, fontSize: 13)),
           const Spacer(),
-          const Text('Stroop Renk',
-              style: TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(S.stroopTestLabel,
+              style: const TextStyle(color: Colors.white54, fontSize: 12)),
         ],
       ),
     );
