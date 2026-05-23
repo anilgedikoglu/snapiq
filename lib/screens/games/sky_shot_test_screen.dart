@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'target_lock_test_screen.dart';
 
@@ -204,18 +205,18 @@ class _SSTState extends State<SkyShotTestScreen>
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Text('$_shotsLeft atış kaldı',
+                    Text(S.dartShots(_shotsLeft),
                         style: const TextStyle(
                             color: Color(0xFF00B4FF), fontSize: 13)),
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Sky Shot — Hedef tam üstündeyken dokun!',
+                  S.skyInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               // Game area
@@ -363,7 +364,7 @@ class _SSTState extends State<SkyShotTestScreen>
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
                 child: Text(
-                  'Puan: $_totalScore',
+                  S.skyScore(_totalScore),
                   style: const TextStyle(
                       color: Color(0xFF00B4FF),
                       fontSize: 18,

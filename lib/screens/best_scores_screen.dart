@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../services/storage_service.dart';
 import '../widgets/animated_background.dart';
 
@@ -76,9 +77,9 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text(
-                      'En İyi Skorlar',
-                      style: TextStyle(
+                    Text(
+                      S.bestScoresTitle,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -111,13 +112,13 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
           Row(
             children: [
               _BigStat(
-                label: 'En İyi SnapIQ',
+                label: S.bestSnapIQ,
                 value: s.bestReflexIQ == 0 ? '--' : '${s.bestReflexIQ}',
                 color: const Color(0xFF00B4FF),
               ),
               const SizedBox(width: 12),
               _BigStat(
-                label: 'En İyi Bilişsel Yaş',
+                label: S.bestCogAge,
                 value: s.bestCognitiveAge == 0
                     ? '--'
                     : '${s.bestCognitiveAge}',
@@ -127,18 +128,18 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
           ),
           const SizedBox(height: 12),
           _BigStat(
-            label: 'Toplam Test',
+            label: S.totalTestsLabel,
             value: '${s.totalGames}',
             color: const Color(0xFFBB86FC),
             fullWidth: true,
           ),
           const SizedBox(height: 24),
           // Last 5 scores
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Son 5 Oyun',
-              style: TextStyle(
+              S.last5Games,
+              style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 15,
                   fontWeight: FontWeight.bold),
@@ -146,9 +147,9 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
           ),
           const SizedBox(height: 12),
           if (s.lastScores.isEmpty)
-            const Text(
-              'Henüz oyun oynanmadı.',
-              style: TextStyle(color: Colors.white38, fontSize: 14),
+            Text(
+              S.noGamesYet,
+              style: const TextStyle(color: Colors.white38, fontSize: 14),
             )
           else
             ...s.lastScores.asMap().entries.map((e) {
@@ -188,7 +189,7 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'SnapIQ: ${r.reflexIQ}  •  Yaş: ${r.cognitiveAge}',
+                            S.scoreRowLabel(r.reflexIQ, r.cognitiveAge),
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -254,16 +255,16 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
               const Icon(Icons.public_rounded,
                   color: Color(0xFFBB86FC), size: 18),
               const SizedBox(width: 8),
-              const Text(
-                'Tüm Oyuncular',
-                style: TextStyle(
+              Text(
+                S.allPlayers,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,
                     fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               Text(
-                'Toplam: ${_fmt(_totalPlayers)} kişi',
+                S.totalPlayers(_fmt(_totalPlayers)),
                 style: const TextStyle(color: Colors.white38, fontSize: 12),
               ),
             ],
@@ -272,9 +273,9 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
           const SizedBox(height: 16),
 
           if (!hasScore) ...[
-            const Text(
-              'İlk testini tamamla ve sıralamanı gör!',
-              style: TextStyle(color: Colors.white38, fontSize: 13),
+            Text(
+              S.noRankYet,
+              style: const TextStyle(color: Colors.white38, fontSize: 13),
             ),
           ] else ...[
             // Bar showing relative position
@@ -291,10 +292,10 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('En İyi',
-                    style: TextStyle(color: Colors.white24, fontSize: 10)),
-                const Text('En Kötü',
-                    style: TextStyle(color: Colors.white24, fontSize: 10)),
+                Text(S.rankBest,
+                    style: const TextStyle(color: Colors.white24, fontSize: 10)),
+                Text(S.rankWorst,
+                    style: const TextStyle(color: Colors.white24, fontSize: 10)),
               ],
             ),
 
@@ -307,8 +308,8 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Sen',
-                        style: TextStyle(
+                    Text(S.rankYou,
+                        style: const TextStyle(
                             color: Colors.white38, fontSize: 11)),
                     Text(
                       '#${_fmt(_myRank)}',
@@ -346,16 +347,16 @@ class _TopBadge extends StatelessWidget {
     final String label;
     if (topPercent <= 5) {
       col = const Color(0xFFFDD835);
-      label = 'İlk %$topPercent 🏆';
+      label = S.topPctGold(topPercent);
     } else if (topPercent <= 15) {
       col = const Color(0xFF00C853);
-      label = 'İlk %$topPercent 🥇';
+      label = S.topPctGreen(topPercent);
     } else if (topPercent <= 35) {
       col = const Color(0xFF00B4FF);
-      label = 'İlk %$topPercent';
+      label = S.topPct(topPercent);
     } else {
       col = Colors.white38;
-      label = 'İlk %$topPercent';
+      label = S.topPct(topPercent);
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),

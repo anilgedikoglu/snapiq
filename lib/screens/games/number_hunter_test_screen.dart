@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'pattern_master_test_screen.dart';
 
@@ -221,12 +222,12 @@ class _NHTState extends State<NumberHunterTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Number Hunter â€” SayÄ±yÄ± bul!',
+                  S.numHunterInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Padding(
@@ -240,7 +241,7 @@ class _NHTState extends State<NumberHunterTestScreen> {
                                 ? Colors.white54
                                 : Colors.redAccent,
                             fontSize: 14)),
-                    Text('$_score bulundu',
+                    Text(S.nFound(_score),
                         style: const TextStyle(
                             color: Color(0xFF00B4FF),
                             fontSize: 16,
@@ -251,7 +252,7 @@ class _NHTState extends State<NumberHunterTestScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(
-                  'Bulunacak: $_target',
+                  S.numberTarget(_target),
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 28,

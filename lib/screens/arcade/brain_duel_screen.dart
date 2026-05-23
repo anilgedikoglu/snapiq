@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -179,13 +180,13 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '$playerNum. Oyuncu',
+              S.playerN(playerNum),
               style: const TextStyle(
                   color: Colors.white54, fontSize: 18),
             ),
             const SizedBox(height: 12),
             Text(
-              'Telefonu $playerNum. oyuncuya ver',
+              S.giveToPlayerN(playerNum),
               textAlign: TextAlign.center,
               style: const TextStyle(
                   color: Colors.white,
@@ -204,8 +205,8 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
                   border: Border.all(
                       color: const Color(0xFF00B4FF).withValues(alpha: 0.6)),
                 ),
-                child: const Text('HAZIR',
-                    style: TextStyle(
+                child: Text(S.duelReady,
+                    style: const TextStyle(
                         color: Color(0xFF00B4FF),
                         fontSize: 22,
                         fontWeight: FontWeight.bold)),
@@ -225,7 +226,7 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Oyuncu $playerNum',
+              Text(S.playerN(playerNum),
                   style: const TextStyle(
                       color: Colors.white54, fontSize: 13)),
               Text(
@@ -279,10 +280,10 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
 
   Widget _buildResult() {
     final winner = _score1 > _score2
-        ? '1. Oyuncu Kazandı! 🏆'
+        ? S.duelP1Wins
         : _score2 > _score1
-            ? '2. Oyuncu Kazandı! 🏆'
-            : 'Berabere! 🤝';
+            ? S.duelP2Wins
+            : S.duelTie;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -299,8 +300,8 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _scoreCard('Oyuncu 1', _score1),
-                _scoreCard('Oyuncu 2', _score2),
+                _scoreCard(S.playerN(1), _score1),
+                _scoreCard(S.playerN(2), _score2),
               ],
             ),
             const SizedBox(height: 32),
@@ -315,7 +316,7 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: const Text('Çıkış'),
+                    child: Text(S.exit),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -328,7 +329,7 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: const Text('Tekrar'),
+                    child: Text(S.again),
                   ),
                 ),
               ],

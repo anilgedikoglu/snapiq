@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../services/storage_service.dart';
 import '../widgets/animated_background.dart';
 
@@ -41,8 +42,8 @@ class _StatsScreenState extends State<StatsScreen> {
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text('İstatistikler',
-                        style: TextStyle(
+                    Text(S.statsTitle,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
@@ -85,15 +86,15 @@ class _StatsScreenState extends State<StatsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Son 10 Oyun – SnapIQ',
-              style: TextStyle(
+          Text(S.statsChart,
+              style: const TextStyle(
                   color: Color(0xFF00B4FF),
                   fontWeight: FontWeight.bold,
                   fontSize: 15)),
           const SizedBox(height: 12),
           if (snapIQs.isEmpty)
-            const Text('Henüz oyun kaydı yok.',
-                style: TextStyle(color: Colors.white38, fontSize: 14))
+            Text(S.statsNoGames,
+                style: const TextStyle(color: Colors.white38, fontSize: 14))
           else ...[
             SizedBox(
               height: 160,
@@ -105,13 +106,13 @@ class _StatsScreenState extends State<StatsScreen> {
             const SizedBox(height: 20),
             Row(
               children: [
-                _statChip('En İyi', best!.round().toString(),
+                _statChip(S.statsChipBest, best!.round().toString(),
                     const Color(0xFF00C853)),
                 const SizedBox(width: 10),
-                _statChip('Ortalama', avg!.toStringAsFixed(1),
+                _statChip(S.statsChipAvg, avg!.toStringAsFixed(1),
                     const Color(0xFF00B4FF)),
                 const SizedBox(width: 10),
-                _statChip('En Düşük', worst!.round().toString(),
+                _statChip(S.statsChipWorst, worst!.round().toString(),
                     const Color(0xFFFF7043)),
               ],
             ),
@@ -123,14 +124,14 @@ class _StatsScreenState extends State<StatsScreen> {
                   fontWeight: FontWeight.bold,
                   fontSize: 15)),
           const SizedBox(height: 12),
-          _infoRow('Toplam Oyun', '${s.totalGames}'),
-          _infoRow('En İyi SnapIQ',
+          _infoRow(S.statsTotalGames, '${s.totalGames}'),
+          _infoRow(S.statsBestIQ,
               s.bestReflexIQ > 0 ? '${s.bestReflexIQ}' : '--'),
-          _infoRow('En İyi Bilişsel Yaş',
+          _infoRow(S.statsBestCogAge,
               s.bestCognitiveAge > 0 ? '${s.bestCognitiveAge}' : '--'),
-          _infoRow('En İyi Reaksiyon',
+          _infoRow(S.statsBestReaction,
               s.bestReactionMs > 0 ? '${s.bestReactionMs} ms' : '--'),
-          _infoRow('Toplam Süre', '${s.totalTestTimeSecs} sn'),
+          _infoRow(S.statsTotalTime, '${s.totalTestTimeSecs} sn'),
           const SizedBox(height: 20),
         ],
       ),

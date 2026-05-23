@@ -339,7 +339,7 @@ class _CTTState extends State<CircleTapTestScreen>
               Padding(
                 padding: const EdgeInsets.only(bottom: 6),
                 child: Text(
-                  'Daire ust ortaya geldiginde tap et!',
+                  S.circleInstr,
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
@@ -395,7 +395,7 @@ class _CTTState extends State<CircleTapTestScreen>
                           if (_phase == 'playing')
                             Positioned(
                               bottom: 16,
-                              child: Text('Skor: $_totalScore',
+                              child: Text(S.circleScore(_totalScore),
                                   style: TextStyle(
                                       color: Colors.white.withValues(alpha: 0.45),
                                       fontSize: 13)),
@@ -415,7 +415,7 @@ class _CTTState extends State<CircleTapTestScreen>
 
   Widget _buildFeedback() {
     final showDir = _fbErrorMs < 9999 && _fbErrorMs > 0 &&
-        _fbLabel != 'Mükemmel!' && _fbLabel != 'Kaçtı!';
+        _fbLabel != S.excellent && _fbLabel != S.missed;
     final sign = _fbIsEarly ? '-' : '+';
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -423,14 +423,14 @@ class _CTTState extends State<CircleTapTestScreen>
         Text(_fbLabel,
             style: TextStyle(color: _fbColor, fontSize: 28, fontWeight: FontWeight.bold,
                 shadows: [Shadow(color: _fbColor, blurRadius: 20)])),
-        if (_fbLabel == 'Mükemmel!' && _fbErrorMs < 9999) ...[
+        if (_fbLabel == S.excellent && _fbErrorMs < 9999) ...[
           const SizedBox(height: 3),
           Text('${_fbErrorMs}ms',
               style: TextStyle(color: _fbColor.withValues(alpha: 0.65), fontSize: 13)),
         ],
         if (showDir) ...[
           const SizedBox(height: 3),
-          Text('${_fbIsEarly ? "Erken" : "Geç"}: $sign${_fbErrorMs}ms',
+          Text('${_fbIsEarly ? S.early : S.late}: $sign${_fbErrorMs}ms',
               style: TextStyle(color: _fbColor.withValues(alpha: 0.70),
                   fontSize: 14, fontWeight: FontWeight.w500)),
         ],

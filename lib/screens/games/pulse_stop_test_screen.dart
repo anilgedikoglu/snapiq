@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
 import '../../services/ad_service.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'balance_bar_test_screen.dart';
 
@@ -85,15 +86,15 @@ class _PSTState extends State<PulseStopTestScreen>
     Color color;
 
     if (diff < 5) {
-      points = 100; msg = 'Mükemmel!'; color = const Color(0xFF00C853);
+      points = 100; msg = S.excellent; color = const Color(0xFF00C853);
     } else if (diff < 15) {
-      points = 70;  msg = 'Harika!';   color = const Color(0xFF00B4FF);
+      points = 70;  msg = S.great;     color = const Color(0xFF00B4FF);
     } else if (diff < 30) {
-      points = 40;  msg = 'İyi';       color = const Color(0xFFFDD835);
+      points = 40;  msg = S.good;      color = const Color(0xFFFDD835);
     } else if (diff < 50) {
-      points = 15;  msg = 'Tamam';     color = const Color(0xFFFF7043);
+      points = 15;  msg = S.okay;      color = const Color(0xFFFF7043);
     } else {
-      points = 0;   msg = 'Kaçırdın'; color = Colors.red;
+      points = 0;   msg = S.missed;    color = Colors.red;
     }
 
     setState(() {
@@ -194,12 +195,12 @@ class _PSTState extends State<PulseStopTestScreen>
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 4),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
                   child: Text(
-                    'Pulse Stop — Halkayı sarı bölgede durdur!',
+                    S.pulseInstr,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ),
                 Expanded(
@@ -274,9 +275,9 @@ class _PSTState extends State<PulseStopTestScreen>
                           ),
                         ),
                       if (_gameEnded)
-                        const Text(
-                          'Tamamlandı!',
-                          style: TextStyle(
+                        Text(
+                          S.done,
+                          style: const TextStyle(
                               color: Colors.white54, fontSize: 16),
                         ),
                     ],
@@ -285,7 +286,7 @@ class _PSTState extends State<PulseStopTestScreen>
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
                   child: Text(
-                    'Toplam: $_totalScore',
+                    S.pulseTotal(_totalScore),
                     style: const TextStyle(
                         color: Color(0xFFFDD835),
                         fontSize: 18,

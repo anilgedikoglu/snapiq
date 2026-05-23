@@ -6,6 +6,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 class SpeedMathScreen extends StatefulWidget {
@@ -165,7 +166,7 @@ class _SpeedMathScreenState extends State<SpeedMathScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Soru: ${_qIndex + 1}/$_totalQ',
+                    Text(S.speedMathQ(_qIndex + 1, _totalQ),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 13)),
                     Text('$_score/$_totalQ',
@@ -229,9 +230,9 @@ class _SpeedMathScreenState extends State<SpeedMathScreen> {
                                     border: Border.all(
                                         color: Colors.green.withValues(alpha: 0.6)),
                                   ),
-                                  child: const Center(
-                                    child: Text('✓ DOĞRU',
-                                        style: TextStyle(
+                                  child: Center(
+                                    child: Text(S.speedMathTrue,
+                                        style: const TextStyle(
                                             color: Colors.green,
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold)),
@@ -251,9 +252,9 @@ class _SpeedMathScreenState extends State<SpeedMathScreen> {
                                     border: Border.all(
                                         color: Colors.red.withValues(alpha: 0.6)),
                                   ),
-                                  child: const Center(
-                                    child: Text('✗ YANLIŞ',
-                                        style: TextStyle(
+                                  child: Center(
+                                    child: Text(S.speedMathFalse,
+                                        style: const TextStyle(
                                             color: Colors.red,
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold)),

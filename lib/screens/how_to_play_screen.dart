@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../widgets/animated_background.dart';
 
 class HowToPlayScreen extends StatelessWidget {
@@ -21,9 +22,9 @@ class HowToPlayScreen extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text(
-                      'Nasıl Oynanır',
-                      style: TextStyle(
+                    Text(
+                      S.howTitle,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

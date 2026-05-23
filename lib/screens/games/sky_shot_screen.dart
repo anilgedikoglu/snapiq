@@ -5,6 +5,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 class SkyShotScreen extends StatefulWidget {
@@ -353,7 +354,7 @@ class _SkyShotScreenState extends State<SkyShotScreen>
                       ),
                     ),
                     Text(
-                      'Puan: $_totalScore',
+                      S.skyScore(_totalScore),
                       style: const TextStyle(
                           color: Color(0xFF00B4FF),
                           fontSize: 20,

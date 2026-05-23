@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'sequence_rush_test_screen.dart';
 
@@ -238,12 +239,12 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Mirror Brain â€” Tersine dokun!',
+                  S.mirrorBrainInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Padding(
@@ -283,8 +284,8 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          const Text('TERSÄ°NE DOKUN!',
-                              style: TextStyle(
+                          Text(S.mirrorBrainTap,
+                              style: const TextStyle(
                                   color: Colors.white54,
                                   fontSize: 14,
                                   letterSpacing: 1)),
@@ -320,7 +321,7 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                                   color: const Color(0xFF00B4FF)
                                       .withValues(alpha: 0.5)),
                             ),
-                            child: const Text('BAÅLA',
+                            child: Text(S.startBtn,
                                 style: TextStyle(
                                     color: Color(0xFF00B4FF),
                                     fontSize: 24,

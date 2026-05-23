@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -165,10 +166,10 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Tur: ${_round + 1}/$_totalRounds',
+                    Text(S.focusRound(_round + 1, _totalRounds),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 13)),
-                    Text('$_score puan',
+                    Text(S.focusScore(_score),
                         style: const TextStyle(
                             color: Color(0xFF00B4FF),
                             fontSize: 16,
@@ -191,8 +192,8 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
                 ),
               ),
               const SizedBox(height: 6),
-              const Text('Farklı olanı bul!',
-                  style: TextStyle(color: Colors.white54, fontSize: 13)),
+              Text(S.focusHunterFindOdd,
+                  style: const TextStyle(color: Colors.white54, fontSize: 13)),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(12),

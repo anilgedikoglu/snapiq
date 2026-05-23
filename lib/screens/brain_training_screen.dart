@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../services/storage_service.dart';
 import '../models/game_session.dart';
 import '../widgets/animated_background.dart';
@@ -43,8 +44,8 @@ class _BrainTrainingScreenState extends State<BrainTrainingScreen> {
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text('Beyin Antrenmanı',
-                        style: TextStyle(
+                    Text(S.brainTrainTitle,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
@@ -53,9 +54,9 @@ class _BrainTrainingScreenState extends State<BrainTrainingScreen> {
               ),
               const CinHost(size: 80),
               const SizedBox(height: 8),
-              const Text(
-                'Hangi becerini çalışmak istiyorsun?',
-                style: TextStyle(color: Colors.white54, fontSize: 13),
+              Text(
+                S.brainTrainPrompt,
+                style: const TextStyle(color: Colors.white54, fontSize: 13),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -66,7 +67,7 @@ class _BrainTrainingScreenState extends State<BrainTrainingScreen> {
                     _ModeCard(
                       emoji: '🧠',
                       title: 'Memory Blitz',
-                      description: 'Hangi kutular yandı? Ezberle ve seç.',
+                      description: S.brainTrainMemDesc,
                       color: const Color(0xFFBB86FC),
                       bestScore: _storage == null
                           ? null
@@ -91,7 +92,7 @@ class _BrainTrainingScreenState extends State<BrainTrainingScreen> {
                     _ModeCard(
                       emoji: '🎨',
                       title: 'Speed Tap',
-                      description: 'Stroop renk testi. Rengi hızlıca seç!',
+                      description: S.brainTrainStroopDesc,
                       color: const Color(0xFF1E88E5),
                       bestScore: _storage == null
                           ? null
@@ -116,7 +117,7 @@ class _BrainTrainingScreenState extends State<BrainTrainingScreen> {
                       emoji: '🎯',
                       title: 'Focus Hunter',
                       description:
-                          'Sadece doğru şekle dokun. Dikkatini koru.',
+                          S.brainTrainImpulseDesc,
                       color: const Color(0xFFFF7043),
                       bestScore: _storage == null
                           ? null
@@ -144,7 +145,7 @@ class _BrainTrainingScreenState extends State<BrainTrainingScreen> {
                       emoji: '🔢',
                       title: 'Number Rush',
                       description:
-                          'Sayıları küçükten büyüğe sırala. Süre dolmadan!',
+                          S.brainTrainSeqDesc,
                       color: const Color(0xFFFDD835),
                       bestScore: _storage == null
                           ? null
@@ -225,7 +226,7 @@ class _ModeCard extends StatelessWidget {
                           color: Colors.white54, fontSize: 12)),
                   if (bestScore != null) ...[
                     const SizedBox(height: 4),
-                    Text('Son: $bestScore puan',
+                    Text(S.brainTrainBest(bestScore!),
                         style: TextStyle(
                             color: color.withValues(alpha: 0.7),
                             fontSize: 11)),

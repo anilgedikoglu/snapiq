@@ -6,6 +6,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 import '../../painters/radar_painter.dart';
 
@@ -98,7 +99,7 @@ class _TargetLockScreenState extends State<TargetLockScreen>
 
     if (!lockedAny) {
       setState(() {
-        _feedback     = 'Kaçırdın!';
+        _feedback     = S.missed;
         _feedbackColor = const Color(0xFFFF7043);
         _showFeedback  = true;
       });
@@ -206,10 +207,10 @@ class _TargetLockScreenState extends State<TargetLockScreen>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Kilitli: $_totalLocked/$_totalToLock',
+                      Text(S.targetLocked(_totalLocked, _totalToLock),
                           style: const TextStyle(
                               color: Colors.white70, fontSize: 16)),
-                      Text('Puan: $_totalScore',
+                      Text(S.targetScore(_totalScore),
                           style: const TextStyle(
                               color: Color(0xFFBB86FC),
                               fontSize: 20,

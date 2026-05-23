@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 
 class PremiumHeader extends StatelessWidget {
   const PremiumHeader({super.key});
@@ -25,10 +26,10 @@ class PremiumHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 3),
-          const Text(
-            'Refleksini, zamanlamanı ve odağını test et.',
+          Text(
+            S.widgetSubtitle,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white54, fontSize: 11),
+            style: const TextStyle(color: Colors.white54, fontSize: 11),
           ),
         ],
       ),

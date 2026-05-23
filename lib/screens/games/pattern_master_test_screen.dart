@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../models/test_result.dart';
 import '../../services/storage_service.dart';
 import '../../services/ad_service.dart';
@@ -278,12 +279,12 @@ class _PMTState extends State<PatternMasterTestScreen> {
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 4),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
                     child: Text(
-                      'Pattern Master â€” SÄ±radaki ne?',
+                      S.patternMasterInstr,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white54, fontSize: 12),
+                      style: const TextStyle(color: Colors.white54, fontSize: 12),
                     ),
                   ),
                   if (_qIndex < _totalQ && _questions.isNotEmpty) ...[
@@ -292,10 +293,10 @@ class _PMTState extends State<PatternMasterTestScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Soru: ${_qIndex + 1}/$_totalQ',
+                          Text(S.patternQ(_qIndex + 1, _totalQ),
                               style: const TextStyle(
                                   color: Colors.white54, fontSize: 13)),
-                          Text('${_score * _ptsPerQ} puan',
+                          Text(S.patternPoints(_score, _ptsPerQ),
                               style: const TextStyle(
                                   color: Color(0xFF00B4FF),
                                   fontSize: 16,

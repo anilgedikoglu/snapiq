@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -173,7 +174,7 @@ class _NumberHunterScreenState extends State<NumberHunterScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(
-                  'Bulunacak: $_target',
+                  S.numberTarget(_target),
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 28,

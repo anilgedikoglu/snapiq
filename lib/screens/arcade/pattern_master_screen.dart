@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -196,10 +197,10 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Soru: ${_qIndex + 1}/$_totalQ',
+                          Text(S.patternQ(_qIndex + 1, _totalQ),
                               style: const TextStyle(
                                   color: Colors.white54, fontSize: 13)),
-                          Text('${_score * _ptsPerQ} puan',
+                          Text(S.patternPoints(_score, _ptsPerQ),
                               style: const TextStyle(
                                   color: Color(0xFF00B4FF),
                                   fontSize: 16,

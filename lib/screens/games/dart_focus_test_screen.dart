@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import '../../painters/dart_board_painter.dart';
 import 'sky_shot_test_screen.dart';
@@ -181,18 +182,18 @@ class _DFTState extends State<DartFocusTestScreen>
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Text('$_shotsLeft atış kaldı',
+                    Text(S.dartShots(_shotsLeft),
                         style: const TextStyle(
                             color: Color(0xFFFF7043), fontSize: 13)),
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Dart Focus — Nişangahı merkeze getir ve at!',
+                  S.dartInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Expanded(
@@ -250,7 +251,7 @@ class _DFTState extends State<DartFocusTestScreen>
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
                 child: Text(
-                  'Puan: ${_dartScores.fold(0, (a, b) => a + b)}',
+                  S.dartScore(_dartScores.fold(0, (a, b) => a + b)),
                   style: const TextStyle(
                       color: Color(0xFFFF7043),
                       fontSize: 18,

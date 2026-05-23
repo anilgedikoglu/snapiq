@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
 import '../models/test_result.dart';
 import '../services/storage_service.dart';
@@ -108,9 +109,9 @@ class _UltraHardScreenState extends State<UltraHardScreen> {
               children: [
                 const CinHost(size: 100),
                 const SizedBox(height: 16),
-                const Text(
-                  'MANYAK MOD',
-                  style: TextStyle(
+                Text(
+                  S.ultraTitle,
+                  style: const TextStyle(
                     color: Color(0xFFFF7043),
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -149,7 +150,7 @@ class _UltraHardScreenState extends State<UltraHardScreen> {
                 ),
                 const SizedBox(height: 32),
                 NeonButton(
-                  text: 'Manyak Moda Gir!',
+                  text: S.ultraTitle,
                   onPressed: _startTest,
                   color: const Color(0xFFFF7043),
                   width: double.infinity,
@@ -158,7 +159,7 @@ class _UltraHardScreenState extends State<UltraHardScreen> {
                 ),
                 const SizedBox(height: 14),
                 NeonButton(
-                  text: 'Geri',
+                  text: S.back,
                   onPressed: () => Navigator.pop(context),
                   color: Colors.white38,
                   width: double.infinity,

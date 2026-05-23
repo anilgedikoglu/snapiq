@@ -6,6 +6,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../painters/laser_gate_painter.dart';
 
 class LaserGateScreen extends StatefulWidget {
@@ -178,7 +179,7 @@ class _LaserGateScreenState extends State<LaserGateScreen>
                       color: Color(0xFF00E5FF),
                       fontSize: 52,
                       fontWeight: FontWeight.bold)),
-              Text('En İyi: ${bestStr}s',
+              Text('${S.best}: ${bestStr}s',
                   style: const TextStyle(color: Colors.white38, fontSize: 12)),
               const SizedBox(height: 12),
               Container(
@@ -207,7 +208,7 @@ class _LaserGateScreenState extends State<LaserGateScreen>
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text('Çıkış'),
+                      child: Text(S.exit),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -220,7 +221,7 @@ class _LaserGateScreenState extends State<LaserGateScreen>
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text('Tekrar'),
+                      child: Text(S.again),
                     ),
                   ),
                 ],

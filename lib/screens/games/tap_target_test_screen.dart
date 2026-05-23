@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'shape_strike_test_screen.dart';
 
@@ -218,7 +219,7 @@ class _TTTState extends State<TapTargetTestScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Tap Target — Yeşile dokun, kırmızıdan kaç!  $_score',
+                  S.tapTargetInstr,
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),

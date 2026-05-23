@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'reaction_wall_test_screen.dart';
 
@@ -250,12 +251,12 @@ class _SRTState extends State<SequenceRushTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Sequence Rush â€” SÄ±rayÄ± tekrarla!',
+                  S.seqRushInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Padding(
@@ -268,7 +269,7 @@ class _SRTState extends State<SequenceRushTestScreen> {
                           (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
                               style: const TextStyle(fontSize: 18))),
                     ),
-                    Text('Seviye $_level',
+                    Text(S.seqRushLevel(_level),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 12)),
                   ],
@@ -277,7 +278,7 @@ class _SRTState extends State<SequenceRushTestScreen> {
               const SizedBox(height: 8),
               if (_started)
                 Text(
-                  _isWatching ? 'Ä°ZLE!' : (_inputEnabled ? 'TEKRARLA!' : ''),
+                  _isWatching ? S.seqRushWatch : (_inputEnabled ? S.seqRushRepeat : ''),
                   style: TextStyle(
                       color: _isWatching
                           ? const Color(0xFFFDD835)
@@ -336,7 +337,7 @@ class _SRTState extends State<SequenceRushTestScreen> {
                                   color: const Color(0xFF00B4FF)
                                       .withValues(alpha: 0.5)),
                             ),
-                            child: const Text('BAÅLA',
+                            child: Text(S.startBtn,
                                 style: TextStyle(
                                     color: Color(0xFF00B4FF),
                                     fontSize: 24,

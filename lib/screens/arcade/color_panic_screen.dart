@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -20,7 +21,7 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
   static const _xpReward = 30;
   static const _gameName = 'Color Panic';
 
-  static const _words = ['KIRMIZI', 'MAVİ', 'YEŞİL', 'SARI', 'MOR', 'TURUNCU'];
+  // Words sourced from S.colorPanicWords at runtime (see _generateRound)
   static const _colors = [
     Colors.red,
     Colors.blue,
@@ -33,7 +34,7 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
   int _lives = 3;
   int _score = 0;
   int _intervalMs = 1200;
-  String _word = 'KIRMIZI';
+  String _word = '';
   Color _inkColor = Colors.red;
   bool _isMatch = false;
   bool _gameEnded = false;
@@ -54,9 +55,10 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
   }
 
   void _generateRound() {
-    final wordIdx = _rand.nextInt(_words.length);
+    final words = S.colorPanicWords;
+    final wordIdx = _rand.nextInt(words.length);
     final inkIdx = _rand.nextInt(_colors.length);
-    _word = _words[wordIdx];
+    _word = words[wordIdx];
     _inkColor = _colors[inkIdx];
     _isMatch = wordIdx == inkIdx;
   }
@@ -185,9 +187,9 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
                                     border: Border.all(
                                         color: Colors.green.withValues(alpha: 0.6)),
                                   ),
-                                  child: const Center(
-                                    child: Text('✓ EŞLEŞME',
-                                        style: TextStyle(
+                                  child: Center(
+                                    child: Text(S.colorMatch,
+                                        style: const TextStyle(
                                             color: Colors.green,
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold)),
@@ -207,9 +209,9 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
                                     border: Border.all(
                                         color: Colors.red.withValues(alpha: 0.6)),
                                   ),
-                                  child: const Center(
-                                    child: Text('✗ FARKLI',
-                                        style: TextStyle(
+                                  child: Center(
+                                    child: Text(S.colorDiff,
+                                        style: const TextStyle(
                                             color: Colors.red,
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold)),

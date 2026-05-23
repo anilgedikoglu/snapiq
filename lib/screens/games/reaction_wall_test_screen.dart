@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'focus_hunter_test_screen.dart';
 
@@ -250,12 +251,12 @@ class _RWTState extends State<ReactionWallTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Reaction Wall â€” DoÄŸru ÅŸeritte dur!',
+                  S.reactionWallInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Padding(
@@ -332,7 +333,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
                                   color: const Color(0xFF00B4FF)
                                       .withValues(alpha: 0.5)),
                             ),
-                            child: const Text('BAÅLA',
+                            child: Text(S.startBtn,
                                 style: TextStyle(
                                     color: Color(0xFF00B4FF),
                                     fontSize: 24,

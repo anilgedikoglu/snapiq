@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../services/storage_service.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/cin_host.dart';
@@ -277,8 +278,8 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
               _buildHeader(),
               const CinHost(size: 70),
               const SizedBox(height: 4),
-              const Text('25 mini oyun • 8 kategori',
-                  style: TextStyle(color: Colors.white54, fontSize: 13)),
+              Text(S.arcadeSubtitle,
+                  style: const TextStyle(color: Colors.white54, fontSize: 13)),
               const SizedBox(height: 12),
               Expanded(
                 child: ListView(
@@ -396,7 +397,7 @@ class _ArcadeHubScreenState extends State<ArcadeHubScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 2),
-                  Text('En İyi: $best',
+                  Text(S.arcadeBest(best),
                       style: const TextStyle(
                           color: Colors.white38, fontSize: 10)),
                 ],

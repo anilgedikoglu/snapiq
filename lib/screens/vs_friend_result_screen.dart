@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/test_result.dart';
 import '../services/storage_service.dart';
 import '../services/achievement_service.dart';
@@ -68,12 +69,12 @@ class _VsFriendResultScreenState extends State<VsFriendResultScreen>
   String get _speedComparison {
     final iq1 = widget.p1Result.reflexIQ;
     final iq2 = widget.p2Result.reflexIQ;
-    if (iq1 == iq2) return 'Beraberlik!';
+    if (iq1 == iq2) return S.vsTie;
     final winner = _p1Wins ? iq1 : iq2;
     final loser = _p1Wins ? iq2 : iq1;
     if (loser == 0) return '';
     final pct = ((winner - loser) / loser * 100).round();
-    return '%$pct daha hızlı zihin!';
+    return S.fasterMind(pct);
   }
 
   @override
@@ -111,13 +112,13 @@ class _VsFriendResultScreenState extends State<VsFriendResultScreen>
                     children: [
                       Expanded(
                           child: _PlayerCard(
-                              label: 'Oyuncu 1',
+                              label: S.playerN(1),
                               result: widget.p1Result,
                               isWinner: _p1Wins)),
                       const SizedBox(width: 12),
                       Expanded(
                           child: _PlayerCard(
-                              label: 'Oyuncu 2',
+                              label: S.playerN(2),
                               result: widget.p2Result,
                               isWinner: !_p1Wins)),
                     ],
@@ -126,7 +127,7 @@ class _VsFriendResultScreenState extends State<VsFriendResultScreen>
                   _buildComparison(),
                   const SizedBox(height: 24),
                   NeonButton(
-                    text: 'Ana Menü',
+                    text: S.menu,
                     onPressed: () => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -150,12 +151,12 @@ class _VsFriendResultScreenState extends State<VsFriendResultScreen>
     final r1 = widget.p1Result;
     final r2 = widget.p2Result;
     final categories = [
-      ('Reaksiyon', r1.reactionScore, r2.reactionScore),
-      ('Dikkat', r1.stroopScore, r2.stroopScore),
-      ('Hafıza', r1.memoryScore, r2.memoryScore),
-      ('Sıralama', r1.sequenceScore, r2.sequenceScore),
-      ('İmpuls', r1.impulseScore, r2.impulseScore),
-      ('Örüntü', r1.patternScore, r2.patternScore),
+      (S.cardReaction, r1.reactionScore, r2.reactionScore),
+      (S.cardStroop,   r1.stroopScore,   r2.stroopScore),
+      (S.cardMemory,   r1.memoryScore,   r2.memoryScore),
+      (S.cardSequence, r1.sequenceScore, r2.sequenceScore),
+      (S.cardImpulse,  r1.impulseScore,  r2.impulseScore),
+      (S.cardPattern,  r1.patternScore,  r2.patternScore),
     ];
 
     return Container(

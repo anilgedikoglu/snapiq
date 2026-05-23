@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'number_hunter_test_screen.dart';
 
@@ -240,12 +241,12 @@ class _SMTState extends State<SpeedMathTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Speed Math â€” DoÄŸru mu yanlÄ±ÅŸ mÄ±?',
+                  S.speedMathInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Padding(
@@ -253,7 +254,7 @@ class _SMTState extends State<SpeedMathTestScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Soru: ${_qIndex + 1}/$_totalQ',
+                    Text(S.speedMathQ(_qIndex + 1, _totalQ),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 13)),
                     Text('$_score/$_totalQ',
@@ -319,8 +320,8 @@ class _SMTState extends State<SpeedMathTestScreen> {
                                         color: Colors.green
                                             .withValues(alpha: 0.6)),
                                   ),
-                                  child: const Center(
-                                    child: Text('âœ“ DOÄRU',
+                                  child: Center(
+                                    child: Text(S.speedMathTrue,
                                         style: TextStyle(
                                             color: Colors.green,
                                             fontSize: 18,
@@ -342,8 +343,8 @@ class _SMTState extends State<SpeedMathTestScreen> {
                                         color: Colors.red
                                             .withValues(alpha: 0.6)),
                                   ),
-                                  child: const Center(
-                                    child: Text('âœ— YANLIÅ',
+                                  child: Center(
+                                    child: Text(S.speedMathFalse,
                                         style: TextStyle(
                                             color: Colors.red,
                                             fontSize: 18,

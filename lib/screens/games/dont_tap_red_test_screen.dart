@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'tap_target_test_screen.dart';
 
@@ -198,12 +199,12 @@ class _DTRTState extends State<DontTapRedTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  "Don't Tap Red — Kırmızıya dokunma!",
+                  S.dontTapRedInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               // Lives + correct count
@@ -217,7 +218,7 @@ class _DTRTState extends State<DontTapRedTestScreen> {
                           (i) => Text(i < _lives ? '❤️' : '🖤',
                               style: const TextStyle(fontSize: 20))),
                     ),
-                    Text('$_correct doğru',
+                    Text(S.dontTapRedCorrect(_correct),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 13)),
                   ],

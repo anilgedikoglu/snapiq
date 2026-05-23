@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'mirror_brain_test_screen.dart';
 
@@ -221,12 +222,12 @@ class _MFTState extends State<MemoryFlashTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Memory Flash â€” Hangi kareler?',
+                  S.memFlashInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Padding(
@@ -239,7 +240,7 @@ class _MFTState extends State<MemoryFlashTestScreen> {
                           (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
                               style: const TextStyle(fontSize: 18))),
                     ),
-                    Text('$_score doÄŸru',
+                    Text(S.memFlashCorrect(_score),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 13)),
                   ],
@@ -262,11 +263,11 @@ class _MFTState extends State<MemoryFlashTestScreen> {
     Color color = Colors.white54;
     switch (_phase) {
       case _Phase.watch:
-        text = 'Ezberle!';
+        text = S.memFlashMemorize;
         color = const Color(0xFFFDD835);
         break;
       case _Phase.recall:
-        text = 'Hangileri?';
+        text = S.memFlashWhich;
         color = const Color(0xFF00B4FF);
         break;
       case _Phase.result:

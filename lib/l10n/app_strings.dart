@@ -282,6 +282,7 @@ class S {
   static String get shapeStrikeInstr   => _e ? 'Shape Strike — Tap the correct shape!'         : 'Shape Strike — Doğru şekle dokun!';
   static String get memFlashInstr      => _e ? 'Memory Flash — Which squares?'                 : 'Memory Flash — Hangi kareler?';
   static String get mirrorBrainInstr   => _e ? 'Mirror Brain — Tap the opposite!'              : 'Mirror Brain — Tersine dokun!';
+  static String get mirrorBrainTap    => _e ? 'TAP OPPOSITE!'     : 'TERSİNE DOKUN!';
   static String get seqRushInstr       => _e ? 'Sequence Rush — Repeat the sequence!'          : 'Sequence Rush — Sırayı tekrarla!';
   static String get reactionWallInstr  => _e ? 'Reaction Wall — Stop in the right lane!'       : 'Reaction Wall — Doğru şeritte dur!';
   static String get focusHunterInstr   => _e ? 'Focus Hunter — Find the odd one out!'          : 'Focus Hunter — Farklı olanı bul!';

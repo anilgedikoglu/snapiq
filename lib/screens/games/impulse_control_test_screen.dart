@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'tap_rain_test_screen.dart';
 
@@ -125,7 +126,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
       _showTimer = Timer(Duration(milliseconds: displayMs), () {
         if (!mounted || _gameEnded) return;
         if (_isGo && !_tapped) {
-          setState(() => _message = 'KaÃ§Ä±rdÄ±n!');
+          setState(() => _message = 'missed');
         }
         setState(() {
           _showing = false;
@@ -145,7 +146,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
     if (_isGo) {
       setState(() {
         _score++;
-        _message = 'âœ“';
+        _message = '✓';
         _showing = false;
         _round++;
       });
@@ -155,7 +156,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
     } else {
       setState(() {
         _lives--;
-        _message = 'âœ—';
+        _message = '✗';
         _showing = false;
         _round++;
       });
@@ -260,12 +261,12 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 4),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
                   child: Text(
-                    'Impulse Control â€” GO mu BEKLE mi?',
+                    S.impulseCtrlInstr,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ),
                 Padding(
@@ -297,7 +298,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                               children: [
                                 if (_showing)
                                   Text(
-                                    _isGo ? 'GO' : 'BEKLE',
+                                    _isGo ? 'GO' : S.impulseCtrlWait,
                                     style: TextStyle(
                                       color: _isGo
                                           ? const Color(0xFF00C853)
@@ -315,11 +316,14 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                                     ),
                                   )
                                 else if (_message.isNotEmpty)
-                                  Text(_message,
+                                  Text(
+                                      _message == 'missed'
+                                          ? S.impulseCtrlMissed
+                                          : _message,
                                       style: TextStyle(
-                                          color: _message == 'âœ“'
+                                          color: _message == '✓'
                                               ? const Color(0xFF00C853)
-                                              : _message == 'KaÃ§Ä±rdÄ±n!'
+                                              : _message == 'missed'
                                                   ? const Color(0xFFFDD835)
                                                   : Colors.red,
                                           fontSize: 48,
@@ -331,8 +335,8 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                                           fontSize: 48)),
                                 const SizedBox(height: 20),
                                 if (!_showing)
-                                  const Text('Ekrana dokun',
-                                      style: TextStyle(
+                                  Text(S.tapScreen,
+                                      style: const TextStyle(
                                           color: Colors.white24,
                                           fontSize: 14)),
                               ],

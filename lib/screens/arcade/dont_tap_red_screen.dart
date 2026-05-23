@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -164,8 +165,8 @@ class _DontTapRedScreenState extends State<DontTapRedScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text('KIRMIZIYA DOKUNMA!',
-                  style: TextStyle(
+              Text(S.dontTapRedLabel,
+                  style: const TextStyle(
                       color: Colors.red,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

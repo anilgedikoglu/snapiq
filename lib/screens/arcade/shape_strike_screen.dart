@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -48,12 +49,6 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
   final _rand = Random();
   double _fallSpeed = 0.006; // fraction per tick (50ms ticks)
 
-  static const _shapeNames = {
-    _ShapeType.circle: 'DAİRE',
-    _ShapeType.triangle: 'ÜÇGEN',
-    _ShapeType.square: 'KARE',
-    _ShapeType.star: 'YİLDİZ',
-  };
 
   static const _shapeColors = {
     _ShapeType.circle: Color(0xFF00B4FF),
@@ -248,17 +243,10 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Sadece ',
-                      style: TextStyle(color: Colors.white70, fontSize: 16)),
                   _buildShape(_targetShape, targetColor),
-                  const Text(' dokun!',
-                      style: TextStyle(color: Colors.white70, fontSize: 16)),
-                  const SizedBox(width: 6),
-                  Text(_shapeNames[_targetShape]!,
-                      style: TextStyle(
-                          color: targetColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 8),
+                  Text(S.shapeStrikeOnly(S.shapeStrikeNames[_targetShape.index]!),
+                      style: const TextStyle(color: Colors.white70, fontSize: 16)),
                 ],
               ),
               Expanded(

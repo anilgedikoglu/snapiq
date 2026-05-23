@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
 import '../../services/ad_service.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'dart_focus_test_screen.dart';
 
@@ -95,13 +96,13 @@ class _BBTState extends State<BalanceBarTestScreen>
     Color color;
 
     if (dist < _zoneWidth * 0.25) {
-      points = 100; msg = 'Mükemmel!'; color = const Color(0xFF00C853);
+      points = 100; msg = S.excellent; color = const Color(0xFF00C853);
     } else if (barPos >= zoneLeft && barPos <= zoneRight) {
-      points = 70;  msg = 'Harika!';   color = const Color(0xFF00B4FF);
+      points = 70;  msg = S.great;     color = const Color(0xFF00B4FF);
     } else if (dist < 0.35) {
-      points = 30;  msg = 'Tamam';     color = const Color(0xFFFDD835);
+      points = 30;  msg = S.okay;      color = const Color(0xFFFDD835);
     } else {
-      points = 0;   msg = 'Kaçırdın'; color = const Color(0xFFFF7043);
+      points = 0;   msg = S.missed;    color = const Color(0xFFFF7043);
     }
 
     setState(() {
@@ -202,13 +203,12 @@ class _BBTState extends State<BalanceBarTestScreen>
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 4),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
                   child: Text(
-                    'Balance Bar — Yeşil bölgeye gir ve dokun!',
+                    S.balanceInstr,
                     textAlign: TextAlign.center,
-                    style:
-                        TextStyle(color: Colors.white54, fontSize: 12),
+                    style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ),
                 Expanded(
@@ -250,7 +250,7 @@ class _BBTState extends State<BalanceBarTestScreen>
                                       width: zoneW,
                                       top: 0,
                                       child: Center(
-                                        child: Text('HEDEF',
+                                        child: Text(S.target,
                                             style: TextStyle(
                                                 color: const Color(
                                                         0xFF00C853)
@@ -346,7 +346,7 @@ class _BBTState extends State<BalanceBarTestScreen>
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
                   child: Text(
-                    'Toplam: $_totalScore',
+                    S.balanceTotal(_totalScore),
                     style: const TextStyle(
                         color: Color(0xFF00C853),
                         fontSize: 18,

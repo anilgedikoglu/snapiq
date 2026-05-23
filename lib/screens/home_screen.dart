@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/mini_game.dart';
 import '../services/storage_service.dart';
 import '../widgets/animated_background.dart';
@@ -50,16 +51,16 @@ class _IQInfo {
 }
 
 _IQInfo _iqInfoForScore(int score) {
-  if (score >= 140) return const _IQInfo('assets/iq_avatars/iq_dahi.png',     'Dahi',           '140+ IQ');
-  if (score >= 120) return const _IQInfo('assets/iq_avatars/iq_ustun.png',    'Üstün Zeka',     '120–139 IQ');
-  if (score >= 110) return const _IQInfo('assets/iq_avatars/iq_cokzeki.png',  'Çok Zeki',       '110–119 IQ');
-  if (score >= 90)  return const _IQInfo('assets/iq_avatars/iq_ort_ustu.png', 'Ortalama Üstü',  '90–109 IQ');
-  if (score >= 80)  return const _IQInfo('assets/iq_avatars/iq_ortalama.png', 'Ortalama',       '80–89 IQ');
-  if (score >= 70)  return const _IQInfo('assets/iq_avatars/iq_ort_alti.png', 'Ortalama Altı',  '70–79 IQ');
-  if (score >= 55)  return const _IQInfo('assets/iq_avatars/iq_sinirda.png',  'Sınırda Zeka',   '55–69 IQ');
-  if (score > 0)    return const _IQInfo('assets/iq_avatars/iq_dusuk.png',    'Düşük Zeka',     '54 ve Altı IQ');
+  if (score >= 140) return _IQInfo('assets/iq_avatars/iq_dahi.png',     S.iqGenius,    '140+ IQ');
+  if (score >= 120) return _IQInfo('assets/iq_avatars/iq_ustun.png',    S.iqSuperior,  '120–139 IQ');
+  if (score >= 110) return _IQInfo('assets/iq_avatars/iq_cokzeki.png',  S.iqVeryHigh,  '110–119 IQ');
+  if (score >= 90)  return _IQInfo('assets/iq_avatars/iq_ort_ustu.png', S.iqAboveAvg,  '90–109 IQ');
+  if (score >= 80)  return _IQInfo('assets/iq_avatars/iq_ortalama.png', S.iqAverage,   '80–89 IQ');
+  if (score >= 70)  return _IQInfo('assets/iq_avatars/iq_ort_alti.png', S.iqBelowAvg,  '70–79 IQ');
+  if (score >= 55)  return _IQInfo('assets/iq_avatars/iq_sinirda.png',  S.iqBorderline,'55–69 IQ');
+  if (score > 0)    return _IQInfo('assets/iq_avatars/iq_dusuk.png',    S.iqLow,       '54 ve Altı IQ');
   // Henüz oynanmamış → varsayılan (Ortalama)
-  return             const _IQInfo('assets/iq_avatars/iq_ortalama.png',       'Skor Bekleniyor','İlk testi tamamla!');
+  return             _IQInfo('assets/iq_avatars/iq_ortalama.png',       S.iqPending,   S.iqFirstTest);
 }
 
 class HomeScreen extends StatefulWidget {
@@ -107,34 +108,34 @@ class _HomeScreenState extends State<HomeScreen>
 
   // ── Game lists ──────────────────────────────────────────────────────────
   List<MiniGameInfo> get _timingGames => [
-    MiniGameInfo(id:'circle_tap_reflex', title:'Circle Tap Reflex', subtitle:'Top hedefe gelince dokun', category:GameCategory.timing, difficulty:GameDifficulty.medium, color:const Color(0xFF00E5FF), icon:Icons.radio_button_unchecked, duration:'10 tur', builder:()=>const CircleTapReflexScreen()),
-    MiniGameInfo(id:'laser_gate',   title:'Laser Gate',   subtitle:'Boşluktan geç',       category:GameCategory.timing,      difficulty:GameDifficulty.hard,   color:const Color(0xFF00B4FF), icon:Icons.bolt,                   duration:'3 can',    builder:()=>const LaserGateScreen()),
-    MiniGameInfo(id:'timing_stack', title:'Timing Stack', subtitle:'Bloğu hizala',        category:GameCategory.timing,      difficulty:GameDifficulty.medium, color:const Color(0xFF03DAC6), icon:Icons.stacked_line_chart,     duration:'∞',        builder:()=>const TimingStackScreen()),
-    MiniGameInfo(id:'pulse_stop',   title:'Pulse Stop',   subtitle:'Tam zamanında dur',   category:GameCategory.timing,      difficulty:GameDifficulty.medium, color:const Color(0xFFFDD835), icon:Icons.radio_button_checked,   duration:'15 tur',   builder:()=>const PulseStopScreen()),
-    MiniGameInfo(id:'balance_bar',  title:'Balance Bar',  subtitle:'Hedefi yakala',       category:GameCategory.timing,      difficulty:GameDifficulty.easy,   color:const Color(0xFF00C853), icon:Icons.equalizer,              duration:'15 tur',   builder:()=>const BalanceBarScreen()),
+    MiniGameInfo(id:'circle_tap_reflex', title:'Circle Tap Reflex', subtitle:S.subCircle,     category:GameCategory.timing, difficulty:GameDifficulty.medium, color:const Color(0xFF00E5FF), icon:Icons.radio_button_unchecked, duration:S.chip10rounds, builder:()=>const CircleTapReflexScreen()),
+    MiniGameInfo(id:'laser_gate',   title:'Laser Gate',   subtitle:S.subSwipe,              category:GameCategory.timing,      difficulty:GameDifficulty.hard,   color:const Color(0xFF00B4FF), icon:Icons.bolt,                   duration:S.chip3lives,    builder:()=>const LaserGateScreen()),
+    MiniGameInfo(id:'timing_stack', title:'Timing Stack', subtitle:S.subBalance,            category:GameCategory.timing,      difficulty:GameDifficulty.medium, color:const Color(0xFF03DAC6), icon:Icons.stacked_line_chart,     duration:'∞',             builder:()=>const TimingStackScreen()),
+    MiniGameInfo(id:'pulse_stop',   title:'Pulse Stop',   subtitle:S.subPulse,              category:GameCategory.timing,      difficulty:GameDifficulty.medium, color:const Color(0xFFFDD835), icon:Icons.radio_button_checked,   duration:S.chip15rounds,  builder:()=>const PulseStopScreen()),
+    MiniGameInfo(id:'balance_bar',  title:'Balance Bar',  subtitle:S.subReaction,           category:GameCategory.timing,      difficulty:GameDifficulty.easy,   color:const Color(0xFF00C853), icon:Icons.equalizer,              duration:S.chip15rounds,  builder:()=>const BalanceBarScreen()),
   ];
 
   List<MiniGameInfo> get _aimGames => [
-    MiniGameInfo(id:'dart_focus',   title:'Dart Focus',   subtitle:"Bullseye'a nişan al", category:GameCategory.aimShoot,    difficulty:GameDifficulty.hard,   color:const Color(0xFFFF7043), icon:Icons.gps_fixed,              duration:'5 atış',   builder:()=>const DartFocusScreen()),
-    MiniGameInfo(id:'sky_shot',     title:'Sky Shot',     subtitle:'Uçan hedefe ateş et', category:GameCategory.aimShoot,    difficulty:GameDifficulty.medium, color:const Color(0xFF00B4FF), icon:Icons.flight_takeoff,         duration:'5 hedef',  builder:()=>const SkyShotScreen()),
-    MiniGameInfo(id:'target_lock',  title:'Target Lock',  subtitle:'Radarı kilitle',      category:GameCategory.aimShoot,    difficulty:GameDifficulty.hard,   color:const Color(0xFFBB86FC), icon:Icons.radar,                  duration:'10 hedef', builder:()=>const TargetLockScreen()),
+    MiniGameInfo(id:'dart_focus',   title:'Dart Focus',   subtitle:S.subDart,             category:GameCategory.aimShoot,    difficulty:GameDifficulty.hard,   color:const Color(0xFFFF7043), icon:Icons.gps_fixed,              duration:S.chip5shots,    builder:()=>const DartFocusScreen()),
+    MiniGameInfo(id:'sky_shot',     title:'Sky Shot',     subtitle:S.subSky,              category:GameCategory.aimShoot,    difficulty:GameDifficulty.medium, color:const Color(0xFF00B4FF), icon:Icons.flight_takeoff,         duration:S.chip5targets,  builder:()=>const SkyShotScreen()),
+    MiniGameInfo(id:'target_lock',  title:'Target Lock',  subtitle:S.subTargetLock,       category:GameCategory.aimShoot,    difficulty:GameDifficulty.hard,   color:const Color(0xFFBB86FC), icon:Icons.radar,                  duration:S.chip10targets, builder:()=>const TargetLockScreen()),
   ];
 
   List<MiniGameInfo> get _reflexGames => [
-    MiniGameInfo(id:'split_second', title:'Split Second', subtitle:'Anlık karar ver',     category:GameCategory.reflexArcade,difficulty:GameDifficulty.hard,   color:const Color(0xFFFF7043), icon:Icons.speed,                  duration:'30 sin',   builder:()=>const SplitSecondScreen()),
-    MiniGameInfo(id:'swipe_dodge',  title:'Swipe Dodge',  subtitle:'Engellerden kaç',     category:GameCategory.reflexArcade,difficulty:GameDifficulty.medium, color:const Color(0xFF00C853), icon:Icons.swap_horiz,             duration:'3 can',    builder:()=>const SwipeDodgeScreen()),
-    MiniGameInfo(id:'color_panic',  title:'Color Panic',  subtitle:'Renk eşleştir',       category:GameCategory.reflexArcade,difficulty:GameDifficulty.hard,   color:const Color(0xFFFF7043), icon:Icons.palette,                duration:'3 can',    builder:()=>const ColorPanicScreen()),
-    MiniGameInfo(id:'dont_tap_red', title:"Don't Tap Red",subtitle:'Kırmızıya dokunma!',  category:GameCategory.reflexArcade,difficulty:GameDifficulty.medium, color:const Color(0xFFE91E63), icon:Icons.do_not_disturb_on,      duration:'3 can',    builder:()=>const DontTapRedScreen()),
-    MiniGameInfo(id:'tap_target',   title:'Tap Target',   subtitle:'Hedefleri vur',       category:GameCategory.reflexArcade,difficulty:GameDifficulty.easy,   color:const Color(0xFF03DAC6), icon:Icons.adjust,                 duration:'30 sn',    builder:()=>const TapTargetScreen()),
-    MiniGameInfo(id:'shape_strike', title:'Shape Strike', subtitle:'Doğru şekle dokun',   category:GameCategory.reflexArcade,difficulty:GameDifficulty.medium, color:const Color(0xFFFDD835), icon:Icons.category,               duration:'3 can',    builder:()=>const ShapeStrikeScreen()),
+    MiniGameInfo(id:'split_second', title:'Split Second', subtitle:S.subColorPanic,      category:GameCategory.reflexArcade,difficulty:GameDifficulty.hard,   color:const Color(0xFFFF7043), icon:Icons.speed,                  duration:S.chip30s,       builder:()=>const SplitSecondScreen()),
+    MiniGameInfo(id:'swipe_dodge',  title:'Swipe Dodge',  subtitle:S.subDodge,            category:GameCategory.reflexArcade,difficulty:GameDifficulty.medium, color:const Color(0xFF00C853), icon:Icons.swap_horiz,             duration:S.chip3lives,    builder:()=>const SwipeDodgeScreen()),
+    MiniGameInfo(id:'color_panic',  title:'Color Panic',  subtitle:S.subColorMatch,       category:GameCategory.reflexArcade,difficulty:GameDifficulty.hard,   color:const Color(0xFFFF7043), icon:Icons.palette,                duration:S.chip3lives,    builder:()=>const ColorPanicScreen()),
+    MiniGameInfo(id:'dont_tap_red', title:"Don't Tap Red",subtitle:S.subDontTapRed,       category:GameCategory.reflexArcade,difficulty:GameDifficulty.medium, color:const Color(0xFFE91E63), icon:Icons.do_not_disturb_on,      duration:S.chip3lives,    builder:()=>const DontTapRedScreen()),
+    MiniGameInfo(id:'tap_target',   title:'Tap Target',   subtitle:S.subTapTarget,        category:GameCategory.reflexArcade,difficulty:GameDifficulty.easy,   color:const Color(0xFF03DAC6), icon:Icons.adjust,                 duration:S.chip30s,       builder:()=>const TapTargetScreen()),
+    MiniGameInfo(id:'shape_strike', title:'Shape Strike', subtitle:S.subShapeStrike,      category:GameCategory.reflexArcade,difficulty:GameDifficulty.medium, color:const Color(0xFFFDD835), icon:Icons.category,               duration:S.chip3lives,    builder:()=>const ShapeStrikeScreen()),
   ];
 
   List<MiniGameInfo> get _brainGames => [
-    MiniGameInfo(id:'memory_flash',  title:'Memory Flash',  subtitle:'Deseni ezberle',   category:GameCategory.brainFocus,  difficulty:GameDifficulty.medium, color:const Color(0xFFBB86FC), icon:Icons.grid_view,              duration:'3 can',    builder:()=>const MemoryFlashScreen()),
-    MiniGameInfo(id:'number_hunter', title:'Number Hunter', subtitle:'Sayıyı hızlı bul', category:GameCategory.brainFocus,  difficulty:GameDifficulty.easy,   color:const Color(0xFF1E88E5), icon:Icons.search,                 duration:'10 tur',   builder:()=>const NumberHunterScreen()),
-    MiniGameInfo(id:'pattern_master',title:'Pattern Master',subtitle:'Örüntüyü tamamla', category:GameCategory.brainFocus,  difficulty:GameDifficulty.hard,   color:const Color(0xFFFDD835), icon:Icons.schema,                 duration:'10 soru',  builder:()=>const PatternMasterScreen()),
-    MiniGameInfo(id:'mirror_brain',  title:'Mirror Brain',  subtitle:'Tersini seç',      category:GameCategory.brainFocus,  difficulty:GameDifficulty.hard,   color:const Color(0xFFBB86FC), icon:Icons.flip,                   duration:'15 tur',   builder:()=>const MirrorBrainScreen()),
-    MiniGameInfo(id:'speed_math',    title:'Speed Math',    subtitle:'Hızlı matematik',  category:GameCategory.brainFocus,  difficulty:GameDifficulty.medium, color:const Color(0xFF03DAC6), icon:Icons.calculate,              duration:'10 soru',  builder:()=>const SpeedMathScreen()),
+    MiniGameInfo(id:'memory_flash',  title:'Memory Flash',  subtitle:S.subMemoryFlash,   category:GameCategory.brainFocus,  difficulty:GameDifficulty.medium, color:const Color(0xFFBB86FC), icon:Icons.grid_view,              duration:S.chip3lives,    builder:()=>const MemoryFlashScreen()),
+    MiniGameInfo(id:'number_hunter', title:'Number Hunter', subtitle:S.subNumberHunter,  category:GameCategory.brainFocus,  difficulty:GameDifficulty.easy,   color:const Color(0xFF1E88E5), icon:Icons.search,                 duration:S.chip10rounds,  builder:()=>const NumberHunterScreen()),
+    MiniGameInfo(id:'pattern_master',title:'Pattern Master',subtitle:S.subPatternMaster, category:GameCategory.brainFocus,  difficulty:GameDifficulty.hard,   color:const Color(0xFFFDD835), icon:Icons.schema,                 duration:S.chip10q,       builder:()=>const PatternMasterScreen()),
+    MiniGameInfo(id:'mirror_brain',  title:'Mirror Brain',  subtitle:S.subMirrorBrain,   category:GameCategory.brainFocus,  difficulty:GameDifficulty.hard,   color:const Color(0xFFBB86FC), icon:Icons.flip,                   duration:S.chip15rounds,  builder:()=>const MirrorBrainScreen()),
+    MiniGameInfo(id:'speed_math',    title:'Speed Math',    subtitle:S.subSpeedMath,     category:GameCategory.brainFocus,  difficulty:GameDifficulty.medium, color:const Color(0xFF03DAC6), icon:Icons.calculate,              duration:S.chip10q,       builder:()=>const SpeedMathScreen()),
   ];
 
   void _navigate(Widget screen) {
@@ -180,14 +181,14 @@ class _HomeScreenState extends State<HomeScreen>
                     // Full Test
                     SliverToBoxAdapter(child: _buildWideButton(
                       title: 'Full Test',
-                      subtitle: '29 test • ~20 dakika',
+                      subtitle: S.homeFullTest,
                       color: const Color(0xFF00B4FF),
                       icon: Icons.play_circle_fill_rounded,
                       onTap: () => _navigate(const PrepScreen()),
                     )),
                     // Hızlı Oyun
                     SliverToBoxAdapter(child: _buildWideButton(
-                      title: 'Hızlı Oyun',
+                      title: S.homeQuickPlay,
                       subtitle: '2 test • ~45 saniye',
                       color: const Color(0xFF03DAC6),
                       icon: Icons.flash_on_rounded,
@@ -296,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Seviye $level',
+                S.levelLabel(level),
                 style: const TextStyle(
                   color: Color(0xFFBB86FC),
                   fontSize: 12,
@@ -379,7 +380,7 @@ class _HomeScreenState extends State<HomeScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        played ? 'Bugünkü Görev Tamamlandı!' : 'Bugünün Göreviyle Başla',
+                        played ? S.homeDailyDone : S.homeDailyStart,
                         style: TextStyle(
                           color: played ? const Color(0xFF03DAC6) : const Color(0xFFFDD835),
                           fontSize: 14,
@@ -387,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                       ),
                       Text(
-                        played ? 'Yarın tekrar gel' : 'Günlük meydan okuma',
+                        played ? S.homeDailyTomorrow : S.homeDailyChallenge,
                         style: const TextStyle(color: Colors.white54, fontSize: 11),
                       ),
                     ],
@@ -453,28 +454,28 @@ class _HomeScreenState extends State<HomeScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Text('Daha Fazla',
-                style: TextStyle(color: Colors.white54, fontSize: 13, letterSpacing: 0.5)),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Text(S.homeMore,
+                style: const TextStyle(color: Colors.white54, fontSize: 13, letterSpacing: 0.5)),
           ),
           _buildMoreRow([
-            _MoreBtn(label:'Sonsuz\nRefleks', icon:Icons.all_inclusive_rounded,         color:const Color(0xFF00C853),  onTap:()=>_navigate(const EndlessReflexScreen())),
-            _MoreBtn(label:'Manyak\nMod',     icon:Icons.local_fire_department_rounded,  color:const Color(0xFFFF7043),  onTap:()=>_navigate(const UltraHardScreen())),
-            _MoreBtn(label:'VS\nArkadaş',     icon:Icons.people_rounded,                 color:const Color(0xFFBB86FC),  onTap:()=>_navigate(const VsFriendScreen())),
-            _MoreBtn(label:'Çark\nÇevir',     icon:Icons.casino_rounded,                 color:const Color(0xFFE91E63),  onTap:()=>_navigate(const SpinWheelScreen())),
+            _MoreBtn(label:S.gridEndless,    icon:Icons.all_inclusive_rounded,         color:const Color(0xFF00C853),  onTap:()=>_navigate(const EndlessReflexScreen())),
+            _MoreBtn(label:S.gridUltraHard,  icon:Icons.local_fire_department_rounded,  color:const Color(0xFFFF7043),  onTap:()=>_navigate(const UltraHardScreen())),
+            _MoreBtn(label:S.gridVsFriend,   icon:Icons.people_rounded,                 color:const Color(0xFFBB86FC),  onTap:()=>_navigate(const VsFriendScreen())),
+            _MoreBtn(label:S.gridSpinWheel,  icon:Icons.casino_rounded,                 color:const Color(0xFFE91E63),  onTap:()=>_navigate(const SpinWheelScreen())),
           ]),
           const SizedBox(height: 10),
           _buildMoreRow([
-            _MoreBtn(label:'Profil',          icon:Icons.person_rounded,                 color:const Color(0xFF9C27B0),  onTap:()=>_navigate(const ProfileScreen())),
-            _MoreBtn(label:'Başarımlar',      icon:Icons.emoji_events_rounded,           color:const Color(0xFFFDD835),  onTap:()=>_navigate(const AchievementsScreen())),
-            _MoreBtn(label:'İstatistik',      icon:Icons.bar_chart_rounded,              color:const Color(0xFF1E88E5),  onTap:()=>_navigate(const StatsScreen())),
-            _MoreBtn(label:'En İyi\nSkorlar', icon:Icons.leaderboard_rounded,            color:const Color(0xFFBB86FC),  onTap:()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const BestScoresScreen()))),
+            _MoreBtn(label:S.gridProfile,    icon:Icons.person_rounded,                 color:const Color(0xFF9C27B0),  onTap:()=>_navigate(const ProfileScreen())),
+            _MoreBtn(label:S.gridAchiev,     icon:Icons.emoji_events_rounded,           color:const Color(0xFFFDD835),  onTap:()=>_navigate(const AchievementsScreen())),
+            _MoreBtn(label:S.gridStats,      icon:Icons.bar_chart_rounded,              color:const Color(0xFF1E88E5),  onTap:()=>_navigate(const StatsScreen())),
+            _MoreBtn(label:S.gridBestScores, icon:Icons.leaderboard_rounded,            color:const Color(0xFFBB86FC),  onTap:()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const BestScoresScreen()))),
           ]),
           const SizedBox(height: 10),
           _buildMoreRow([
-            _MoreBtn(label:'Ayarlar',         icon:Icons.settings_rounded,               color:Colors.white38,           onTap:()=>_navigate(const SettingsScreen())),
-            _MoreBtn(label:'Nasıl\nOynanır',  icon:Icons.help_outline_rounded,           color:Colors.white38,           onTap:()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const HowToPlayScreen()))),
+            _MoreBtn(label:S.gridSettings,   icon:Icons.settings_rounded,               color:Colors.white38,           onTap:()=>_navigate(const SettingsScreen())),
+            _MoreBtn(label:S.gridHowToPlay,  icon:Icons.help_outline_rounded,           color:Colors.white38,           onTap:()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const HowToPlayScreen()))),
           ]),
         ],
       ),
@@ -482,33 +483,36 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildMoreRow(List<_MoreBtn> buttons) {
-    return Row(
-      children: buttons.map((b) => Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: GestureDetector(
-            onTap: b.onTap,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: b.color.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: b.color.withValues(alpha: 0.3), width: 1),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(b.icon, color: b.color, size: 22),
-                  const SizedBox(height: 4),
-                  Text(b.label,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: b.color, fontSize: 10, fontWeight: FontWeight.w600, height: 1.2)),
-                ],
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: buttons.map((b) => Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: GestureDetector(
+              onTap: b.onTap,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                decoration: BoxDecoration(
+                  color: b.color.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: b.color.withValues(alpha: 0.3), width: 1),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(b.icon, color: b.color, size: 22),
+                    const SizedBox(height: 4),
+                    Text(b.label,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: b.color, fontSize: 10, fontWeight: FontWeight.w600, height: 1.2)),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      )).toList(),
+        )).toList(),
+      ),
     );
   }
 }

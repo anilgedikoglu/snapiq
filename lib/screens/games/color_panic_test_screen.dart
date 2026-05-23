@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'dont_tap_red_test_screen.dart';
 
@@ -53,7 +54,6 @@ class ColorPanicTestScreen extends StatefulWidget {
 class _CPTState extends State<ColorPanicTestScreen> {
   static const _totalRounds = 20;
 
-  static const _words  = ['KIRMIZI', 'MAVİ', 'YEŞİL', 'SARI', 'MOR', 'TURUNCU'];
   static const _colors = [
     Colors.red, Colors.blue, Colors.green,
     Colors.yellow, Colors.purple, Colors.orange,
@@ -84,9 +84,10 @@ class _CPTState extends State<ColorPanicTestScreen> {
   }
 
   void _generateRound() {
-    final wordIdx = _rand.nextInt(_words.length);
+    final words   = S.colorPanicWords;
+    final wordIdx = _rand.nextInt(words.length);
     final inkIdx  = _rand.nextInt(_colors.length);
-    _word     = _words[wordIdx];
+    _word     = words[wordIdx];
     _inkColor = _colors[inkIdx];
     _isMatch  = wordIdx == inkIdx;
   }
@@ -202,12 +203,12 @@ class _CPTState extends State<ColorPanicTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Color Panic — Renk eşleşiyor mu?',
+                  S.colorPanicInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               // Lives
@@ -221,7 +222,7 @@ class _CPTState extends State<ColorPanicTestScreen> {
                           (i) => Text(i < _lives ? '❤️' : '🖤',
                               style: const TextStyle(fontSize: 20))),
                     ),
-                    Text('$_correct doğru',
+                    Text(S.colorPanicCorrect(_correct),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 13)),
                   ],
@@ -258,9 +259,9 @@ class _CPTState extends State<ColorPanicTestScreen> {
                                     border: Border.all(
                                         color: Colors.green.withValues(alpha: 0.6)),
                                   ),
-                                  child: const Center(
-                                    child: Text('✓ EŞLEŞME',
-                                        style: TextStyle(
+                                  child: Center(
+                                    child: Text(S.colorMatch,
+                                        style: const TextStyle(
                                             color: Colors.green,
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold)),
@@ -280,9 +281,9 @@ class _CPTState extends State<ColorPanicTestScreen> {
                                     border: Border.all(
                                         color: Colors.red.withValues(alpha: 0.6)),
                                   ),
-                                  child: const Center(
-                                    child: Text('✗ FARKLI',
-                                        style: TextStyle(
+                                  child: Center(
+                                    child: Text(S.colorDiff,
+                                        style: const TextStyle(
                                             color: Colors.red,
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold)),

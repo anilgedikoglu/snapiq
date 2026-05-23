@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import '../../painters/radar_painter.dart';
 import 'swipe_dodge_test_screen.dart';
@@ -125,7 +126,7 @@ class _TLTState extends State<TargetLockTestScreen>
 
     if (!lockedAny) {
       setState(() {
-        _feedback      = 'Kaçırdın!';
+        _feedback      = S.missed;
         _feedbackColor = const Color(0xFFFF7043);
         _showFeedback  = true;
       });
@@ -206,18 +207,18 @@ class _TLTState extends State<TargetLockTestScreen>
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Text('$_totalLocked/$_totalToLock kilitli',
+                      Text(S.targetLocked(_totalLocked, _totalToLock),
                           style: const TextStyle(
                               color: Color(0xFF00C853), fontSize: 13)),
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 4),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
                   child: Text(
-                    'Target Lock — Tarama geçerken dokun!',
+                    S.targetLockInstr,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ),
                 Expanded(
@@ -254,7 +255,7 @@ class _TLTState extends State<TargetLockTestScreen>
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
                   child: Text(
-                    'Puan: $_totalScore',
+                    S.targetScore(_totalScore),
                     style: const TextStyle(
                         color: Color(0xFFBB86FC),
                         fontSize: 18,

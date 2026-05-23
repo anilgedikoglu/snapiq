@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/achievement.dart';
 import '../models/player_profile.dart';
 import '../services/storage_service.dart';
@@ -46,8 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text('Profil',
-                        style: TextStyle(
+                    Text(S.profileTitle,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
@@ -90,17 +91,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fontSize: 22,
                   fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          Text('Seviye $level',
+          Text(S.levelLabel(level),
               style: const TextStyle(color: Colors.white54, fontSize: 14)),
           const SizedBox(height: 12),
           _buildXpBar(p.xp, xpProgress, xpForLevel, xpInLevel),
           const SizedBox(height: 20),
           _buildStatsGrid(p),
           const SizedBox(height: 20),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
-            child: Text('Başarımlar',
-                style: TextStyle(
+            child: Text(S.achievementsTitle,
+                style: const TextStyle(
                     color: Color(0xFF00B4FF),
                     fontWeight: FontWeight.bold,
                     fontSize: 15)),
@@ -128,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('$xp XP toplam',
+              Text(S.profileXP(xp),
                   style: const TextStyle(color: Colors.white70, fontSize: 12)),
               Text('$xpInLevel / $xpForLevel XP',
                   style: const TextStyle(
@@ -161,16 +162,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       mainAxisSpacing: 10,
       childAspectRatio: 1.8,
       children: [
-        _statCard('Toplam Oyun', '${p.totalGames}',
+        _statCard(S.profileTotalGames, '${p.totalGames}',
             const Color(0xFF00B4FF)),
-        _statCard('Ortalama SnapIQ',
+        _statCard(S.profileAvgIQ,
             p.avgSnapIQ > 0 ? p.avgSnapIQ.toStringAsFixed(1) : '--',
             const Color(0xFF03DAC6)),
-        _statCard('En İyi SnapIQ',
+        _statCard(S.profileBestIQ,
             p.bestSnapIQ > 0 ? '${p.bestSnapIQ}' : '--',
             const Color(0xFFBB86FC)),
         _statCard(
-            'En İyi Reaksiyon',
+            S.profileBestReaction,
             p.bestReactionMs > 0 ? '${p.bestReactionMs} ms' : '--',
             const Color(0xFF00C853)),
       ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../services/storage_service.dart';
 import '../services/theme_service.dart';
+import '../services/locale_service.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/neon_button.dart';
 
@@ -42,8 +44,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF0D1B2A),
-        title: const Text('Verileri Sıfırla',
-            style: TextStyle(color: Colors.white)),
+        title: Text(S.settingsResetData,
+            style: const TextStyle(color: Colors.white)),
         content: const Text(
             'Tüm oyun verilerin silinecek. Devam etmek istiyor musun?',
             style: TextStyle(color: Colors.white70)),
@@ -65,9 +67,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await _storage!.clearAll();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Veriler sıfırlandı.'),
-            backgroundColor: Color(0xFF0D1B2A),
+          SnackBar(
+            content: Text(S.settingsDataReset),
+            backgroundColor: const Color(0xFF0D1B2A),
           ),
         );
         await _load();
@@ -92,9 +94,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text(
-                      'Ayarlar',
-                      style: TextStyle(
+                    Text(
+                      S.settingsTitle,
+                      style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold),
@@ -122,9 +124,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('Ses & Titreşim'),
+          _sectionTitle(S.settingsSound),
           _toggleTile(
-            title: 'Ses Efektleri',
+            title: S.settingsSoundFX,
             icon: Icons.volume_up_rounded,
             value: _sound,
             onChanged: (v) async {
@@ -133,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           _toggleTile(
-            title: 'Titreşim',
+            title: S.settingsVibration,
             icon: Icons.vibration_rounded,
             value: _vibration,
             onChanged: (v) async {
@@ -142,9 +144,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const SizedBox(height: 20),
-          _sectionTitle('Görsel'),
+          _sectionTitle(S.settingsVisual),
           _toggleTile(
-            title: 'Animasyonları Azalt',
+            title: S.settingsReduceAnim,
             icon: Icons.motion_photos_off_rounded,
             value: _reduceAnim,
             onChanged: (v) async {
@@ -153,15 +155,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const SizedBox(height: 16),
-          const Text('Tema',
-              style: TextStyle(color: Colors.white70, fontSize: 13)),
+          Text(S.spinTheme,
+              style: const TextStyle(color: Colors.white70, fontSize: 13)),
           const SizedBox(height: 10),
           _buildThemeSelector(),
           const SizedBox(height: 32),
-          _sectionTitle('Veri'),
+          _sectionTitle(S.settingsLanguage),
+          const SizedBox(height: 8),
+          _buildLanguageSelector(),
+          const SizedBox(height: 32),
+          _sectionTitle(S.settingsData),
           const SizedBox(height: 8),
           NeonButton(
-            text: 'Verileri Sıfırla',
+            text: S.settingsResetData,
             onPressed: _confirmReset,
             color: Colors.redAccent,
             width: double.infinity,
@@ -259,6 +265,91 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildLanguageSelector() {
+    final isEnglish = LocaleService.instance.isEnglish;
+    return Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: () async {
+              await LocaleService.instance.setEnglish(false);
+              if (mounted) setState(() {});
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: !isEnglish
+                    ? const Color(0xFF00B4FF).withValues(alpha: 0.2)
+                    : const Color(0xFF0D1B2A),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: !isEnglish
+                      ? const Color(0xFF00B4FF)
+                      : const Color(0xFF00B4FF).withValues(alpha: 0.2),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('🇹🇷', style: TextStyle(fontSize: 18)),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Türkçe',
+                    style: TextStyle(
+                      color: !isEnglish ? Colors.white : Colors.white70,
+                      fontSize: 14,
+                      fontWeight:
+                          !isEnglish ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: GestureDetector(
+            onTap: () async {
+              await LocaleService.instance.setEnglish(true);
+              if (mounted) setState(() {});
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: isEnglish
+                    ? const Color(0xFF00B4FF).withValues(alpha: 0.2)
+                    : const Color(0xFF0D1B2A),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isEnglish
+                      ? const Color(0xFF00B4FF)
+                      : const Color(0xFF00B4FF).withValues(alpha: 0.2),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('🇬🇧', style: TextStyle(fontSize: 18)),
+                  const SizedBox(width: 8),
+                  Text(
+                    'English',
+                    style: TextStyle(
+                      color: isEnglish ? Colors.white : Colors.white70,
+                      fontSize: 14,
+                      fontWeight:
+                          isEnglish ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

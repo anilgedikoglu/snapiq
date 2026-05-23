@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -198,7 +199,7 @@ class _SequenceRushScreenState extends State<SequenceRushScreen> {
                             style: const TextStyle(fontSize: 18)),
                       ),
                     ),
-                    Text('Seviye $_level | $_score puan',
+                    Text(S.seqLevelScore(_level, _score),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 12)),
                   ],
@@ -206,7 +207,7 @@ class _SequenceRushScreenState extends State<SequenceRushScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                _isWatching ? 'İZLE!' : (_inputEnabled ? 'TEKRARLA!' : ''),
+                _isWatching ? S.seqRushWatch : (_inputEnabled ? S.seqRushRepeat : ''),
                 style: TextStyle(
                     color: _isWatching
                         ? const Color(0xFFFDD835)

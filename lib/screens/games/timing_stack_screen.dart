@@ -5,6 +5,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 class _Block {
@@ -328,7 +329,7 @@ class _TimingStackScreenState extends State<TimingStackScreen>
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: Text('Skor: $_score',
+            child: Text(S.circleScore(_score),
                 style: const TextStyle(color: Color(0xFF03DAC6),
                     fontSize: 14, fontWeight: FontWeight.bold)),
           ),

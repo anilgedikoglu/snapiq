@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
 import '../services/storage_service.dart';
 import '../services/achievement_service.dart';
@@ -70,8 +71,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text('Günün Meydan Okuması',
-                        style: TextStyle(
+                    Text(S.dailyTitle,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold)),
@@ -86,9 +87,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                     children: [
                       const CinHost(size: 100),
                       const SizedBox(height: 20),
-                      const Text(
-                        'Bugünün Meydan Okuması',
-                        style: TextStyle(
+                      Text(
+                        S.dailyTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -109,9 +110,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                           ),
                           child: Column(
                             children: [
-                              const Text(
-                                'Bugün zaten oynadın!',
-                                style: TextStyle(
+                              Text(
+                                S.dailyPlayed,
+                                style: const TextStyle(
                                     color: Color(0xFF03DAC6),
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16),
@@ -120,7 +121,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                               if (_storage != null &&
                                   _storage!.dailyChallengeBestScore > 0)
                                 Text(
-                                  'En İyi: ${_storage!.dailyChallengeBestScore}',
+                                  S.dailyBest(_storage!.dailyChallengeBestScore),
                                   style: const TextStyle(
                                       color: Colors.white54, fontSize: 14),
                                 ),
@@ -128,22 +129,22 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
-                          'Yeni meydan okuma yarın seni bekliyor.',
+                        Text(
+                          S.dailyTomorrow,
                           style:
-                              TextStyle(color: Colors.white38, fontSize: 13),
+                              const TextStyle(color: Colors.white38, fontSize: 13),
                           textAlign: TextAlign.center,
                         ),
                       ] else ...[
-                        const Text(
-                          'Her gün yeni bir SnapIQ testi. Skoru daha iyi yapmaya çalış!',
+                        Text(
+                          S.dailyCTA,
                           style:
-                              TextStyle(color: Colors.white54, fontSize: 14),
+                              const TextStyle(color: Colors.white54, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 32),
                         NeonButton(
-                          text: 'Meydan Okumayı Başlat',
+                          text: S.dailyStartBtn,
                           onPressed: _startChallenge,
                           color: const Color(0xFF03DAC6),
                           width: double.infinity,

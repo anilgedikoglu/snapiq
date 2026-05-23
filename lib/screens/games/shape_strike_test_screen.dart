@@ -7,6 +7,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/animated_background.dart';
 import 'memory_flash_test_screen.dart';
 
@@ -92,12 +93,7 @@ class _SSTState extends State<ShapeStrikeTestScreen> {
   final _rand = Random();
   double _fallSpeed = 0.006;
 
-  static const _shapeNames = {
-    _ShapeType.circle:   'DAİRE',
-    _ShapeType.triangle: 'ÜÇGEN',
-    _ShapeType.square:   'KARE',
-    _ShapeType.star:     'YİLDİZ',
-  };
+  // shape names now come from S.shapeStrikeNames at runtime
 
   static const _shapeColors = {
     _ShapeType.circle:   Color(0xFF00B4FF),
@@ -296,12 +292,12 @@ class _SSTState extends State<ShapeStrikeTestScreen> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Shape Strike — Doğru şekle dokun!',
+                  S.shapeStrikeInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               // Lives + score
@@ -327,13 +323,9 @@ class _SSTState extends State<ShapeStrikeTestScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Sadece ',
-                      style: TextStyle(color: Colors.white70, fontSize: 16)),
                   _buildShape(_targetShape, targetColor),
-                  const Text(' dokun!',
-                      style: TextStyle(color: Colors.white70, fontSize: 16)),
-                  const SizedBox(width: 6),
-                  Text(_shapeNames[_targetShape]!,
+                  const SizedBox(width: 8),
+                  Text(S.shapeStrikeOnly(S.shapeStrikeNames[_targetShape.index]!),
                       style: TextStyle(
                           color: targetColor,
                           fontSize: 14,

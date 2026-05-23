@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
 import '../models/test_result.dart';
 import '../widgets/animated_background.dart';
@@ -74,11 +75,11 @@ class _VsFriendScreenState extends State<VsFriendScreen> {
       case _VsPhase.intro:
         return _buildIntro();
       case _VsPhase.player1Playing:
-        return _buildWaiting('Oyuncu 1 oynuyor...');
+        return _buildWaiting(S.playerN(1) + '...');
       case _VsPhase.handoff:
         return _buildHandoff();
       case _VsPhase.player2Playing:
-        return _buildWaiting('Oyuncu 2 oynuyor...');
+        return _buildWaiting(S.playerN(2) + '...');
     }
   }
 
@@ -93,9 +94,9 @@ class _VsFriendScreenState extends State<VsFriendScreen> {
               children: [
                 const CinHost(size: 100),
                 const SizedBox(height: 20),
-                const Text(
-                  'Arkadaşını Geç',
-                  style: TextStyle(
+                Text(
+                  S.vsTitle,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -106,15 +107,15 @@ class _VsFriendScreenState extends State<VsFriendScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Siz oynayın, arkadaşınız oynasın.\nKimin zihni daha güçlü?',
+                Text(
+                  S.vsSubtitle,
                   style:
-                      TextStyle(color: Colors.white54, fontSize: 15),
+                      const TextStyle(color: Colors.white54, fontSize: 15),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
                 NeonButton(
-                  text: 'Oyuncu 1 Oynasın',
+                  text: S.vsP1Play,
                   onPressed: _startPlayer1,
                   color: const Color(0xFFBB86FC),
                   width: double.infinity,
@@ -123,7 +124,7 @@ class _VsFriendScreenState extends State<VsFriendScreen> {
                 ),
                 const SizedBox(height: 14),
                 NeonButton(
-                  text: 'Geri',
+                  text: S.back,
                   onPressed: () => Navigator.pop(context),
                   color: Colors.white38,
                   width: double.infinity,
@@ -148,31 +149,31 @@ class _VsFriendScreenState extends State<VsFriendScreen> {
               children: [
                 const CinHost(size: 100),
                 const SizedBox(height: 24),
-                const Text(
-                  'Telefonu arkadaşına ver.',
+                Text(
+                  S.vsGive,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Bakalım seni geçebilecek mi?',
+                Text(
+                  S.vsCanBeat,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 16),
+                  style: const TextStyle(color: Colors.white54, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Senin SnapIQ: ${_p1Result?.reflexIQ ?? '--'}',
+                  S.yourSnapIQ(_p1Result?.reflexIQ ?? 0),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: Color(0xFFBB86FC), fontSize: 14),
                 ),
                 const SizedBox(height: 40),
                 NeonButton(
-                  text: 'Oyuncu 2 Oynasın',
+                  text: S.vsP2Play,
                   onPressed: _startPlayer2,
                   color: const Color(0xFF00B4FF),
                   width: double.infinity,

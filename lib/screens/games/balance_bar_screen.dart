@@ -5,6 +5,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 class BalanceBarScreen extends StatefulWidget {
@@ -74,21 +75,21 @@ class _BalanceBarScreenState extends State<BalanceBarScreen>
     if (dist < _zoneWidth * 0.25) {
       // Center zone
       points = 100;
-      msg = 'Mükemmel!';
+      msg = S.excellent;
       color = const Color(0xFF00C853);
     } else if (barPos >= zoneLeft && barPos <= zoneRight) {
       // Near zone
       points = 70;
-      msg = 'Harika!';
+      msg = S.great;
       color = const Color(0xFF00B4FF);
     } else if (dist < 0.35) {
       // Outer zone
       points = 30;
-      msg = 'Tamam';
+      msg = S.okay;
       color = const Color(0xFFFDD835);
     } else {
       points = 0;
-      msg = 'Kaçırdın';
+      msg = S.missed;
       color = const Color(0xFFFF7043);
     }
 
@@ -201,9 +202,9 @@ class _BalanceBarScreenState extends State<BalanceBarScreen>
                           ),
                         )
                       else
-                        const Text(
-                          'Yeşil bölgeye gir ve dokun!',
-                          style: TextStyle(color: Colors.white54, fontSize: 14),
+                        Text(
+                          S.balanceInstr,
+                          style: const TextStyle(color: Colors.white54, fontSize: 14),
                         ),
                       const SizedBox(height: 24),
                       // Track
@@ -229,7 +230,7 @@ class _BalanceBarScreenState extends State<BalanceBarScreen>
                                         top: 0,
                                         child: Center(
                                           child: Text(
-                                            'HEDEF',
+                                            S.target,
                                             style: TextStyle(
                                               color: const Color(0xFF00C853)
                                                   .withValues(alpha: 0.8),
@@ -341,12 +342,12 @@ class _BalanceBarScreenState extends State<BalanceBarScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Tur: ${_round.clamp(0, 5)}/5',
+                        S.focusRound(_round.clamp(0, 5), 5),
                         style: const TextStyle(
                             color: Colors.white70, fontSize: 16),
                       ),
                       Text(
-                        'Puan: $_totalScore',
+                        S.balanceTotal(_totalScore),
                         style: const TextStyle(
                             color: Color(0xFF00C853),
                             fontSize: 20,

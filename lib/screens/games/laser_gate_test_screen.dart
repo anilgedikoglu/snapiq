@@ -9,6 +9,7 @@ import '../../models/game_session.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
 import '../../painters/laser_gate_painter.dart';
+import '../../l10n/app_strings.dart';
 import 'timing_stack_test_screen.dart';
 
 class LaserGateTestScreen extends StatefulWidget {
@@ -216,12 +217,12 @@ class _LGTState extends State<LaserGateTestScreen>
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Laser Gate — En dışa geç!',
+                  S.laserInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               // Big timer
@@ -272,9 +273,9 @@ class _LGTState extends State<LaserGateTestScreen>
                           ),
                         ),
                       if (_done && _ballRing >= 3)
-                        const Text(
-                          'Tamamlandı!',
-                          style: TextStyle(color: Colors.white54, fontSize: 16),
+                        Text(
+                          S.done,
+                          style: const TextStyle(color: Colors.white54, fontSize: 16),
                         ),
                     ],
                   ),

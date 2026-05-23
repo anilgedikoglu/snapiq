@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/neon_button.dart';
@@ -20,9 +21,9 @@ class QuickPlayScreen extends StatelessWidget {
               children: [
                 const CinHost(size: 100),
                 const SizedBox(height: 16),
-                const Text(
-                  'Hızlı Oyun',
-                  style: TextStyle(
+                Text(
+                  S.quickTitle,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -32,9 +33,9 @@ class QuickPlayScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  '~20 saniyede hızlı bir beyin testi.',
-                  style: TextStyle(color: Colors.white54, fontSize: 15),
+                Text(
+                  S.quickSubtitle,
+                  style: const TextStyle(color: Colors.white54, fontSize: 15),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
@@ -46,28 +47,28 @@ class QuickPlayScreen extends StatelessWidget {
                         const Color(0xFF00B4FF).withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.bolt,
+                      const Icon(Icons.bolt,
                           color: Color(0xFF00B4FF), size: 16),
-                      SizedBox(width: 6),
-                      Text('Reaksiyon Hızı',
-                          style: TextStyle(
+                      const SizedBox(width: 6),
+                      Text(S.testNames[0],
+                          style: const TextStyle(
                               color: Colors.white70, fontSize: 13)),
-                      SizedBox(width: 16),
-                      Icon(Icons.touch_app,
+                      const SizedBox(width: 16),
+                      const Icon(Icons.touch_app,
                           color: Color(0xFFBB86FC), size: 16),
-                      SizedBox(width: 6),
-                      Text('İmpuls Kontrolü',
-                          style: TextStyle(
+                      const SizedBox(width: 6),
+                      Text(S.testNames[4],
+                          style: const TextStyle(
                               color: Colors.white70, fontSize: 13)),
                     ],
                   ),
                 ),
                 const SizedBox(height: 40),
                 NeonButton(
-                  text: 'Başla!',
+                  text: S.start,
                   onPressed: () {
                     final session = GameSession();
                     Navigator.push(
@@ -85,7 +86,7 @@ class QuickPlayScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 14),
                 NeonButton(
-                  text: 'Geri',
+                  text: S.back,
                   onPressed: () => Navigator.pop(context),
                   color: Colors.white38,
                   width: double.infinity,

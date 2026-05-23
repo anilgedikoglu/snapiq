@@ -3,6 +3,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
 import 'pulse_stop_test_screen.dart';
@@ -311,12 +312,12 @@ class _TSTState extends State<TimingStackTestScreen>
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'Timing Stack — Barı hizala!',
+                  S.timingInstr,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ),
               Expanded(

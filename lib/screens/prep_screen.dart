@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/neon_button.dart';
@@ -18,36 +19,36 @@ class _PrepScreenState extends State<PrepScreen>
   late final AnimationController _chevronCtrl;
   late final Animation<double> _chevronTurn;
 
-  static const _tests = [
-    (1,  'Reaksiyon Hızı',  Icons.bolt),
-    (2,  'Stroop Renk',     Icons.color_lens),
-    (3,  'Hafıza Kutuları', Icons.grid_view),
-    (4,  'Sayı Sıralama',   Icons.sort),
-    (5,  'İmpuls Kontrolü', Icons.touch_app),
-    (6,  'Pattern IQ',      Icons.pattern),
-    (7,  'Çember Refleks',  Icons.radio_button_unchecked),
-    (8,  'Laser Gate',      Icons.track_changes),
-    (9,  'Timing Stack',    Icons.stacked_bar_chart),
-    (10, 'Pulse Stop',      Icons.radio_button_checked),
-    (11, 'Balance Bar',     Icons.horizontal_rule),
-    (12, 'Dart Focus',      Icons.adjust),
-    (13, 'Sky Shot',        Icons.rocket_launch),
-    (14, 'Target Lock',     Icons.radar),
-    (15, 'Swipe Dodge',     Icons.swipe),
-    (16, 'Color Panic',     Icons.palette),
-    (17, "Don't Tap Red",   Icons.do_not_touch),
-    (18, 'Tap Target',      Icons.my_location),
-    (19, 'Shape Strike',    Icons.category),
-    (20, 'Memory Flash',    Icons.grid_view),
-    (21, 'Mirror Brain',    Icons.compare_arrows),
-    (22, 'Sequence Rush',   Icons.format_list_numbered),
-    (23, 'Reaction Wall',   Icons.view_column),
-    (24, 'Focus Hunter',    Icons.search),
-    (25, 'Impulse Ctrl',    Icons.stop_circle_outlined),
-    (26, 'Tap Rain',        Icons.grain),
-    (27, 'Speed Math',      Icons.calculate),
-    (28, 'Number Hunter',   Icons.tag),
-    (29, 'Pattern Master',  Icons.pattern),
+  static const _testIcons = [
+    Icons.bolt,
+    Icons.color_lens,
+    Icons.grid_view,
+    Icons.sort,
+    Icons.touch_app,
+    Icons.pattern,
+    Icons.radio_button_unchecked,
+    Icons.track_changes,
+    Icons.stacked_bar_chart,
+    Icons.radio_button_checked,
+    Icons.horizontal_rule,
+    Icons.adjust,
+    Icons.rocket_launch,
+    Icons.radar,
+    Icons.swipe,
+    Icons.palette,
+    Icons.do_not_touch,
+    Icons.my_location,
+    Icons.category,
+    Icons.grid_view,
+    Icons.compare_arrows,
+    Icons.format_list_numbered,
+    Icons.view_column,
+    Icons.search,
+    Icons.stop_circle_outlined,
+    Icons.grain,
+    Icons.calculate,
+    Icons.tag,
+    Icons.pattern,
   ];
 
   static const _visibleCount = 3;
@@ -90,20 +91,20 @@ class _PrepScreenState extends State<PrepScreen>
                     children: [
                       const CinHost(size: 120),
                       const SizedBox(height: 16),
-                      const Text(
-                        '29 kısa test seni bekliyor.',
+                      Text(
+                        S.prepTitle,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Hazır olduğunda başla.',
+                      Text(
+                        S.prepSubtitle,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white54,
                           fontSize: 15,
                         ),
@@ -123,9 +124,9 @@ class _PrepScreenState extends State<PrepScreen>
                           children: [
                             // Always-visible first 3
                             ...List.generate(_visibleCount, (i) {
-                              final t = _tests[i];
+                              final names = S.testNames;
                               return _TestListItem(
-                                  n: t.$1, name: t.$2, icon: t.$3,
+                                  n: i + 1, name: names[i], icon: _testIcons[i],
                                   isLast: !_expanded && i == _visibleCount - 1);
                             }),
 
@@ -136,13 +137,14 @@ class _PrepScreenState extends State<PrepScreen>
                               child: _expanded
                                   ? Column(
                                       children: List.generate(
-                                          _tests.length - _visibleCount,
+                                          _testIcons.length - _visibleCount,
                                           (i) {
-                                        final t = _tests[_visibleCount + i];
+                                        final names = S.testNames;
+                                        final idx = _visibleCount + i;
                                         return _TestListItem(
-                                            n: t.$1, name: t.$2, icon: t.$3,
+                                            n: idx + 1, name: names[idx], icon: _testIcons[idx],
                                             isLast: i ==
-                                                _tests.length -
+                                                _testIcons.length -
                                                     _visibleCount -
                                                     1);
                                       }),
@@ -195,7 +197,7 @@ class _PrepScreenState extends State<PrepScreen>
                 ),
                 padding: const EdgeInsets.fromLTRB(28, 14, 28, 14),
                 child: NeonButton(
-                  text: 'Başla!',
+                  text: S.start,
                   onPressed: () => Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

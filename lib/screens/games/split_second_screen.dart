@@ -6,6 +6,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 class SplitSecondScreen extends StatefulWidget {
@@ -213,7 +214,7 @@ class _SplitSecondScreenState extends State<SplitSecondScreen> {
                                 style: const TextStyle(fontSize: 22))),
                       ),
                       Text(
-                        'Skor: $_score',
+                        S.circleScore(_score),
                         style: const TextStyle(
                             color: Color(0xFFFF7043),
                             fontSize: 20,
@@ -250,8 +251,8 @@ class _SplitSecondScreenState extends State<SplitSecondScreen> {
                                         color: const Color(0xFFFF7043)
                                             .withValues(alpha: 0.5)),
                                   ),
-                                  child: const Text('BAŞLA',
-                                      style: TextStyle(
+                                  child: Text(S.startBtn,
+                                      style: const TextStyle(
                                           color: Color(0xFFFF7043),
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold)),
@@ -270,7 +271,7 @@ class _SplitSecondScreenState extends State<SplitSecondScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: Text(
-                    'Tur: $_round/$_totalRounds',
+                    S.focusRound(_round, _totalRounds),
                     style: const TextStyle(color: Colors.white38, fontSize: 13),
                   ),
                 ),

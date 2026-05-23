@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../l10n/app_strings.dart';
 import '../../services/storage_service.dart';
 import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
@@ -213,8 +214,8 @@ class _MirrorBrainScreenState extends State<MirrorBrainScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text('TERSİNE DOKUN!',
-                        style: TextStyle(
+                    Text(S.mirrorTapLabel,
+                        style: const TextStyle(
                             color: Colors.white54,
                             fontSize: 14,
                             letterSpacing: 1)),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_strings.dart';
 import '../services/storage_service.dart';
 import '../services/achievement_service.dart';
 import '../services/ad_service.dart';
@@ -248,8 +249,8 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
                 const Text('♾️',
                     style: TextStyle(fontSize: 64)),
                 const SizedBox(height: 20),
-                const Text('Sonsuz Refleks',
-                    style: TextStyle(
+                Text(S.endlessTitle,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 28,
                         fontWeight: FontWeight.bold)),
@@ -261,7 +262,7 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
                 ),
                 const SizedBox(height: 40),
                 NeonButton(
-                  text: 'Başla!',
+                  text: S.start,
                   onPressed: _startGame,
                   color: const Color(0xFF00C853),
                   width: double.infinity,
@@ -270,7 +271,7 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
                 ),
                 const SizedBox(height: 14),
                 NeonButton(
-                  text: 'Geri',
+                  text: S.back,
                   onPressed: () => Navigator.pop(context),
                   color: Colors.white38,
                   width: double.infinity,
@@ -316,7 +317,7 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
                         color: Colors.white38, fontSize: 12)),
                 const SizedBox(height: 40),
                 NeonButton(
-                  text: 'Tekrar Dene',
+                  text: S.tryAgain,
                   onPressed: _startGame,
                   color: const Color(0xFF00C853),
                   width: double.infinity,
@@ -325,7 +326,7 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
                 ),
                 const SizedBox(height: 12),
                 NeonButton(
-                  text: 'Ana Menü',
+                  text: S.menu,
                   onPressed: () => Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
@@ -385,7 +386,7 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
                   color: Color(0xFF00C853),
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
-          Text('Tur $_round',
+          Text(S.endlessRound(_round),
               style:
                   const TextStyle(color: Colors.white54, fontSize: 13)),
         ],
@@ -430,9 +431,9 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
                   ),
                 ),
               ),
-            const Center(
-              child: Text('Yeşil daire çıkınca dokun!',
-                  style: TextStyle(
+            Center(
+              child: Text(S.endlessCircle,
+                  style: const TextStyle(
                       color: Colors.white30, fontSize: 12)),
             ),
           ],
@@ -448,8 +449,8 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Sadece DAİRE ye dokun!',
-                style: TextStyle(
+            Text(S.endlessShape,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
@@ -495,8 +496,8 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Sıradaki sayı hangisi?',
-              style: TextStyle(
+          Text(S.endlessSeq,
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),

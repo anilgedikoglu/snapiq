@@ -6,6 +6,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 class _Obstacle {
@@ -271,17 +272,17 @@ class _SwipeDodgeScreenState extends State<SwipeDodgeScreen> {
                                             color: const Color(0xFF00C853)
                                                 .withValues(alpha: 0.5)),
                                       ),
-                                      child: const Column(
+                                      child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text('BAŞLA',
-                                              style: TextStyle(
+                                          Text(S.startBtn,
+                                              style: const TextStyle(
                                                   color: Color(0xFF00C853),
                                                   fontSize: 24,
                                                   fontWeight:
                                                       FontWeight.bold)),
-                                          SizedBox(height: 8),
-                                          Text('Sola/Sağa kaydır',
+                                          const SizedBox(height: 8),
+                                          const Text('Sola/Sağa kaydır',
                                               style: TextStyle(
                                                   color: Colors.white54,
                                                   fontSize: 12)),
@@ -373,7 +374,7 @@ class _SwipeDodgeScreenState extends State<SwipeDodgeScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Text(
-              'Skor: $_score',
+              S.circleScore(_score),
               style: const TextStyle(
                   color: Color(0xFF00C853),
                   fontSize: 14,

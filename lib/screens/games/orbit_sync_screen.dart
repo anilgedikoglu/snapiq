@@ -7,6 +7,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../painters/orbit_sync_painter.dart';
 
 // Set true during development to see timing overlay; false for release
@@ -349,8 +350,8 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
         if (result.errorMs < _bestMs) _bestMs = result.errorMs;
       }
 
-      if (result.label == 'Mükemmel Senkron!') _perfectCount++;
-      if (result.label == 'Harika!') _greatCount++;
+      if (result.label == S.excellent) _perfectCount++;
+      if (result.label == S.great) _greatCount++;
 
       _phase = 'feedback';
     });
@@ -417,19 +418,19 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
     final int baseScore;
 
     if (absError <= 20) {
-      label = 'Mükemmel Senkron!';
+      label = S.excellent;
       baseScore = 100;
     } else if (absError <= 50) {
-      label = 'Harika!';
+      label = S.great;
       baseScore = 85 + ((50 - absError) * 14 ~/ 30); // 85–99
     } else if (absError <= 90) {
-      label = 'İyi!';
+      label = S.good;
       baseScore = 65 + ((90 - absError) * 19 ~/ 40); // 65–84
     } else if (absError <= 140) {
-      label = 'Zayıf';
+      label = S.weak;
       baseScore = 40 + ((140 - absError) * 24 ~/ 50); // 40–63
     } else {
-      label = 'Çok Zayıf';
+      label = S.weak;
       baseScore = 10 + ((220 - absError) * 29 ~/ 79); // 10–38
     }
 
@@ -453,19 +454,10 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
   }
 
   Color _colorForLabel(String label) {
-    switch (label) {
-      case 'Mükemmel Senkron!':
-        return _cyan;
-      case 'Harika!':
-        return _green;
-      case 'İyi!':
-        return _yellow;
-      case 'Zayıf':
-      case 'Çok Zayıf':
-        return _magenta;
-      default:
-        return Colors.redAccent;
-    }
+    if (label == S.excellent) return _cyan;
+    if (label == S.great) return _green;
+    if (label == S.good) return _yellow;
+    return Colors.redAccent;
   }
 
   Future<void> _finishGame() async {
@@ -620,7 +612,7 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
                       Positioned(
                         bottom: 16,
                         child: Text(
-                          'Tur $_currentRoundNum / $_totalRounds  •  Skor: $_totalScore',
+                          '${S.focusRound(_currentRoundNum, _totalRounds)}  •  ${S.circleScore(_totalScore)}',
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 13,
@@ -710,9 +702,9 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
                   )
                 ],
               ),
-              child: const Text(
-                'BAŞLA',
-                style: TextStyle(
+              child: Text(
+                S.startBtn,
+                style: const TextStyle(
                   color: _cyan,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -758,7 +750,7 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
   Widget _buildFeedbackOverlay() {
     final showDirection = _feedbackErrorMs < 9999 &&
         _feedbackErrorMs > 0 &&
-        _feedbackLabel != 'Mükemmel Senkron!' &&
+        _feedbackLabel != S.excellent &&
         _feedbackLabel != 'Miss';
 
     return Column(
@@ -776,7 +768,7 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
         if (showDirection) ...[
           const SizedBox(height: 4),
           Text(
-            '${_feedbackIsEarly ? "Erken" : "Geç"} ${_feedbackErrorMs}ms',
+            '${_feedbackIsEarly ? S.early : S.late} ${_feedbackErrorMs}ms',
             style: TextStyle(
               color: _feedbackColor.withValues(alpha: 0.75),
               fontSize: 15,
@@ -902,7 +894,7 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
                   ),
                 ),
                 Text(
-                  'puan',
+                  S.score,
                   style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.5),
                       fontSize: 16),
@@ -914,7 +906,7 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
                   children: [
                     Expanded(
                       child: _resultButton(
-                        label: 'Tekrar Oyna',
+                        label: S.again,
                         color: _cyan,
                         onTap: _restart,
                       ),
@@ -922,7 +914,7 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
                     const SizedBox(width: 14),
                     Expanded(
                       child: _resultButton(
-                        label: 'Çıkış',
+                        label: S.exit,
                         color: _magenta,
                         onTap: () => Navigator.pop(context),
                       ),
@@ -949,7 +941,7 @@ class _OrbitSyncScreenState extends State<OrbitSyncScreen>
         children: [
           Row(children: [
             _statCell('Ort. Hata', '${avgMs}ms', _yellow),
-            _statCell('En İyi', '${bestMs}ms', _green),
+            _statCell(S.best, '${bestMs}ms', _green),
           ]),
           const SizedBox(height: 12),
           Row(children: [

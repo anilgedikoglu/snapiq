@@ -6,6 +6,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 class ImpulseControlScreen extends StatefulWidget {
@@ -75,7 +76,7 @@ class _ImpulseControlScreenState extends State<ImpulseControlScreen> {
       _showTimer = Timer(Duration(milliseconds: displayMs), () {
         if (!mounted || _gameEnded) return;
         if (_isGo && !_tapped) {
-          setState(() => _message = 'Kaçırdın!');
+          setState(() => _message = 'missed');
         }
         setState(() {
           _showing = false;
@@ -222,7 +223,7 @@ class _ImpulseControlScreenState extends State<ImpulseControlScreen> {
                         children: [
                           if (_showing)
                             Text(
-                              _isGo ? 'GO' : 'BEKLE',
+                              _isGo ? 'GO' : S.impulseCtrlWait,
                               style: TextStyle(
                                 color: _isGo
                                     ? const Color(0xFF00C853)
@@ -240,11 +241,14 @@ class _ImpulseControlScreenState extends State<ImpulseControlScreen> {
                               ),
                             )
                           else if (_message.isNotEmpty)
-                            Text(_message,
+                            Text(
+                                _message == 'missed'
+                                    ? S.impulseCtrlMissed
+                                    : _message,
                                 style: TextStyle(
                                     color: _message == '✓'
                                         ? const Color(0xFF00C853)
-                                        : _message == 'Kaçırdın!'
+                                        : _message == 'missed'
                                             ? const Color(0xFFFDD835)
                                             : Colors.red,
                                     fontSize: 48,
@@ -256,8 +260,8 @@ class _ImpulseControlScreenState extends State<ImpulseControlScreen> {
                                     fontSize: 48)),
                           const SizedBox(height: 20),
                           if (!_showing)
-                            const Text('Ekrana dokun',
-                                style: TextStyle(
+                            Text(S.tapScreen,
+                                style: const TextStyle(
                                     color: Colors.white24,
                                     fontSize: 14)),
                         ],

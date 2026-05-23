@@ -6,6 +6,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 import '../../painters/dart_board_painter.dart';
 
@@ -213,11 +214,11 @@ class _DartFocusScreenState extends State<DartFocusScreen>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Atışlar: $_shotsLeft',
+                    Text(S.dartShots(_shotsLeft),
                         style: const TextStyle(
                             color: Colors.white70, fontSize: 16)),
                     Text(
-                      'Puan: ${_dartScores.fold(0, (a, b) => a + b)}',
+                      S.dartScore(_dartScores.fold(0, (a, b) => a + b)),
                       style: const TextStyle(
                           color: Color(0xFFFF7043),
                           fontSize: 20,

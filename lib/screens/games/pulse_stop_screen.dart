@@ -5,6 +5,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 class PulseStopScreen extends StatefulWidget {
@@ -64,23 +65,23 @@ class _PulseStopScreenState extends State<PulseStopScreen>
 
     if (diff < 5) {
       points = 100;
-      msg = 'Mükemmel!';
+      msg = S.excellent;
       color = const Color(0xFF00C853);
     } else if (diff < 15) {
       points = 70;
-      msg = 'Harika!';
+      msg = S.great;
       color = const Color(0xFF00B4FF);
     } else if (diff < 30) {
       points = 40;
-      msg = 'İyi';
+      msg = S.good;
       color = const Color(0xFFFDD835);
     } else if (diff < 50) {
       points = 15;
-      msg = 'Tamam';
+      msg = S.okay;
       color = const Color(0xFFFF7043);
     } else {
       points = 0;
-      msg = 'Kaçırdın';
+      msg = S.missed;
       color = Colors.red;
     }
 
@@ -249,12 +250,12 @@ class _PulseStopScreenState extends State<PulseStopScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Tur: ${_round.clamp(0, 5)}/5',
+                        S.focusRound(_round.clamp(0, 5), 5),
                         style: const TextStyle(
                             color: Colors.white70, fontSize: 16),
                       ),
                       Text(
-                        'Puan: $_totalScore',
+                        S.pulseTotal(_totalScore),
                         style: const TextStyle(
                             color: Color(0xFFFDD835),
                             fontSize: 20,
@@ -263,11 +264,11 @@ class _PulseStopScreenState extends State<PulseStopScreen>
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 16),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
                   child: Text(
-                    'Halka sarı bölgeye girince dokun!',
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    S.pulseInstr,
+                    style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ),
               ],

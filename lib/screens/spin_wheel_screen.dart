@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../services/storage_service.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/neon_button.dart';
@@ -47,6 +48,7 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
         xpReward: 0,
         themeUnlock: 'sunset'),
     _Segment(label: 'Rozet 🏅', color: Color(0xFFFDD835), xpReward: 75),
+    // Note: labels are kept as-is since they are data/display in wheel (not critical for i18n here)
     _Segment(label: '+75 XP', color: Color(0xFF7B2FBE), xpReward: 75),
     _Segment(label: 'Bonus 🎁', color: Color(0xFFE91E63), xpReward: 150),
   ];
@@ -137,8 +139,8 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text('Çark Çevir',
-                        style: TextStyle(
+                    Text(S.spinTitle,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
@@ -157,9 +159,9 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
                       if (_resultIndex != null && _alreadySpun)
                         _buildResult(),
                       if (_alreadySpun && _resultIndex == null)
-                        const Text(
-                          'Bugün zaten çevirdin!\nYarın tekrar gel.',
-                          style: TextStyle(
+                        Text(
+                          S.spinAlreadyDone,
+                          style: const TextStyle(
                               color: Color(0xFF03DAC6), fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
@@ -169,8 +171,8 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
                           padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: NeonButton(
                             text: _alreadySpun
-                                ? 'Yarın Tekrar Gel'
-                                : 'ÇEVİR!',
+                                ? S.homeDailyTomorrow
+                                : S.spinBtn,
                             onPressed: _alreadySpun ? () {} : _spin,
                             color: _alreadySpun
                                 ? Colors.white38
@@ -231,19 +233,19 @@ class _SpinWheelScreenState extends State<SpinWheelScreen>
       child: Column(
         children: [
           Text(
-            'Kazandın: ${seg.label}',
+            S.spinWon(seg.label),
             style: TextStyle(
                 color: seg.color,
                 fontWeight: FontWeight.bold,
                 fontSize: 18),
           ),
           if (seg.xpReward > 0)
-            Text('+${seg.xpReward} XP hesabına eklendi',
+            Text(S.spinXP(seg.xpReward),
                 style: const TextStyle(
                     color: Colors.white54, fontSize: 13)),
           if (seg.themeUnlock != null)
-            const Text('Yeni tema kilidi açıldı!',
-                style: TextStyle(
+            Text(S.spinThemeUnlocked,
+                style: const TextStyle(
                     color: Colors.white54, fontSize: 13)),
         ],
       ),

@@ -5,6 +5,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../widgets/arcade_result_overlay.dart';
 
 enum _Phase { idle, watch, recall, result }
@@ -165,7 +166,7 @@ class _MemoryFlashScreenState extends State<MemoryFlashScreen> {
                             style: const TextStyle(fontSize: 18)),
                       ),
                     ),
-                    Text('Seviye $_level | $_score puan',
+                    Text(S.arcadeLevelScore(_level, _score),
                         style: const TextStyle(
                             color: Colors.white54, fontSize: 12)),
                   ],
@@ -189,11 +190,11 @@ class _MemoryFlashScreenState extends State<MemoryFlashScreen> {
     Color color = Colors.white54;
     switch (_phase) {
       case _Phase.watch:
-        text = 'Ezberle!';
+        text = S.memFlashMemorize;
         color = const Color(0xFFFDD835);
         break;
       case _Phase.recall:
-        text = 'Hangileri?';
+        text = S.memFlashWhich;
         color = const Color(0xFF00B4FF);
         break;
       case _Phase.result:

@@ -7,6 +7,7 @@ import '../../services/xp_service.dart';
 import '../../services/achievement_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/animated_background.dart';
+import '../../l10n/app_strings.dart';
 import '../../painters/circle_tap_reflex_painter.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -220,7 +221,7 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
 
       if (result.isMiss) _missCount++;
       if (result.isPerfect) _perfectCount++;
-      if (result.label == 'Harika!') _greatCount++;
+      if (result.label == S.great) _greatCount++;
 
       if (result.errorMs < 9999) {
         _errorMsList.add(result.errorMs);
@@ -263,9 +264,9 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
 
   _Result _scoreRound(double tapMs) {
     if (tapMs == double.infinity) {
-      return const _Result(
+      return _Result(
         score: 0, errorMs: 9999, isEarly: false,
-        label: 'Kaçtı!', isMiss: true,
+        label: S.missed, isMiss: true,
       );
     }
 
@@ -275,24 +276,24 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
 
     if (abs > 220) {
       return _Result(score: 0, errorMs: abs, isEarly: early,
-          label: 'Kaçtı!', isMiss: true);
+          label: S.missed, isMiss: true);
     }
 
     final String label;
     final int base;
     if (abs <= _perfectMs) {
-      label = 'Mükemmel!'; base = 100;
+      label = S.excellent; base = 100;
     } else if (abs <= 50) {
-      label = 'Harika!';
+      label = S.great;
       base = 85 + ((50 - abs) * 14 ~/ (50 - _perfectMs).clamp(1, 30));
     } else if (abs <= 90) {
-      label = 'İyi!';
+      label = S.good;
       base = 65 + ((90 - abs) * 19 ~/ 40);
     } else if (abs <= 140) {
-      label = 'Az farkla!';
+      label = S.slightlyOff;
       base = 40 + ((140 - abs) * 24 ~/ 50);
     } else {
-      label = 'Zayıf!';
+      label = S.weak;
       base = 10 + ((220 - abs) * 29 ~/ 79);
     }
 
@@ -304,13 +305,11 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
   }
 
   Color _colorForLabel(String label) {
-    switch (label) {
-      case 'Mükemmel!': return _yellow;
-      case 'Harika!': return _cyan;
-      case 'İyi!': return _green;
-      case 'Az farkla!': return _magenta;
-      default: return _red;
-    }
+    if (label == S.excellent) return _yellow;
+    if (label == S.great) return _cyan;
+    if (label == S.good) return _green;
+    if (label == S.slightlyOff) return _magenta;
+    return _red;
   }
 
   Future<void> _finishGame() async {
@@ -385,7 +384,7 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
                     if (_phase == 'warming')
                       Center(
                         child: Text(
-                          'Hazır ol...',
+                          S.ready,
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.4),
                             fontSize: 16,
@@ -399,7 +398,7 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
                       Positioned(
                         bottom: 16,
                         child: Text(
-                          'Tur $_roundNum / $_totalRounds  •  Skor: $_totalScore',
+                          '${S.focusRound(_roundNum, _totalRounds)}  •  ${S.circleScore(_totalScore)}',
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.55),
                             fontSize: 13,
@@ -466,7 +465,7 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
 
   Widget _buildFeedback() {
     final showDir = _fbErrorMs < 9999 && _fbErrorMs > 0 &&
-        _fbLabel != 'Mükemmel!' && _fbLabel != 'Kaçtı!';
+        _fbLabel != S.excellent && _fbLabel != S.missed;
     final sign = _fbIsEarly ? '-' : '+';
 
     return Column(
@@ -475,14 +474,14 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
         Text(_fbLabel,
             style: TextStyle(color: _fbColor, fontSize: 30, fontWeight: FontWeight.bold,
                 shadows: [Shadow(color: _fbColor, blurRadius: 24)])),
-        if (_fbLabel == 'Mükemmel!' && _fbErrorMs < 9999) ...[
+        if (_fbLabel == S.excellent && _fbErrorMs < 9999) ...[
           const SizedBox(height: 4),
           Text('${_fbErrorMs}ms',
               style: TextStyle(color: _fbColor.withValues(alpha: 0.65), fontSize: 14)),
         ],
         if (showDir) ...[
           const SizedBox(height: 4),
-          Text('${_fbIsEarly ? "Erken" : "Geç"}: $sign${_fbErrorMs}ms',
+          Text('${_fbIsEarly ? S.early : S.late}: $sign${_fbErrorMs}ms',
               style: TextStyle(color: _fbColor.withValues(alpha: 0.75),
                   fontSize: 15, fontWeight: FontWeight.w500)),
         ],
@@ -533,7 +532,7 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
                 Text('$_totalScore',
                     style: const TextStyle(color: Colors.white, fontSize: 72,
                         fontWeight: FontWeight.bold, height: 1)),
-                Text('puan',
+                Text(S.score,
                     style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.45), fontSize: 16)),
                 const SizedBox(height: 28),
@@ -541,9 +540,9 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
                 const SizedBox(height: 36),
                 Row(
                   children: [
-                    Expanded(child: _resBtn('Tekrar Oyna', _cyan, _scheduleRestart)),
+                    Expanded(child: _resBtn(S.again, _cyan, _scheduleRestart)),
                     const SizedBox(width: 14),
-                    Expanded(child: _resBtn('Çıkış', _magenta, () => Navigator.pop(context))),
+                    Expanded(child: _resBtn(S.exit, _magenta, () => Navigator.pop(context))),
                   ],
                 ),
               ],
@@ -564,7 +563,7 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
       ),
       child: Column(
         children: [
-          Row(children: [_stat('Ort. Refleks', '${avgMs}ms', _yellow), _stat('En İyi', '${bestMs}ms', _green)]),
+          Row(children: [_stat('Ort. Refleks', '${avgMs}ms', _yellow), _stat(S.best, '${bestMs}ms', _green)]),
           const SizedBox(height: 12),
           Row(children: [_stat('Mükemmel', '$_perfectCount', _cyan), _stat('Harika', '$_greatCount', _green)]),
           const SizedBox(height: 12),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/achievement.dart';
 import '../services/storage_service.dart';
 import '../widgets/animated_background.dart';
@@ -43,8 +44,8 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                       icon: const Icon(Icons.arrow_back_ios_new,
                           color: Colors.white70, size: 20),
                     ),
-                    const Text('Başarımlar',
-                        style: TextStyle(
+                    Text(S.achievementsTitle,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold)),
