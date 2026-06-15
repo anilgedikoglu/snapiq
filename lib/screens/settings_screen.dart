@@ -46,19 +46,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: const Color(0xFF0D1B2A),
         title: Text(S.settingsResetData,
             style: const TextStyle(color: Colors.white)),
-        content: const Text(
-            'Tüm oyun verilerin silinecek. Devam etmek istiyor musun?',
-            style: TextStyle(color: Colors.white70)),
+        content: Text(
+            S.settingsResetConfirm,
+            style: const TextStyle(color: Colors.white70)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('İptal',
-                style: TextStyle(color: Color(0xFF00B4FF))),
+            child: Text(S.cancel,
+                style: const TextStyle(color: Color(0xFF00B4FF))),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Sil',
-                style: TextStyle(color: Colors.redAccent)),
+            child: Text(S.delete,
+                style: const TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),

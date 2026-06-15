@@ -90,7 +90,7 @@ class _LaserGateScreenState extends State<LaserGateScreen>
     if (_isGapAtTop(targetRing)) {
       setState(() {
         _ballRing++;
-        _feedback = ['Geçti! ✓', 'Harika! ✓', 'Dışarı! 🎯'][_ballRing - 1];
+        _feedback = S.laserPassed(_ballRing - 1);
         _feedbackColor = const Color(0xFF00C853);
         _showFeedback = true;
       });
@@ -114,7 +114,7 @@ class _LaserGateScreenState extends State<LaserGateScreen>
       _impactCtrl.forward(from: 0);
       setState(() {
         _ballRing = 0;
-        _feedback = 'Çarptı!';
+        _feedback = S.laserHitMsg;
         _feedbackColor = const Color(0xFFFF7043);
         _showFeedback = true;
       });
@@ -166,8 +166,8 @@ class _LaserGateScreenState extends State<LaserGateScreen>
                     color: const Color(0xFFFDD835).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text('🏆 Yeni Rekor!',
-                      style: TextStyle(
+                  child: Text(S.newRecord,
+                      style: const TextStyle(
                           color: Color(0xFFFDD835),
                           fontWeight: FontWeight.bold,
                           fontSize: 12)),
@@ -324,11 +324,11 @@ class _LaserGateScreenState extends State<LaserGateScreen>
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 16),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
                   child: Text(
-                    "Boşluk 12'de iken dokun  •  En dışa çık!",
-                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                    S.laserGateHint,
+                    style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ),
               ],

@@ -258,9 +258,9 @@ class _SplitSecondScreenState extends State<SplitSecondScreen> {
                                           fontWeight: FontWeight.bold)),
                                 ),
                                 const SizedBox(height: 16),
-                                const Text(
-                                  "GO'da dokun, STOP'ta dur!",
-                                  style: TextStyle(
+                                Text(
+                                  S.splitSecondInstr,
+                                  style: const TextStyle(
                                       color: Colors.white54, fontSize: 13),
                                 ),
                               ],

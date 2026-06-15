@@ -1,7 +1,7 @@
 ﻿// Full-test version of Impulse Control (Test 25/29).
 // 20 rounds, 3 lives.
 // Score = clamp(score / 20 * 100, 0, 100).
-// Mid-chain screen â€” navigates to TapRainTestScreen.
+// Mid-chain screen — navigates to TapRainTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -276,7 +276,7 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                     children: [
                       Row(
                         children: List.generate(3,
-                            (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
+                            (i) => Text(i < _lives ? '❤️' : '🖤',
                                 style: const TextStyle(fontSize: 18))),
                       ),
                       Text('$_score/$_totalRounds',
@@ -357,8 +357,8 @@ class _ICTState extends State<ImpulseControlTestScreen> {
                                     color: const Color(0xFF00B4FF)
                                         .withValues(alpha: 0.5)),
                               ),
-                              child: const Text('BAÅLA',
-                                  style: TextStyle(
+                              child: Text(S.startBtn,
+                                  style: const TextStyle(
                                       color: Color(0xFF00B4FF),
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold)),

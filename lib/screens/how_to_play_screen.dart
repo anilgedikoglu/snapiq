@@ -49,9 +49,9 @@ class HowToPlayScreen extends StatelessWidget {
                               color: const Color(0xFFFF7043)
                                   .withValues(alpha: 0.4)),
                         ),
-                        child: const Text(
-                          '⚠️  Bu uygulama eğlence amaçlıdır. Tıbbi veya bilimsel tanı koymaz. Testler refleks, dikkat, hafıza ve örüntü becerilerini oyunlaştırır.',
-                          style: TextStyle(
+                        child: Text(
+                          S.howDisclaimer,
+                          style: const TextStyle(
                               color: Colors.white70, fontSize: 13, height: 1.5),
                         ),
                       ),
@@ -59,44 +59,38 @@ class HowToPlayScreen extends StatelessWidget {
                       _Section(
                         icon: Icons.bolt,
                         color: const Color(0xFF00C853),
-                        title: '1. Reaksiyon Hızı',
-                        body:
-                            'Ekran kırmızıyken bekle. Yeşile dönünce mümkün olduğunca hızlı dokun. Erken dokunursan 0 puan.',
+                        title: S.how1Title,
+                        body: S.how1Body,
                       ),
                       _Section(
                         icon: Icons.color_lens,
                         color: const Color(0xFF1E88E5),
-                        title: '2. Stroop Renk Testi',
-                        body:
-                            'Kelimenin anlamını değil, yazının rengini seç. Beyin kafa karışıklığıyla mücadele edecek!',
+                        title: S.how2Title,
+                        body: S.how2Body,
                       ),
                       _Section(
                         icon: Icons.grid_view,
                         color: const Color(0xFFBB86FC),
-                        title: '3. Hafıza Kutuları',
-                        body:
-                            'Hangi kutular yandı? Geri sayım başlayınca aynı kutuları seç. Her round biraz daha zor.',
+                        title: S.how3Title,
+                        body: S.how3Body,
                       ),
                       _Section(
                         icon: Icons.sort,
                         color: const Color(0xFFFDD835),
-                        title: '4. Sayı Sıralama',
-                        body:
-                            'Ekrandaki sayılara küçükten büyüğe sırasıyla dokun. 8 saniye içinde bitirmeye çalış.',
+                        title: S.how4Title,
+                        body: S.how4Body,
                       ),
                       _Section(
                         icon: Icons.touch_app,
                         color: const Color(0xFFFF7043),
-                        title: '5. İmpuls Kontrolü',
-                        body:
-                            'Sadece daire çıkınca dokun! Kare, üçgen veya yıldıza dokunursan puan kybedersin.',
+                        title: S.how5Title,
+                        body: S.how5Body,
                       ),
                       _Section(
                         icon: Icons.pattern,
                         color: const Color(0xFF03DAC6),
-                        title: '6. Pattern IQ',
-                        body:
-                            'Örüntüyü analiz et ve doğru devamı seç. Hızlı düşün, zaman sınırı yok.',
+                        title: S.how6Title,
+                        body: S.how6Body,
                       ),
                       const SizedBox(height: 24),
                       const _ScoreInfo(),
@@ -180,21 +174,18 @@ class _ScoreInfo extends StatelessWidget {
         border: Border.all(
             color: const Color(0xFF00B4FF).withValues(alpha: 0.3)),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Puanlama',
-              style: TextStyle(
+          Text(S.howScoreTitle,
+              style: const TextStyle(
                   color: Color(0xFF00B4FF),
                   fontWeight: FontWeight.bold,
                   fontSize: 14)),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
-            'Her test 0-100 arası puanlanır.\n'
-            'Ağırlıklı ortalama ile final skoru hesaplanır.\n'
-            'SnapIQ ≈ 60 - 150 arası değişir.\n'
-            'Bilişsel yaş formülü tamamen eğlence amaçlıdır.',
-            style: TextStyle(
+            S.howScoreBody,
+            style: const TextStyle(
                 color: Colors.white54, fontSize: 12, height: 1.6),
           ),
         ],

@@ -1,7 +1,7 @@
 ﻿// Full-test version of Mirror Brain (Test 21/29).
-// 15 rounds, 3 lives â€” same mechanics as arcade.
+// 15 rounds, 3 lives — same mechanics as arcade.
 // Score = clamp(score / 15 * 100, 0, 100).
-// Mid-chain screen â€” navigates to SequenceRushTestScreen.
+// Mid-chain screen — navigates to SequenceRushTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -64,14 +64,14 @@ class MirrorBrainTestScreen extends StatefulWidget {
 
 class _MBTState extends State<MirrorBrainTestScreen> {
   static const _totalRounds = 15;
-  static const _arrows = ['â†', 'â†’', 'â†‘', 'â†“'];
-  static const _opposites = {'â†': 'â†’', 'â†’': 'â†', 'â†‘': 'â†“', 'â†“': 'â†‘'};
+  static const _arrows = ['←', '→', '↑', '↓'];
+  static const _opposites = {'←': '→', '→': '←', '↑': '↓', '↓': '↑'};
 
   int _score = 0;
   int _lives = 3;
   int _round = 0;
   double _timeLeft = 3.0;
-  String _arrow = 'â†';
+  String _arrow = '←';
   bool _started = false;
   bool _gameEnded = false;
   Timer? _timer;
@@ -254,7 +254,7 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
+                          (i) => Text(i < _lives ? '❤️' : '🖤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text('$_score/$_totalRounds',
@@ -299,10 +299,10 @@ class _MBTState extends State<MirrorBrainTestScreen> {
                           Wrap(
                             alignment: WrapAlignment.center,
                             children: [
-                              _dirButton('â†‘'),
-                              _dirButton('â†“'),
-                              _dirButton('â†'),
-                              _dirButton('â†’'),
+                              _dirButton('↑'),
+                              _dirButton('↓'),
+                              _dirButton('←'),
+                              _dirButton('→'),
                             ],
                           ),
                         ],

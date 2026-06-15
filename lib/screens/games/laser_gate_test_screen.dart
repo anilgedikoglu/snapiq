@@ -107,7 +107,7 @@ class _LGTState extends State<LaserGateTestScreen>
     if (_isGapAtTop(_ballRing)) {
       setState(() {
         _ballRing++;
-        _feedback = ['Geçti! ✓', 'Harika! ✓', 'Dışarı! 🎯'][_ballRing - 1];
+        _feedback = S.laserPassed(_ballRing - 1);
         _feedbackColor = const Color(0xFF00C853);
         _showFeedback = true;
       });
@@ -129,7 +129,7 @@ class _LGTState extends State<LaserGateTestScreen>
       _impactCtrl.forward(from: 0);
       setState(() {
         _ballRing = 0;
-        _feedback = 'Çarptı!';
+        _feedback = S.laserHitMsg;
         _feedbackColor = const Color(0xFFFF7043);
         _showFeedback = true;
       });

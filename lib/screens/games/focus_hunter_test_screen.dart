@@ -1,7 +1,7 @@
 ﻿// Full-test version of Focus Hunter (Test 24/29).
-// 10 rounds â€” same as arcade.
+// 10 rounds — same as arcade.
 // Score = clamp(score / 10 * 100, 0, 100).
-// Mid-chain screen â€” navigates to ImpulseControlTestScreen.
+// Mid-chain screen — navigates to ImpulseControlTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -72,14 +72,14 @@ class _FHTState extends State<FocusHunterTestScreen> {
   static const _totalRounds = 10;
 
   static const _pairs = [
-    ['ğŸ˜Š', 'ğŸ˜„'],
-    ['ğŸ±', 'ğŸ¶'],
-    ['ğŸ', 'ğŸŠ'],
-    ['â­', 'ğŸŒŸ'],
-    ['ğŸ¯', 'ğŸª'],
-    ['â¤ï¸', 'ğŸ’›'],
-    ['ğŸš—', 'ğŸš•'],
-    ['ğŸŒ¸', 'ğŸŒº'],
+    ['😊', '😄'],
+    ['🐱', '🐶'],
+    ['🍎', '🍊'],
+    ['⭐', '🌟'],
+    ['🎯', '🎪'],
+    ['❤️', '💛'],
+    ['🚗', '🚕'],
+    ['🌸', '🌺'],
   ];
 
   int _score = 0;
@@ -312,8 +312,8 @@ class _FHTState extends State<FocusHunterTestScreen> {
                                   color: const Color(0xFF00B4FF)
                                       .withValues(alpha: 0.5)),
                             ),
-                            child: const Text('BAÅLA',
-                                style: TextStyle(
+                            child: Text(S.startBtn,
+                                style: const TextStyle(
                                     color: Color(0xFF00B4FF),
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold)),

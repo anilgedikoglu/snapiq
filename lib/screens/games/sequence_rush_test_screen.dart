@@ -1,7 +1,7 @@
 ﻿// Full-test version of Sequence Rush (Test 22/29).
-// 8 sequences correct OR 3 lives â€” whichever first.
+// 8 sequences correct OR 3 lives — whichever first.
 // Score = clamp(score / 8 * 100, 0, 100).
-// Mid-chain screen â€” navigates to ReactionWallTestScreen.
+// Mid-chain screen — navigates to ReactionWallTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -266,7 +266,7 @@ class _SRTState extends State<SequenceRushTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
+                          (i) => Text(i < _lives ? '❤️' : '🖤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text(S.seqRushLevel(_level),

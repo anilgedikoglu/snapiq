@@ -16,7 +16,7 @@ enum _ShapeType { circle, square, triangle, star }
 class _FallingShape {
   final int id;
   final _ShapeType type;
-  final double x;
+  final double x; // horizontal position as a fraction 0..1 of play width
   double topFraction;
 
   _FallingShape({
@@ -138,7 +138,7 @@ class _SSTState extends State<ShapeStrikeTestScreen> {
         _shapes.add(_FallingShape(
           id: _nextId++,
           type: type,
-          x: 30 + _rand.nextDouble() * 280,
+          x: _rand.nextDouble(),
           topFraction: 0.0,
         ));
       });
@@ -339,7 +339,7 @@ class _SSTState extends State<ShapeStrikeTestScreen> {
                     children: [
                       for (final s in List.from(_shapes))
                         Positioned(
-                          left: s.x - 25,
+                          left: s.x * (constraints.maxWidth - 50),
                           top: s.topFraction * constraints.maxHeight - 25,
                           child: GestureDetector(
                             onTap: () => _tap(s),

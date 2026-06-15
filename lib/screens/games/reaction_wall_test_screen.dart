@@ -1,7 +1,7 @@
 ﻿// Full-test version of Reaction Wall (Test 23/29).
 // 30 seconds OR 3 lives lost.
 // Score = clamp(score / 15 * 100, 0, 100).
-// Mid-chain screen â€” navigates to FocusHunterTestScreen.
+// Mid-chain screen — navigates to FocusHunterTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -266,7 +266,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
+                          (i) => Text(i < _lives ? '❤️' : '🖤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text('$_score',
@@ -362,7 +362,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
                                       .withValues(alpha: 0.5)),
                             ),
                             child: const Center(
-                              child: Text('â†',
+                              child: Text('←',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 28)),
                             ),
@@ -384,7 +384,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
                                       .withValues(alpha: 0.5)),
                             ),
                             child: const Center(
-                              child: Text('â†’',
+                              child: Text('→',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 28)),
                             ),

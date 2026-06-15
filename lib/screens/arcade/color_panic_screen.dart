@@ -57,7 +57,10 @@ class _ColorPanicScreenState extends State<ColorPanicScreen> {
   void _generateRound() {
     final words = S.colorPanicWords;
     final wordIdx = _rand.nextInt(words.length);
-    final inkIdx = _rand.nextInt(_colors.length);
+    // ~50% of rounds force a real match, otherwise the ink is random.
+    // Without this the match chance is only 1/6, so "DIFFERENT" is almost
+    // always correct and the game becomes trivial.
+    final inkIdx = _rand.nextBool() ? wordIdx : _rand.nextInt(_colors.length);
     _word = words[wordIdx];
     _inkColor = _colors[inkIdx];
     _isMatch = wordIdx == inkIdx;

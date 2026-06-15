@@ -1,7 +1,7 @@
 ﻿// Full-test version of Memory Flash (Test 20/29).
-// 5 rounds OR 3 lives â€” whichever first.
+// 5 rounds OR 3 lives — whichever first.
 // Score = clamp(correct / 5 * 100, 0, 100).
-// Mid-chain screen â€” navigates to MirrorBrainTestScreen.
+// Mid-chain screen — navigates to MirrorBrainTestScreen.
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
@@ -237,7 +237,7 @@ class _MFTState extends State<MemoryFlashTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
+                          (i) => Text(i < _lives ? '❤️' : '🖤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text(S.memFlashCorrect(_score),

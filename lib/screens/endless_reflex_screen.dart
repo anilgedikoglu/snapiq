@@ -303,16 +303,16 @@ class _EndlessReflexScreenState extends State<EndlessReflexScreen> {
                         fontSize: 28,
                         fontWeight: FontWeight.bold)),
                 const SizedBox(height: 16),
-                Text('$_survivalSecs saniye',
+                Text(S.endlessSeconds(_survivalSecs),
                     style: const TextStyle(
                         color: Color(0xFF00C853),
                         fontSize: 48,
                         fontWeight: FontWeight.bold)),
-                const Text('hayatta kaldın',
+                Text(S.endlessSurvived,
                     style:
-                        TextStyle(color: Colors.white54, fontSize: 14)),
+                        const TextStyle(color: Colors.white54, fontSize: 14)),
                 const SizedBox(height: 8),
-                Text('$_round tur tamamlandı',
+                Text(S.endlessRoundsDone(_round),
                     style: const TextStyle(
                         color: Colors.white38, fontSize: 12)),
                 const SizedBox(height: 40),

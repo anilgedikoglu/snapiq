@@ -501,12 +501,7 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
         : (valid.reduce((a, b) => a + b) / valid.length).round();
     final bestMs = _bestMs == 9999 ? 0 : _bestMs;
 
-    final String unvan;
-    if (avgMs <= 20) { unvan = 'Refleks Ustası'; }
-    else if (avgMs <= 50) { unvan = 'Çok Hızlı'; }
-    else if (avgMs <= 90) { unvan = 'İyi Refleks'; }
-    else if (avgMs <= 140) { unvan = 'Gelişiyor'; }
-    else { unvan = 'Biraz Antrenman Lazım'; }
+    final String unvan = S.reflexRank(avgMs);
 
     return Column(
       children: [
@@ -563,11 +558,11 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
       ),
       child: Column(
         children: [
-          Row(children: [_stat('Ort. Refleks', '${avgMs}ms', _yellow), _stat(S.best, '${bestMs}ms', _green)]),
+          Row(children: [_stat(S.statAvgReflex, '${avgMs}ms', _yellow), _stat(S.best, '${bestMs}ms', _green)]),
           const SizedBox(height: 12),
-          Row(children: [_stat('Mükemmel', '$_perfectCount', _cyan), _stat('Harika', '$_greatCount', _green)]),
+          Row(children: [_stat(S.statPerfect, '$_perfectCount', _cyan), _stat(S.statGreat, '$_greatCount', _green)]),
           const SizedBox(height: 12),
-          Row(children: [_stat('Kaçtı', '$_missCount', _red), _stat('Best Combo', '$_bestCombo', _magenta)]),
+          Row(children: [_stat(S.statMissed, '$_missCount', _red), _stat(S.statBestCombo, '$_bestCombo', _magenta)]),
         ],
       ),
     );

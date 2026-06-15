@@ -58,7 +58,7 @@ _IQInfo _iqInfoForScore(int score) {
   if (score >= 80)  return _IQInfo('assets/iq_avatars/iq_ortalama.png', S.iqAverage,   '80–89 IQ');
   if (score >= 70)  return _IQInfo('assets/iq_avatars/iq_ort_alti.png', S.iqBelowAvg,  '70–79 IQ');
   if (score >= 55)  return _IQInfo('assets/iq_avatars/iq_sinirda.png',  S.iqBorderline,'55–69 IQ');
-  if (score > 0)    return _IQInfo('assets/iq_avatars/iq_dusuk.png',    S.iqLow,       '54 ve Altı IQ');
+  if (score > 0)    return _IQInfo('assets/iq_avatars/iq_dusuk.png',    S.iqLow,       S.iqRange54);
   // Henüz oynanmamış → varsayılan (Ortalama)
   return             _IQInfo('assets/iq_avatars/iq_ortalama.png',       S.iqPending,   S.iqFirstTest);
 }

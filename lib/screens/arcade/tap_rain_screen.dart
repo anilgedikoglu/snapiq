@@ -11,7 +11,7 @@ import '../../widgets/arcade_result_overlay.dart';
 class _RainItem {
   final int id;
   final String emoji;
-  final double x;
+  final double x; // horizontal position as a fraction 0..1 of play width
   double topFraction;
 
   _RainItem({
@@ -81,7 +81,7 @@ class _TapRainScreenState extends State<TapRainScreen> {
         _items.add(_RainItem(
           id: _nextId++,
           emoji: _types[_rand.nextInt(_types.length)],
-          x: 20 + _rand.nextDouble() * 300,
+          x: _rand.nextDouble(),
           topFraction: 0.0,
         ));
       });
@@ -239,7 +239,7 @@ class _TapRainScreenState extends State<TapRainScreen> {
                     children: [
                       for (final item in List.from(_items))
                         Positioned(
-                          left: item.x,
+                          left: item.x * (constraints.maxWidth - 36),
                           top: item.topFraction *
                               constraints.maxHeight,
                           child: GestureDetector(

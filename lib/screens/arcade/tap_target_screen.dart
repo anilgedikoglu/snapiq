@@ -10,8 +10,8 @@ import '../../widgets/arcade_result_overlay.dart';
 
 class _Target {
   final int id;
-  double x;
-  double y;
+  double x; // horizontal position as a fraction 0..1 of play width
+  double y; // vertical position as a fraction 0..1 of play height
   double radius;
   final bool isDecoy;
   _Target(
@@ -40,7 +40,6 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
   bool _gameEnded = false;
   Timer? _countdownTimer;
   Timer? _spawnTimer;
-  Timer? _despawnTimer;
   int _nextId = 0;
   final _rand = Random();
 
@@ -54,7 +53,6 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
   void dispose() {
     _countdownTimer?.cancel();
     _spawnTimer?.cancel();
-    _despawnTimer?.cancel();
     super.dispose();
   }
 
@@ -65,19 +63,12 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
       if (_timeLeft <= 0) {
         _countdownTimer?.cancel();
         _spawnTimer?.cancel();
-        _despawnTimer?.cancel();
         _endGame();
       }
     });
     _spawnTimer = Timer.periodic(const Duration(milliseconds: 800), (_) {
       if (!mounted) return;
       _spawnTarget();
-    });
-    _despawnTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
-      if (!mounted) return;
-      setState(() {
-        _targets.removeWhere((t) => t.radius <= 0);
-      });
     });
   }
 
@@ -86,8 +77,8 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
     final id = _nextId++;
     final target = _Target(
       id: id,
-      x: 30 + _rand.nextDouble() * 280,
-      y: 80 + _rand.nextDouble() * 420,
+      x: _rand.nextDouble(),
+      y: _rand.nextDouble(),
       radius: 35,
       isDecoy: isDecoy,
     );
@@ -152,7 +143,6 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
   void _restart() {
     _countdownTimer?.cancel();
     _spawnTimer?.cancel();
-    _despawnTimer?.cancel();
     setState(() {
       _timeLeft = 30;
       _score = 0;
@@ -203,12 +193,13 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
                 ),
               ),
               Expanded(
-                child: Stack(
+                child: LayoutBuilder(builder: (ctx, constraints) {
+                  return Stack(
                   children: [
                     for (final t in List.from(_targets))
                       Positioned(
-                        left: t.x - t.radius,
-                        top: t.y - t.radius,
+                        left: t.x * (constraints.maxWidth - t.radius * 2),
+                        top: t.y * (constraints.maxHeight - t.radius * 2),
                         child: GestureDetector(
                           onTap: () => _tapTarget(t),
                           child: t.isDecoy
@@ -250,7 +241,8 @@ class _TapTargetScreenState extends State<TapTargetScreen> {
                         ),
                       ),
                   ],
-                ),
+                );
+                }),
               ),
             ],
           ),

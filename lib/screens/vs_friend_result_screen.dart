@@ -55,15 +55,7 @@ class _VsFriendResultScreenState extends State<VsFriendResultScreen>
 
   String get _celebrationText {
     final diff = (widget.p1Result.reflexIQ - widget.p2Result.reflexIQ).abs();
-    if (_p1Wins) {
-      if (diff >= 20) return 'Oyuncu 1 ezdi geçti! 💀';
-      if (diff >= 10) return 'Oyuncu 1 çok daha hızlı! ⚡';
-      return 'Oyuncu 1 kazandı! 🏆';
-    } else {
-      if (diff >= 20) return 'Oyuncu 2 ezdi geçti! 💀';
-      if (diff >= 10) return 'Oyuncu 2 çok daha hızlı! ⚡';
-      return 'Oyuncu 2 kazandı! 🏆';
-    }
+    return S.vsCelebration(_p1Wins ? 1 : 2, diff);
   }
 
   String get _speedComparison {
@@ -268,7 +260,7 @@ class _PlayerCard extends StatelessWidget {
           const Text('SnapIQ',
               style: TextStyle(color: Colors.white38, fontSize: 10)),
           const SizedBox(height: 4),
-          Text('Yaş: ${result.cognitiveAge}',
+          Text(S.vsAge(result.cognitiveAge),
               style:
                   const TextStyle(color: Colors.white54, fontSize: 12)),
         ],

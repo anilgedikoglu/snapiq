@@ -1,7 +1,7 @@
 ﻿// Full-test version of Tap Rain (Test 26/29).
 // 30 seconds, 3 lives. Auto-starts.
 // Score = clamp(score / 15 * 100, 0, 100).
-// Mid-chain screen â€” navigates to SpeedMathTestScreen.
+// Mid-chain screen — navigates to SpeedMathTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ import 'speed_math_test_screen.dart';
 class _RainItem {
   final int id;
   final String emoji;
-  final double x;
+  final double x; // horizontal position as a fraction 0..1 of play width
   double topFraction;
 
   _RainItem({
@@ -88,13 +88,13 @@ class TapRainTestScreen extends StatefulWidget {
 
 class _TRTState extends State<TapRainTestScreen> {
   static const _maxScore = 15;
-  static const _types = ['ğŸ', 'ğŸŠ', 'â­', 'ğŸ”µ', 'âŒ'];
+  static const _types = ['🍎', '🍊', '⭐', '🔵', '❌'];
   static const _changeTargetEvery = 8;
 
   int _timeLeft = 30;
   int _score = 0;
   int _lives = 3;
-  String _targetType = 'ğŸ';
+  String _targetType = '🍎';
   final List<_RainItem> _items = [];
   bool _gameEnded = false;
   Timer? _countdownTimer;
@@ -135,7 +135,7 @@ class _TRTState extends State<TapRainTestScreen> {
         _items.add(_RainItem(
           id: _nextId++,
           emoji: _types[_rand.nextInt(_types.length)],
-          x: 20 + _rand.nextDouble() * 300,
+          x: _rand.nextDouble(),
           topFraction: 0.0,
         ));
       });
@@ -271,7 +271,7 @@ class _TRTState extends State<TapRainTestScreen> {
                   children: [
                     Row(
                       children: List.generate(3,
-                          (i) => Text(i < _lives ? 'â¤ï¸' : 'ğŸ–¤',
+                          (i) => Text(i < _lives ? '❤️' : '🖤',
                               style: const TextStyle(fontSize: 18))),
                     ),
                     Text('$_score',
@@ -296,7 +296,7 @@ class _TRTState extends State<TapRainTestScreen> {
                     children: [
                       for (final item in List.from(_items))
                         Positioned(
-                          left: item.x,
+                          left: item.x * (constraints.maxWidth - 36),
                           top: item.topFraction * constraints.maxHeight,
                           child: GestureDetector(
                             onTap: () => _tap(item),

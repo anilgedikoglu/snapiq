@@ -1,7 +1,7 @@
 ﻿// Full-test version of Pattern Master (Test 29/29).
-// 10 questions â€” same as arcade. Auto-starts.
+// 10 questions — same as arcade. Auto-starts.
 // Score = clamp(score / 10 * 100, 0, 100).
-// LAST SCREEN â€” creates TestResult, saves, navigates to ResultScreen.
+// LAST SCREEN — creates TestResult, saves, navigates to ResultScreen.
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/game_session.dart';
@@ -95,22 +95,22 @@ class _PMTState extends State<PatternMasterTestScreen> {
     _PQ(series: '2  4  8  16  ?', options: ['24', '28', '30', '32'], answer: '32'),
     _PQ(series: '1  3  6  10  ?', options: ['14', '15', '16', '13'], answer: '15'),
     _PQ(series: 'A  C  E  G  ?', options: ['H', 'I', 'J', 'K'], answer: 'I'),
-    _PQ(series: 'â–²  â–   â–²  â–   ?', options: ['â–²', 'â– ', 'â—', 'â˜…'], answer: 'â–²'),
+    _PQ(series: '▲  ■  ▲  ■  ?', options: ['▲', '■', '●', '★'], answer: '▲'),
     _PQ(series: '3  6  12  24  ?', options: ['36', '42', '48', '32'], answer: '48'),
     _PQ(series: '1  4  9  16  ?', options: ['20', '24', '25', '30'], answer: '25'),
     _PQ(series: 'Z  X  V  T  ?', options: ['S', 'R', 'P', 'Q'], answer: 'R'),
-    _PQ(series: 'ğŸ”´ğŸ”µğŸ”´ğŸ”µ?', options: ['ğŸ”´', 'ğŸ”µ', 'ğŸŸ¢', 'ğŸŸ¡'], answer: 'ğŸ”´'),
+    _PQ(series: '🔴🔵🔴🔵?', options: ['🔴', '🔵', '🟢', '🟡'], answer: '🔴'),
     _PQ(series: '5  10  20  40  ?', options: ['60', '70', '80', '50'], answer: '80'),
     _PQ(series: '2  3  5  8  13  ?', options: ['18', '19', '20', '21'], answer: '21'),
     _PQ(series: '100  50  25  ?', options: ['10', '12', '12.5', '15'], answer: '12.5'),
     _PQ(series: 'AB  CD  EF  ?', options: ['GH', 'HI', 'GI', 'GJ'], answer: 'GH'),
-    _PQ(series: 'â–   â–   â–²  â–   â–   ?', options: ['â– ', 'â–²', 'â—', 'â˜…'], answer: 'â–²'),
+    _PQ(series: '■  ■  ▲  ■  ■  ?', options: ['■', '▲', '●', '★'], answer: '▲'),
     _PQ(series: '7  14  21  28  ?', options: ['33', '34', '35', '36'], answer: '35'),
-    _PQ(series: 'ğŸŒ‘ğŸŒ’ğŸŒ“ğŸŒ”?', options: ['ğŸŒ•', 'ğŸŒ–', 'ğŸŒ’', 'ğŸŒ™'], answer: 'ğŸŒ•'),
+    _PQ(series: '🌑🌒🌓🌔?', options: ['🌕', '🌖', '🌒', '🌙'], answer: '🌕'),
     _PQ(series: '1  2  4  7  11  ?', options: ['14', '15', '16', '18'], answer: '16'),
     _PQ(series: 'B  D  F  H  ?', options: ['I', 'J', 'K', 'L'], answer: 'J'),
     _PQ(series: '9  3  1  ?', options: ['0.5', '0.33', '0.25', '1/4'], answer: '0.33'),
-    _PQ(series: 'ğŸ±ğŸ±ğŸ¶ğŸ±ğŸ±?', options: ['ğŸ±', 'ğŸ¶', 'ğŸ°', 'ğŸ¦Š'], answer: 'ğŸ¶'),
+    _PQ(series: '🐱🐱🐶🐱🐱?', options: ['🐱', '🐶', '🐰', '🦊'], answer: '🐶'),
     _PQ(series: '10  8  6  4  ?', options: ['1', '2', '3', '0'], answer: '2'),
   ];
 

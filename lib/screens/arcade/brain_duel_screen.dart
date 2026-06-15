@@ -13,8 +13,8 @@ enum _DuelPhase { handover1, playing1, handover2, playing2, result }
 
 class _Circle {
   final int id;
-  double x;
-  double y;
+  double x; // horizontal position as a fraction 0..1 of play width
+  double y; // vertical position as a fraction 0..1 of play height
   _Circle({required this.id, required this.x, required this.y});
 }
 
@@ -73,8 +73,8 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
       setState(() {
         _circles.add(_Circle(
           id: id,
-          x: 30 + _rand.nextDouble() * 280,
-          y: 80 + _rand.nextDouble() * 420,
+          x: _rand.nextDouble(),
+          y: _rand.nextDouble(),
         ));
       });
       Timer(const Duration(milliseconds: 1500), () {
@@ -247,32 +247,35 @@ class _BrainDuelScreenState extends State<BrainDuelScreen> {
           ),
         ),
         Expanded(
-          child: Stack(
-            children: [
-              for (final c in List.from(_circles))
-                Positioned(
-                  left: c.x - 30,
-                  top: c.y - 30,
-                  child: GestureDetector(
-                    onTap: () => _tapCircle(c),
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFF00C853).withValues(alpha: 0.85),
-                        boxShadow: [
-                          BoxShadow(
-                              color: const Color(0xFF00C853)
-                                  .withValues(alpha: 0.5),
-                              blurRadius: 14)
-                        ],
+          child: LayoutBuilder(builder: (ctx, constraints) {
+            return Stack(
+              children: [
+                for (final c in List.from(_circles))
+                  Positioned(
+                    left: c.x * (constraints.maxWidth - 60),
+                    top: c.y * (constraints.maxHeight - 60),
+                    child: GestureDetector(
+                      onTap: () => _tapCircle(c),
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:
+                              const Color(0xFF00C853).withValues(alpha: 0.85),
+                          boxShadow: [
+                            BoxShadow(
+                                color: const Color(0xFF00C853)
+                                    .withValues(alpha: 0.5),
+                                blurRadius: 14)
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-            ],
-          ),
+              ],
+            );
+          }),
         ),
       ],
     );

@@ -526,4 +526,114 @@ class S {
     'Başlangıç', 'Çaylak', 'Odaklı', 'Hız Avcısı', 'Beyin Ninja',
     'Sinaps Ustası', 'Zihin Efendisi', 'Efsane', 'Tanrısal', 'Sonsuz',
   ];
+
+  // ═══════════════════════════════════════════════════════════
+  // CIRCLE TAP REFLEX (arcade result)
+  // ═══════════════════════════════════════════════════════════
+  static String reflexRank(int avgMs) {
+    if (avgMs <= 20)  return _e ? 'Reflex Master'    : 'Refleks Ustası';
+    if (avgMs <= 50)  return _e ? 'Very Fast'        : 'Çok Hızlı';
+    if (avgMs <= 90)  return _e ? 'Good Reflexes'    : 'İyi Refleks';
+    if (avgMs <= 140) return _e ? 'Improving'        : 'Gelişiyor';
+    return                   _e ? 'Needs Practice'   : 'Biraz Antrenman Lazım';
+  }
+  static String get statAvgReflex => _e ? 'Avg. Reflex' : 'Ort. Refleks';
+  static String get statPerfect   => _e ? 'Perfect'     : 'Mükemmel';
+  static String get statGreat     => _e ? 'Great'       : 'Harika';
+  static String get statMissed    => _e ? 'Missed'      : 'Kaçtı';
+  static String get statBestCombo => _e ? 'Best Combo'  : 'En İyi Kombo';
+
+  // ═══════════════════════════════════════════════════════════
+  // LASER GATE
+  // ═══════════════════════════════════════════════════════════
+  static String laserPassed(int ring) {
+    const en = ['Passed! ✓', 'Great! ✓', 'Out! 🎯'];
+    const tr = ['Geçti! ✓', 'Harika! ✓', 'Dışarı! 🎯'];
+    final i = ring.clamp(0, 2);
+    return _e ? en[i] : tr[i];
+  }
+  static String get laserHitMsg  => _e ? 'Hit!' : 'Çarptı!';
+  static String get newRecord    => _e ? '🏆 New Record!' : '🏆 Yeni Rekor!';
+  static String get laserGateHint =>
+      _e ? "Tap when the gap is at 12 o'clock  •  Get to the outside!"
+         : "Boşluk 12'de iken dokun  •  En dışa çık!";
+
+  // ═══════════════════════════════════════════════════════════
+  // SPLIT SECOND
+  // ═══════════════════════════════════════════════════════════
+  static String get splitSecondInstr =>
+      _e ? "Tap on GO, stop on STOP!" : "GO'da dokun, STOP'ta dur!";
+
+  // ═══════════════════════════════════════════════════════════
+  // ENDLESS REFLEX (result)
+  // ═══════════════════════════════════════════════════════════
+  static String endlessSeconds(int s) => _e ? '$s seconds' : '$s saniye';
+  static String get endlessSurvived   => _e ? 'you survived' : 'hayatta kaldın';
+  static String endlessRoundsDone(int r) =>
+      _e ? '$r rounds completed' : '$r tur tamamlandı';
+
+  // ═══════════════════════════════════════════════════════════
+  // VS FRIEND RESULT
+  // ═══════════════════════════════════════════════════════════
+  static String vsCelebration(int playerNum, int diff) {
+    if (diff >= 20) return _e ? 'Player $playerNum crushed it! 💀' : 'Oyuncu $playerNum ezdi geçti! 💀';
+    if (diff >= 10) return _e ? 'Player $playerNum is much faster! ⚡' : 'Oyuncu $playerNum çok daha hızlı! ⚡';
+    return                 _e ? 'Player $playerNum wins! 🏆' : 'Oyuncu $playerNum kazandı! 🏆';
+  }
+  static String vsAge(int age) => _e ? 'Age: $age' : 'Yaş: $age';
+
+  // ═══════════════════════════════════════════════════════════
+  // HOME / IQ LABEL
+  // ═══════════════════════════════════════════════════════════
+  static String get iqRange54 => _e ? '54 and Below IQ' : '54 ve Altı IQ';
+
+  // ═══════════════════════════════════════════════════════════
+  // SETTINGS — RESET DIALOG
+  // ═══════════════════════════════════════════════════════════
+  static String get settingsResetConfirm =>
+      _e ? 'All your game data will be deleted. Continue?'
+         : 'Tüm oyun verilerin silinecek. Devam etmek istiyor musun?';
+  static String get cancel => _e ? 'Cancel' : 'İptal';
+  static String get delete => _e ? 'Delete' : 'Sil';
+
+  // ═══════════════════════════════════════════════════════════
+  // HOW TO PLAY
+  // ═══════════════════════════════════════════════════════════
+  static String get howDisclaimer => _e
+      ? '⚠️  This app is for entertainment. It does not provide medical or scientific diagnosis. The tests gamify reflex, attention, memory and pattern skills.'
+      : '⚠️  Bu uygulama eğlence amaçlıdır. Tıbbi veya bilimsel tanı koymaz. Testler refleks, dikkat, hafıza ve örüntü becerilerini oyunlaştırır.';
+  static String get how1Title => _e ? '1. Reaction Speed' : '1. Reaksiyon Hızı';
+  static String get how1Body  => _e
+      ? 'Wait while the screen is red. Tap as fast as you can when it turns green. Tapping early scores 0.'
+      : 'Ekran kırmızıyken bekle. Yeşile dönünce mümkün olduğunca hızlı dokun. Erken dokunursan 0 puan.';
+  static String get how2Title => _e ? '2. Stroop Color Test' : '2. Stroop Renk Testi';
+  static String get how2Body  => _e
+      ? "Pick the ink color, not the word's meaning. Your brain will fight the confusion!"
+      : 'Kelimenin anlamını değil, yazının rengini seç. Beyin kafa karışıklığıyla mücadele edecek!';
+  static String get how3Title => _e ? '3. Memory Boxes' : '3. Hafıza Kutuları';
+  static String get how3Body  => _e
+      ? 'Which boxes lit up? Select the same boxes when the countdown starts. Each round gets harder.'
+      : 'Hangi kutular yandı? Geri sayım başlayınca aynı kutuları seç. Her round biraz daha zor.';
+  static String get how4Title => _e ? '4. Number Sorting' : '4. Sayı Sıralama';
+  static String get how4Body  => _e
+      ? 'Tap the numbers in order from smallest to largest. Try to finish within 8 seconds.'
+      : 'Ekrandaki sayılara küçükten büyüğe sırasıyla dokun. 8 saniye içinde bitirmeye çalış.';
+  static String get how5Title => _e ? '5. Impulse Control' : '5. İmpuls Kontrolü';
+  static String get how5Body  => _e
+      ? 'Tap only when a circle appears! You lose points if you tap a square, triangle or star.'
+      : 'Sadece daire çıkınca dokun! Kare, üçgen veya yıldıza dokunursan puan kaybedersin.';
+  static String get how6Title => _e ? '6. Pattern IQ' : '6. Pattern IQ';
+  static String get how6Body  => _e
+      ? 'Analyze the pattern and pick the correct continuation. Think fast, no time limit.'
+      : 'Örüntüyü analiz et ve doğru devamı seç. Hızlı düşün, zaman sınırı yok.';
+  static String get howScoreTitle => _e ? 'Scoring' : 'Puanlama';
+  static String get howScoreBody => _e
+      ? 'Each test is scored 0-100.\n'
+        'The final score is a weighted average.\n'
+        'SnapIQ ≈ ranges from 60 - 150.\n'
+        'The cognitive age formula is purely for fun.'
+      : 'Her test 0-100 arası puanlanır.\n'
+        'Ağırlıklı ortalama ile final skoru hesaplanır.\n'
+        'SnapIQ ≈ 60 - 150 arası değişir.\n'
+        'Bilişsel yaş formülü tamamen eğlence amaçlıdır.';
 }
