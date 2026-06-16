@@ -21,7 +21,7 @@ workflows:
         - signing_credentials  # CERTIFICATE_PRIVATE_KEY bu grupta (paylaşımlı)
       vars:
         APP_STORE_APP_ID: "6780837725"
-        BUNDLE_ID: "com.snapiq.snapiq"
+        BUNDLE_ID: "com.futurastic.Snapiq"
 
     triggering:
       events:
