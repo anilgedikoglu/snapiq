@@ -20,8 +20,7 @@ workflows:
       groups:
         - signing_credentials  # CERTIFICATE_PRIVATE_KEY bu grupta (paylaşımlı)
       vars:
-        # ⚠️ App Store Connect → SnapIQ → App Information → Apple ID (sayı) ile değiştir
-        APP_STORE_APP_ID: "PLACEHOLDER_SNAPIQ_APPLE_ID"
+        APP_STORE_APP_ID: "6780837725"
         BUNDLE_ID: "com.snapiq.snapiq"
 
     triggering:
