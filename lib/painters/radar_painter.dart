@@ -6,13 +6,34 @@ class RadarPainter extends CustomPainter {
   final List<double> targetAngles;
   final List<bool> targetLocked;
   final double tolerance;
+  // Optional asymmetric "beam" model: target is active from a small lead
+  // before the sweep line reaches it, then through a trailing window while the
+  // sweep slice still covers it. When null, falls back to symmetric tolerance.
+  final double? leadTol;
+  final double? lockWindow;
 
   RadarPainter({
     required this.sweepAngle,
     required this.targetAngles,
     required this.targetLocked,
     this.tolerance = 40 * pi / 180,
+    this.leadTol,
+    this.lockWindow,
   });
+
+  /// How far the sweep line has passed the target (0 = exactly on it).
+  double _beamDelta(double a) =>
+      ((sweepAngle - a) % (2 * pi) + 2 * pi) % (2 * pi);
+
+  bool _isActive(double a) {
+    if (leadTol == null || lockWindow == null) {
+      final diff = (sweepAngle - a).abs();
+      final d = min(diff, 2 * pi - diff);
+      return d <= tolerance;
+    }
+    final delta = _beamDelta(a);
+    return delta <= lockWindow! || delta >= 2 * pi - leadTol!;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -34,15 +55,19 @@ class RadarPainter extends CustomPainter {
     }
 
     // ── Hit zone visuals (drawn first, targets on top) ───────────────────────
+    final bool asym = leadTol != null && lockWindow != null;
     for (int i = 0; i < targetAngles.length; i++) {
       if (targetLocked[i]) continue;
       final a = targetAngles[i];
+      // Zone the sweep can lock from (relative to target angle).
+      final zoneStart = asym ? a - leadTol! : a - tolerance;
+      final zoneSweep = asym ? (leadTol! + lockWindow!) : tolerance * 2;
 
       // 1. Sector fill (very faint) — shows the whole angular zone
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius * 0.95),
-        a - tolerance,
-        tolerance * 2,
+        zoneStart,
+        zoneSweep,
         true,  // useCenter: pie-slice shape
         Paint()
           ..color = const Color(0xFFFF7043).withValues(alpha: 0.10)
@@ -52,8 +77,8 @@ class RadarPainter extends CustomPainter {
       // 2. Thick arc on the outer ring — clearly visible zone boundary
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius * 0.88),
-        a - tolerance,
-        tolerance * 2,
+        zoneStart,
+        zoneSweep,
         false,
         Paint()
           ..color = const Color(0xFFFF7043).withValues(alpha: 0.55)
@@ -101,9 +126,7 @@ class RadarPainter extends CustomPainter {
         canvas.drawCircle(pos, 6, Paint()..color = Colors.white);
       } else {
         // Check if sweep is inside the hit zone → make dot brighter
-        final diff = (sweepAngle - a).abs();
-        final angDist = min(diff, (2 * pi - diff).abs());
-        final isNear = angDist <= tolerance; // visual = detection zone
+        final isNear = _isActive(a); // visual = detection zone
 
         canvas.drawCircle(pos, isNear ? 14 : 10, Paint()
           ..color = const Color(0xFFFF7043).withValues(alpha: isNear ? 0.8 : 0.5)

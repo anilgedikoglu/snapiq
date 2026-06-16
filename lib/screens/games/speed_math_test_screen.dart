@@ -1,7 +1,7 @@
 ﻿// Full-test version of Speed Math (Test 27/29).
-// 10 questions â€” same as arcade. Auto-starts.
+// 10 questions — same as arcade. Auto-starts.
 // Score = clamp(score / 10 * 100, 0, 100).
-// Mid-chain screen â€” navigates to NumberHunterTestScreen.
+// Mid-chain screen — navigates to NumberHunterTestScreen.
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -106,7 +106,7 @@ class _SMTState extends State<SpeedMathTestScreen> {
     final a = 2 + _rand.nextInt(14);
     final b = 2 + _rand.nextInt(8);
     final opIdx = _rand.nextInt(3);
-    final ops = ['+', '-', 'Ã—'];
+    final ops = ['+', '-', '×'];
     final op = ops[opIdx];
     int correct;
     if (op == '+') {

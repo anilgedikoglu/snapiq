@@ -477,7 +477,11 @@ class _UHStroopState extends State<_UHStroop> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
               Text(
                 item.word,
                 style: TextStyle(
@@ -488,7 +492,7 @@ class _UHStroopState extends State<_UHStroop> {
               const SizedBox(height: 8),
               const Text('Rengi seç',
                   style: TextStyle(color: Colors.white38, fontSize: 13)),
-              const Spacer(),
+              const SizedBox(height: 28),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: GridView.count(
@@ -530,7 +534,10 @@ class _UHStroopState extends State<_UHStroop> {
                   }).toList(),
                 ),
               ),
-              const SizedBox(height: 32),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -637,6 +644,11 @@ class _UHMemoryState extends State<_UHMemory> {
                   ],
                 ),
               ),
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
               Text(
                 _phase == _MemPhase2.showing
                     ? 'Ezberle!'
@@ -715,6 +727,10 @@ class _UHMemoryState extends State<_UHMemory> {
                     icon: Icons.check_rounded,
                   ),
                 ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -833,13 +849,18 @@ class _UHSequenceState extends State<_UHSequence> {
                   ],
                 ),
               ),
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
               const Text('Küçükten büyüğe dokun!',
                   style: TextStyle(color: Colors.white, fontSize: 18)),
               const SizedBox(height: 24),
-              Expanded(
-                child: Padding(
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Wrap(
+                    alignment: WrapAlignment.center,
                     spacing: 12,
                     runSpacing: 12,
                     children: _numbers.map((n) {
@@ -866,6 +887,9 @@ class _UHSequenceState extends State<_UHSequence> {
                         ),
                       );
                     }).toList(),
+                  ),
+                ),
+                    ],
                   ),
                 ),
               ),
@@ -1150,6 +1174,11 @@ class _UHPatternState extends State<_UHPattern> {
                   ],
                 ),
               ),
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
               Text('${_current + 1} / ${_questions.length}',
                   style: const TextStyle(
                       color: Colors.white54, fontSize: 13)),
@@ -1217,6 +1246,10 @@ class _UHPatternState extends State<_UHPattern> {
                       ),
                     );
                   }),
+                ),
+              ),
+                    ],
+                  ),
                 ),
               ),
             ],

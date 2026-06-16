@@ -129,7 +129,7 @@ class _AchievementCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            ach.title,
+            S.achTitle(ach.id),
             style: TextStyle(
               color: color,
               fontWeight: FontWeight.bold,
@@ -139,7 +139,7 @@ class _AchievementCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            ach.description,
+            S.achDesc(ach.id),
             style: TextStyle(
               color: unlocked ? Colors.white60 : Colors.white24,
               fontSize: 10,

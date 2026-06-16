@@ -52,7 +52,10 @@ class _TLTState extends State<TargetLockTestScreen>
     with TickerProviderStateMixin {
 
   static const _totalToLock = 10;
-  static const _tolerance   = 40 * pi / 180;
+  // Beam lock model: small anticipation before the sweep line reaches the
+  // target, then a trailing window while the sweep slice still covers it.
+  static const _leadTol    = 10 * pi / 180;
+  static const _lockWindow = 50 * pi / 180;
 
   final _rand = Random();
 
@@ -105,10 +108,12 @@ class _TLTState extends State<TargetLockTestScreen>
     bool lockedAny = false;
     for (int i = 0; i < _targetAngles.length; i++) {
       if (_targetLocked[i]) continue;
-      final diff    = (_sweepAngle - _targetAngles[i]).abs();
-      final minDiff = min(diff, (2 * pi - diff).abs());
-      if (minDiff <= _tolerance) {
-        final accuracyScore = (100 * (1 - minDiff / _tolerance)).round().clamp(0, 100);
+      // How far the sweep line has passed the target (0 = exactly on it).
+      final delta = ((_sweepAngle - _targetAngles[i]) % (2 * pi) + 2 * pi) % (2 * pi);
+      final inBeam = delta <= _lockWindow || delta >= 2 * pi - _leadTol;
+      if (inBeam) {
+        final dist = delta <= _lockWindow ? delta : (2 * pi - delta);
+        final accuracyScore = (100 * (1 - dist / _lockWindow)).round().clamp(0, 100);
         setState(() {
           _targetLocked[i] = true;
           _totalLocked++;
@@ -230,7 +235,8 @@ class _TLTState extends State<TargetLockTestScreen>
                           sweepAngle:   _sweepAngle,
                           targetAngles: _targetAngles,
                           targetLocked: _targetLocked,
-                          tolerance:    _tolerance,
+                          leadTol:      _leadTol,
+                          lockWindow:   _lockWindow,
                         ),
                         size: const Size(300, 300),
                       ),

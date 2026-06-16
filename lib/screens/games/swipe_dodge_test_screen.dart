@@ -109,7 +109,9 @@ class _SDTState extends State<SwipeDodgeTestScreen> {
 
   void _tick() {
     setState(() {
-      _speed = 0.010 + (_dodged * 0.0003);
+      // Ramps steadily as the round progresses (by obstacles spawned),
+      // so the fall speed gradually increases over time.
+      _speed = (0.008 + _spawned * 0.00035).clamp(0.008, 0.022);
       final toRemove = <_Obstacle>[];
       for (final obs in _obstacles) {
         obs.y += _speed;

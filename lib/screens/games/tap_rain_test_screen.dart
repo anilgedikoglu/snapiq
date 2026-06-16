@@ -103,7 +103,8 @@ class _TRTState extends State<TapRainTestScreen> {
   Timer? _targetTimer;
   int _nextId = 0;
   final _rand = Random();
-  static const double _fallSpeed = 0.006;
+  // Falls start slow and ramp up over the 30s round.
+  double _fallSpeed = 0.005;
 
   @override
   void initState() {
@@ -124,7 +125,10 @@ class _TRTState extends State<TapRainTestScreen> {
   void _startTimers() {
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
-      setState(() => _timeLeft--);
+      setState(() {
+        _timeLeft--;
+        _fallSpeed = (_fallSpeed + 0.0005).clamp(0.005, 0.016);
+      });
       if (_timeLeft <= 0) {
         _endGame();
       }

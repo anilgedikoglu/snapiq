@@ -263,19 +263,34 @@ class _LGTState extends State<LaserGateTestScreen>
                         ),
                       ),
                       if (_showFeedback)
-                        Text(
-                          _feedback,
-                          style: TextStyle(
-                            color: _feedbackColor,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            shadows: [Shadow(color: _feedbackColor, blurRadius: 20)],
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              _feedback,
+                              style: TextStyle(
+                                color: _feedbackColor,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  Shadow(color: _feedbackColor, blurRadius: 20)
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       if (_done && _ballRing >= 3)
-                        Text(
-                          S.done,
-                          style: const TextStyle(color: Colors.white54, fontSize: 16),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              S.done,
+                              style: const TextStyle(
+                                  color: Colors.white54, fontSize: 16),
+                            ),
+                          ),
                         ),
                     ],
                   ),

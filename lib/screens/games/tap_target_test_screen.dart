@@ -76,6 +76,10 @@ class _TTTState extends State<TapTargetTestScreen> {
   bool _gameEnded = false;
   Timer? _countdownTimer;
   Timer? _spawnTimer;
+  Timer? _checkTimer;
+  double? _checkX;
+  double? _checkY;
+  bool _showCheck = false;
   int _nextId = 0;
   final _rand = Random();
 
@@ -89,6 +93,7 @@ class _TTTState extends State<TapTargetTestScreen> {
   void dispose() {
     _countdownTimer?.cancel();
     _spawnTimer?.cancel();
+    _checkTimer?.cancel();
     super.dispose();
   }
 
@@ -130,10 +135,20 @@ class _TTTState extends State<TapTargetTestScreen> {
       _targets.removeWhere((item) => item.id == t.id);
       if (!t.isDecoy) {
         _score++;
+        // Green check flash at the tapped spot.
+        _checkX = t.x;
+        _checkY = t.y;
+        _showCheck = true;
       } else {
         if (_score > 0) _score--;
       }
     });
+    if (!t.isDecoy) {
+      _checkTimer?.cancel();
+      _checkTimer = Timer(const Duration(milliseconds: 320), () {
+        if (mounted) setState(() => _showCheck = false);
+      });
+    }
   }
 
   void _endGame() {
@@ -260,6 +275,27 @@ class _TTTState extends State<TapTargetTestScreen> {
                                         blurRadius: 14)],
                                   ),
                                 ),
+                        ),
+                      ),
+                    if (_showCheck && _checkX != null && _checkY != null)
+                      Positioned(
+                        left: _checkX! * (constraints.maxWidth - 56),
+                        top: _checkY! * (constraints.maxHeight - 56),
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0xFF00C853),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: const Color(0xFF00C853)
+                                      .withValues(alpha: 0.6),
+                                  blurRadius: 16)
+                            ],
+                          ),
+                          child: const Icon(Icons.check_rounded,
+                              color: Colors.white, size: 34),
                         ),
                       ),
                   ],

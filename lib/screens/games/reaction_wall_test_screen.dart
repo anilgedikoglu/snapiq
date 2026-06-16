@@ -75,12 +75,15 @@ class ReactionWallTestScreen extends StatefulWidget {
 
 class _RWTState extends State<ReactionWallTestScreen> {
   static const _maxScore = 15;
-  static const _duration = 30;
-  static const double _wallSpeed = 0.008;
+  static const _duration = 60;
 
   int _playerLane = 1;
   int _score = 0;
-  int _lives = 3;
+  int _misses = 0;
+  bool _hitFlash = false;
+  // Wall speed ramps up +20% every 3 seconds, up to 4 times total.
+  double _wallSpeed = 0.008;
+  int _ramps = 0;
   int _timeLeft = _duration;
   final List<_Wall> _walls = [];
   bool _started = false;
@@ -88,6 +91,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
   Timer? _moveTimer;
   Timer? _spawnTimer;
   Timer? _countdownTimer;
+  Timer? _flashTimer;
   final _rand = Random();
 
   @override
@@ -95,6 +99,7 @@ class _RWTState extends State<ReactionWallTestScreen> {
     _moveTimer?.cancel();
     _spawnTimer?.cancel();
     _countdownTimer?.cancel();
+    _flashTimer?.cancel();
     super.dispose();
   }
 
@@ -102,7 +107,15 @@ class _RWTState extends State<ReactionWallTestScreen> {
     setState(() => _started = true);
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted || _gameEnded) return;
-      setState(() => _timeLeft--);
+      setState(() {
+        _timeLeft--;
+        final elapsed = _duration - _timeLeft;
+        // +20% speed every 3 seconds, max 4 ramps.
+        if (elapsed % 3 == 0 && _ramps < 4) {
+          _wallSpeed *= 1.2;
+          _ramps++;
+        }
+      });
       if (_timeLeft <= 0) {
         _endGame();
       }
@@ -125,11 +138,13 @@ class _RWTState extends State<ReactionWallTestScreen> {
             if (w.gapLane == _playerLane) {
               _score++;
             } else {
-              _lives--;
-              if (_lives <= 0) {
-                _endGame();
-                return;
-              }
+              // Wall hit: count a miss + flash, but keep playing the full round.
+              _misses++;
+              _hitFlash = true;
+              _flashTimer?.cancel();
+              _flashTimer = Timer(const Duration(milliseconds: 350), () {
+                if (mounted) setState(() => _hitFlash = false);
+              });
             }
           }
         }
@@ -158,7 +173,8 @@ class _RWTState extends State<ReactionWallTestScreen> {
   }
 
   Future<void> _finish() async {
-    final reactionWallScore = (_score / _maxScore * 100).round().clamp(0, 100);
+    final reactionWallScore =
+        ((_score - _misses) / _maxScore * 100).round().clamp(0, 100);
     if (!mounted) return;
     Navigator.pushReplacement(
       context,
@@ -264,11 +280,11 @@ class _RWTState extends State<ReactionWallTestScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: List.generate(3,
-                          (i) => Text(i < _lives ? '❤️' : '🖤',
-                              style: const TextStyle(fontSize: 18))),
-                    ),
+                    Text('✗ $_misses',
+                        style: const TextStyle(
+                            color: Color(0xFFFF4D6D),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
                     Text('$_score',
                         style: const TextStyle(
                             color: Color(0xFF00B4FF),
@@ -316,6 +332,25 @@ class _RWTState extends State<ReactionWallTestScreen> {
                                 ),
                               ),
                             ),
+                            if (_hitFlash)
+                              Positioned(
+                                bottom: 70,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: Text('✗ -1',
+                                      style: TextStyle(
+                                          color: const Color(0xFFFF4D6D),
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow(
+                                                color: const Color(0xFFFF4D6D)
+                                                    .withValues(alpha: 0.7),
+                                                blurRadius: 16)
+                                          ])),
+                                ),
+                              ),
                           ],
                         );
                       })

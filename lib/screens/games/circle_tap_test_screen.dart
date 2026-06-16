@@ -237,12 +237,18 @@ class _CTTState extends State<CircleTapTestScreen>
           label: S.missed, isMiss: true);
     }
     final double err = tapMs - _targetHitMs;
-    final int abs = err.abs().round();
+    int abs = err.abs().round();
     final bool early = err < 0;
-    if (abs > 220) {
+    // Ball visually inside the green arc at tap → never a miss (symmetric
+    // for clockwise / counter-clockwise rotation).
+    final angleAtTap =
+        _initialAngleDeg + _direction * _speedDegPerMs * (tapMs - _roundStartMs);
+    final inGreen = _angDist(angleAtTap, _targetAngleDeg) <= (_arcWidthDeg / 2);
+    if (abs > 220 && !inGreen) {
       return _R(score: 0, errorMs: abs, isEarly: early,
           label: S.missed, isMiss: true);
     }
+    if (inGreen && abs > 140) abs = 140;
     final String label;
     final int base;
     if (abs <= _perfectMs) {

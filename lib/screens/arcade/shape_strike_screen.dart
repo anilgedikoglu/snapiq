@@ -45,6 +45,7 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
   bool _gameEnded = false;
   Timer? _spawnTimer;
   Timer? _moveTimer;
+  Timer? _rampTimer;
   int _nextId = 0;
   final _rand = Random();
   double _fallSpeed = 0.006; // fraction per tick (50ms ticks)
@@ -67,12 +68,18 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
   void dispose() {
     _spawnTimer?.cancel();
     _moveTimer?.cancel();
+    _rampTimer?.cancel();
     super.dispose();
   }
 
   void _startGame() {
     setState(() {
       _targetShape = _ShapeType.values[_rand.nextInt(_ShapeType.values.length)];
+    });
+    // Speed up the fall every 3 seconds.
+    _rampTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+      if (!mounted || _gameEnded) return;
+      setState(() => _fallSpeed = (_fallSpeed + 0.0015).clamp(0.003, 0.03));
     });
     _spawnTimer = Timer.periodic(const Duration(milliseconds: 600), (_) {
       if (!mounted || _gameEnded) return;
@@ -164,6 +171,7 @@ class _ShapeStrikeScreenState extends State<ShapeStrikeScreen> {
   void _restart() {
     _spawnTimer?.cancel();
     _moveTimer?.cancel();
+    _rampTimer?.cancel();
     setState(() {
       _lives = 3;
       _score = 0;

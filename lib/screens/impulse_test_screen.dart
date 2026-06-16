@@ -38,6 +38,7 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
   Timer? _showTimer;
   int _score = 100;
   bool _tapped = false;
+  bool _tapCorrect = false;
   bool _done = false;
 
   @override
@@ -81,16 +82,22 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
   }
 
   void _onTap() {
-    if (!_showing || _done) return;
+    if (!_showing || _done || _tapped) return;
     _tapped = true;
     if (_sequence[_current] == 'daire') {
-      // correct
+      // correct → flash green
       HapticFeedback.selectionClick();
-      setState(() => _score = (_score + 25).clamp(0, 100));
+      setState(() {
+        _tapCorrect = true;
+        _score = (_score + 25).clamp(0, 100);
+      });
     } else {
-      // wrong
+      // wrong → flash red
       HapticFeedback.mediumImpact();
-      setState(() => _score = (_score - 20).clamp(0, 100));
+      setState(() {
+        _tapCorrect = false;
+        _score = (_score - 20).clamp(0, 100);
+      });
     }
   }
 
@@ -121,8 +128,8 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
     super.dispose();
   }
 
-  Widget _buildShape(String shape, double size) {
-    final color = const Color(0xFF00B4FF);
+  Widget _buildShape(String shape, double size, {Color? flash}) {
+    final color = flash ?? const Color(0xFF00B4FF);
     switch (shape) {
       case 'daire':
         return Container(
@@ -130,33 +137,35 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
           height: size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: color.withValues(alpha: 0.2),
+            color: color.withValues(alpha: flash != null ? 0.35 : 0.2),
             border: Border.all(color: color, width: 3),
             boxShadow: [
               BoxShadow(
-                  color: color.withValues(alpha: 0.4), blurRadius: 20)
+                  color: color.withValues(alpha: flash != null ? 0.6 : 0.4),
+                  blurRadius: 20)
             ],
           ),
         );
       case 'kare':
+        final c = flash ?? const Color(0xFFBB86FC);
         return Container(
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: const Color(0xFFBB86FC).withValues(alpha: 0.2),
-            border: Border.all(color: const Color(0xFFBB86FC), width: 3),
+            color: c.withValues(alpha: flash != null ? 0.35 : 0.2),
+            border: Border.all(color: c, width: 3),
             borderRadius: BorderRadius.circular(8),
           ),
         );
       case 'üçgen':
         return CustomPaint(
           size: Size(size, size),
-          painter: _TrianglePainter(const Color(0xFF03DAC6)),
+          painter: _TrianglePainter(flash ?? const Color(0xFF03DAC6)),
         );
       case 'yıldız':
         return CustomPaint(
           size: Size(size, size),
-          painter: _StarPainter(Colors.amber),
+          painter: _StarPainter(flash ?? Colors.amber),
         );
       default:
         return const SizedBox.shrink();
@@ -215,7 +224,12 @@ class _ImpulseTestScreenState extends State<ImpulseTestScreen> {
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 150),
                       child: _showing && _current >= 0
-                          ? _buildShape(_sequence[_current], 130)
+                          ? _buildShape(_sequence[_current], 130,
+                              flash: _tapped
+                                  ? (_tapCorrect
+                                      ? const Color(0xFF00C853)
+                                      : const Color(0xFFE53935))
+                                  : null)
                           : const SizedBox(width: 130, height: 130),
                     ),
                   ),

@@ -104,7 +104,9 @@ class TestResult {
     if (reactionScore < 30)  base += 3;
     if (memoryScore < 30)    base += 4;
     if (memoryScore >= 90)   base -= 2;
-    return base.round().clamp(18, 65);
+    // Skew a few years older (3–5) so the player feels motivated to improve.
+    base += 3 + (finalScore % 3);
+    return base.round().clamp(18, 70);
   }
 
   String get label {

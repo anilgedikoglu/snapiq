@@ -35,7 +35,7 @@ class _ReactionWallScreenState extends State<ReactionWallScreen> {
   Timer? _moveTimer;
   Timer? _spawnTimer;
   final _rand = Random();
-  static const double _wallSpeed = 0.008; // fraction per tick
+  double _wallSpeed = 0.008; // fraction per tick, ramps up as you score
 
   @override
   void initState() {
@@ -67,6 +67,7 @@ class _ReactionWallScreenState extends State<ReactionWallScreen> {
         for (final w in _walls) {
           if (!w.scored && w.y >= 0.88) {
             w.scored = true;
+            _wallSpeed = (_wallSpeed + 0.0004).clamp(0.008, 0.026);
             if (w.gapLane == _playerLane) {
               _score++;
             } else {
@@ -142,6 +143,7 @@ class _ReactionWallScreenState extends State<ReactionWallScreen> {
       _lives = 3;
       _walls.clear();
       _gameEnded = false;
+      _wallSpeed = 0.008;
     });
     _startTimers();
   }

@@ -29,7 +29,7 @@ class _StackPainter extends CustomPainter {
   final bool gameOver;
   final int score;
   static const double bh = 22.0;
-  static const int maxVisible = 12;
+  static const int maxVisible = 22;
 
   const _StackPainter({
     required this.placedBlocks,
@@ -157,7 +157,7 @@ class TimingStackTestScreen extends StatefulWidget {
 class _TSTState extends State<TimingStackTestScreen>
     with SingleTickerProviderStateMixin {
   static const _blockHeight = 22.0;
-  static const _maxVisible  = 12;
+  static const _maxVisible  = 22;
   static const List<Color> _palette = [
     Color(0xFF00B4FF), Color(0xFF03DAC6), Color(0xFF00C853),
     Color(0xFFFDD835), Color(0xFFFF7043), Color(0xFFE91E63), Color(0xFFBB86FC),

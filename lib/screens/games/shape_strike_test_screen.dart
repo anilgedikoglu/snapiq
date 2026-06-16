@@ -122,7 +122,13 @@ class _SSTState extends State<ShapeStrikeTestScreen> {
     });
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted || _gameEnded) return;
-      setState(() => _timeLeft--);
+      setState(() {
+        _timeLeft--;
+        // Speed up the fall every 3 seconds.
+        if (_timeLeft % 3 == 0) {
+          _fallSpeed = (_fallSpeed + 0.0015).clamp(0.003, 0.03);
+        }
+      });
       if (_timeLeft <= 0) {
         _spawnTimer?.cancel();
         _moveTimer?.cancel();

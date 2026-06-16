@@ -133,20 +133,24 @@ class _MemoryTestScreenState extends State<MemoryTestScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        itemCount: 9,
+                        itemBuilder: (_, i) => _buildTile(i),
+                      ),
                     ),
-                    itemCount: 9,
-                    itemBuilder: (_, i) => _buildTile(i),
                   ),
                 ),
               ),

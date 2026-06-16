@@ -183,6 +183,9 @@ class _ResultScreenState extends State<ResultScreen>
                           fontSize: 13),
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  // Personalized analysis (full-width)
+                  _buildAnalysisBox(r),
                   const SizedBox(height: 16),
                   // Score cards grid
                   GridView.count(
@@ -191,7 +194,7 @@ class _ResultScreenState extends State<ResultScreen>
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 1.45,
+                    childAspectRatio: 1.9,
                     children: [
                       ScoreCard(
                         title: S.cardReaction,
@@ -368,6 +371,47 @@ class _ResultScreenState extends State<ResultScreen>
     );
   }
 
+  double _avg(List<int> xs) =>
+      xs.isEmpty ? 0 : xs.reduce((a, b) => a + b) / xs.length;
+
+  Widget _buildAnalysisBox(TestResult r) {
+    final domains = <String, double>{
+      'reflex': _avg([r.reactionScore, r.circleScore, r.laserScore,
+          r.timingScore, r.pulseScore, r.reactionWallScore,
+          r.tapTargetScore, r.tapRainScore]),
+      'focus': _avg([r.stroopScore, r.focusHunterScore, r.dontTapRedScore,
+          r.colorPanicScore, r.impulseScore, r.impulseControlScore]),
+      'memory': _avg([r.memoryScore, r.memoryFlashScore, r.sequenceScore,
+          r.sequenceRushScore]),
+      'logic': _avg([r.patternScore, r.patternMasterScore, r.speedMathScore,
+          r.numberHunterScore, r.mirrorBrainScore]),
+      'coord': _avg([r.dartScore, r.skyScore, r.targetLockScore,
+          r.swipeDodgeScore, r.balanceScore, r.shapeStrikeScore]),
+    };
+    var bestKey = domains.keys.first;
+    var worstKey = domains.keys.first;
+    domains.forEach((k, v) {
+      if (v > domains[bestKey]!) bestKey = k;
+      if (v < domains[worstKey]!) worstKey = k;
+    });
+    final text = S.resultAnalysis(r.reflexIQ, bestKey, worstKey);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF00B4FF).withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(14),
+        border:
+            Border.all(color: const Color(0xFF00B4FF).withValues(alpha: 0.3)),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+            color: Colors.white70, fontSize: 13, height: 1.5),
+      ),
+    );
+  }
+
   Widget _buildNewAchievements() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -396,12 +440,12 @@ class _ResultScreenState extends State<ResultScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(a.title,
+                          Text(S.achTitle(a.id),
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12)),
-                          Text(a.description,
+                          Text(S.achDesc(a.id),
                               style: const TextStyle(
                                   color: Colors.white54, fontSize: 10)),
                         ],
@@ -446,7 +490,7 @@ class _ResultScreenState extends State<ResultScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${S.yourSnapIQ(widget.result.reflexIQ)}  •  Yaş: ${widget.result.cognitiveAge}',
+                  '${S.yourSnapIQ(widget.result.reflexIQ)}  •  ${S.vsAge(widget.result.cognitiveAge)}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: Color(0xFFBB86FC), fontSize: 14),
@@ -504,11 +548,11 @@ class _AchievementPopup extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(a.title,
+                            Text(S.achTitle(a.id),
                                 style: const TextStyle(
                                     color: Color(0xFFBB86FC),
                                     fontWeight: FontWeight.bold)),
-                            Text(a.description,
+                            Text(S.achDesc(a.id),
                                 style: const TextStyle(
                                     color: Colors.white54, fontSize: 12)),
                           ],

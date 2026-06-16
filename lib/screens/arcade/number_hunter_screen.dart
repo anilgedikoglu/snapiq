@@ -186,14 +186,15 @@ class _NumberHunterScreenState extends State<NumberHunterScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Center(
                   child: GridView.count(
+                    shrinkWrap: true,
                     crossAxisCount: 4,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
                     physics: const NeverScrollableScrollPhysics(),
                     children: List.generate(_numbers.length, (i) {
                       final isFlash = _flashIndex == i;
-                      final isTarget = _numbers[i] == _target;
                       return GestureDetector(
                         onTap: () => _tap(i),
                         child: AnimatedContainer(
@@ -216,19 +217,16 @@ class _NumberHunterScreenState extends State<NumberHunterScreen> {
                               style: TextStyle(
                                 color: isFlash
                                     ? const Color(0xFF00C853)
-                                    : isTarget
-                                        ? Colors.white
-                                        : Colors.white70,
+                                    : Colors.white70,
                                 fontSize: 18,
-                                fontWeight: isTarget
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
                           ),
                         ),
                       );
                     }),
+                  ),
                   ),
                 ),
               ),

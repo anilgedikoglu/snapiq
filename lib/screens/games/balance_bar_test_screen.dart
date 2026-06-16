@@ -162,6 +162,69 @@ class _BBTState extends State<BalanceBarTestScreen>
     );
   }
 
+  // Live "ruler" showing how far the bar is from the target centre.
+  Widget _buildDeviationMeter() {
+    return AnimatedBuilder(
+      animation: _barCtrl,
+      builder: (ctx, _) {
+        final dev = _barPosition - _targetCenter; // - = left, + = right
+        final pct = (dev * 100).round();
+        final mag = pct.abs();
+        final label = mag <= 1 ? '0%' : (dev < 0 ? '< $mag%' : '$mag% >');
+        final color = mag <= 4
+            ? const Color(0xFF00C853)
+            : mag <= 12
+                ? const Color(0xFFFDD835)
+                : const Color(0xFFFF7043);
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 4, 24, 8),
+          child: Column(
+            children: [
+              Text(label,
+                  style: TextStyle(
+                      color: color,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1)),
+              const SizedBox(height: 4),
+              LayoutBuilder(builder: (c, cons) {
+                final w = cons.maxWidth;
+                final nx =
+                    (w / 2) + (dev / 0.5).clamp(-1.0, 1.0) * (w / 2 - 6);
+                return SizedBox(
+                  height: 18,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(height: 2, color: Colors.white24),
+                      Container(width: 2, height: 14, color: Colors.white38),
+                      Positioned(
+                        left: nx - 5,
+                        child: Container(
+                          width: 10,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(3),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: color.withValues(alpha: 0.6),
+                                  blurRadius: 8)
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,6 +274,7 @@ class _BBTState extends State<BalanceBarTestScreen>
                     style: const TextStyle(color: Colors.white54, fontSize: 12),
                   ),
                 ),
+                _buildDeviationMeter(),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

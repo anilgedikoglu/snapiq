@@ -312,13 +312,21 @@ class _LaserGateScreenState extends State<LaserGateScreen>
                         ),
                       ),
                       if (_showFeedback)
-                        Text(
-                          _feedback,
-                          style: TextStyle(
-                            color: _feedbackColor,
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            shadows: [Shadow(color: _feedbackColor, blurRadius: 20)],
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              _feedback,
+                              style: TextStyle(
+                                color: _feedbackColor,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  Shadow(color: _feedbackColor, blurRadius: 20)
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                     ],

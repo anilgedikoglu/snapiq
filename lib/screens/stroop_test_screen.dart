@@ -139,14 +139,17 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
                 '${_current + 1} / ${_items.length}',
                 style: const TextStyle(color: Colors.white38, fontSize: 12),
               ),
-              const SizedBox(height: 40),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
               Text(
                 displayWord,
                 style: TextStyle(
                   color: inkColor,
                   fontSize: 52,
                   fontWeight: FontWeight.bold,
-                  shadows: [Shadow(color: inkColor, blurRadius: 16)],
+                  shadows: [Shadow(color: inkColor.withValues(alpha: 0.45), blurRadius: 8)],
                 ),
               ),
               const SizedBox(height: 48),
@@ -190,6 +193,9 @@ class _StroopTestScreenState extends State<StroopTestScreen> {
                       ),
                     );
                   }),
+                ),
+              ),
+                  ],
                 ),
               ),
             ],

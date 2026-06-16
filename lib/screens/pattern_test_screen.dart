@@ -144,7 +144,10 @@ class _PatternTestScreenState extends State<PatternTestScreen> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 40),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
               // Sequence display
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -223,6 +226,9 @@ class _PatternTestScreenState extends State<PatternTestScreen> {
                       ),
                     );
                   }),
+                ),
+              ),
+                  ],
                 ),
               ),
             ],

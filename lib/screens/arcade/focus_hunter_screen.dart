@@ -197,7 +197,9 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
+                  child: Center(
                   child: GridView.count(
+                    shrinkWrap: true,
                     crossAxisCount: gs,
                     mainAxisSpacing: 4,
                     crossAxisSpacing: 4,
@@ -218,6 +220,7 @@ class _FocusHunterScreenState extends State<FocusHunterScreen> {
                         ),
                       );
                     }),
+                  ),
                   ),
                 ),
               ),

@@ -1,6 +1,7 @@
 ﻿// Full-test version of Sky Shot (Test 13/14).
 // 5 shots, max 100 pts each → normalized to 0-100.
 // Navigates to TargetLockTestScreen on completion.
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../../models/game_session.dart';
@@ -53,6 +54,8 @@ class _SSTState extends State<SkyShotTestScreen>
   double _phase      = 0.3;
   int    _prevMs     = 0;
   double _speedFactor = 1.0;
+  double _targetTopFrac = 0.10; // vertical position, changes each shot
+  final _rng = Random();
 
   // ── Projectile ───────────────────────────────────────────────────────────────
   AnimationController? _projectileCtrl;
@@ -134,6 +137,8 @@ class _SSTState extends State<SkyShotTestScreen>
         _showHitEffect   = score > 0;
       });
       _speedFactor += 0.3;
+      // Move the target to a new height for the next shot.
+      _targetTopFrac = 0.06 + _rng.nextDouble() * 0.40;
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) setState(() { _showHitEffect = false; });
       });
@@ -230,8 +235,12 @@ class _SSTState extends State<SkyShotTestScreen>
                       final h = constraints.maxHeight;
                       _screenWidth = w;
                       final targetX = _targetNorm * (w - 60);
+                      // Projectile travels from the cannon up to the target's
+                      // current height (which changes every shot).
+                      final targetCenterY = h * _targetTopFrac + 20;
                       final projY = _projectileCtrl != null
-                          ? h - (h * 0.9 * _projectileCtrl!.value) - 30
+                          ? (h - 50) +
+                              (targetCenterY - (h - 50)) * _projectileCtrl!.value
                           : h - 50.0;
 
                       return Stack(
@@ -239,7 +248,7 @@ class _SSTState extends State<SkyShotTestScreen>
                           // Target
                           Positioned(
                             left: targetX,
-                            top: h * 0.08,
+                            top: h * _targetTopFrac,
                             child: Stack(
                               alignment: Alignment.center,
                               children: [

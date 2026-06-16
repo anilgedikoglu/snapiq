@@ -313,11 +313,9 @@ class _PatternMasterScreenState extends State<PatternMasterScreen> {
 
               // ── Feedback pill (floats at top center) ──────────────
               if (_flash != null)
-                Positioned(
-                  top: 70,
-                  left: 0,
-                  right: 0,
-                  child: Center(
+                Positioned.fill(
+                  child: Align(
+                    alignment: const Alignment(0, -0.5),
                     child: AnimatedOpacity(
                       opacity: _flash != null ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 150),

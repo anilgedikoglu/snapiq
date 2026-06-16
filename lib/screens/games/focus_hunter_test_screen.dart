@@ -275,7 +275,9 @@ class _FHTState extends State<FocusHunterTestScreen> {
                 child: _started
                     ? Padding(
                         padding: const EdgeInsets.all(12),
+                        child: Center(
                         child: GridView.count(
+                          shrinkWrap: true,
                           crossAxisCount: gs,
                           mainAxisSpacing: 4,
                           crossAxisSpacing: 4,
@@ -296,6 +298,7 @@ class _FHTState extends State<FocusHunterTestScreen> {
                               ),
                             );
                           }),
+                        ),
                         ),
                       )
                     : Center(

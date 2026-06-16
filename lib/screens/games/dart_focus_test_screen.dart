@@ -84,7 +84,7 @@ class _DFTState extends State<DartFocusTestScreen>
     if (dt <= 0) return;
     final dtSec = dt / 1000.0;
     _realSec    += dtSec;
-    final speedMul = 1.05 + 0.75 * sin(_realSec * 1.05);
+    final speedMul = 1.0 + 0.25 * sin(_realSec * 1.05); // peak lowered further
     _elapsedSec += dtSec * speedMul;
 
     final t = _elapsedSec;

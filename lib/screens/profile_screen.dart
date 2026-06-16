@@ -219,7 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final ach = Achievement.all[i];
         final unlocked = p.unlockedAchievements.contains(ach.id);
         return Tooltip(
-          message: '${ach.title}\n${ach.description}',
+          message: '${S.achTitle(ach.id)}\n${S.achDesc(ach.id)}',
           child: Container(
             decoration: BoxDecoration(
               color: unlocked
@@ -251,7 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  ach.title,
+                  S.achTitle(ach.id),
                   style: TextStyle(
                     color: unlocked
                         ? Colors.white

@@ -271,13 +271,21 @@ class _CircleTapReflexState extends State<CircleTapReflexScreen>
     }
 
     final double err = tapMs - _targetHitMs;
-    final int abs = err.abs().round();
+    int abs = err.abs().round();
     final bool early = err < 0;
 
-    if (abs > 220) {
+    // Is the ball visually inside the green target arc at tap time?
+    // If so we never call it a miss (keeps scoring consistent with the
+    // visual for both clockwise and counter-clockwise rotation).
+    final angleAtTap =
+        _initialAngleDeg + _direction * _speedDegPerMs * (tapMs - _roundStartMs);
+    final inGreen = _angDist(angleAtTap, _targetAngleDeg) <= (_arcWidthDeg / 2);
+
+    if (abs > 220 && !inGreen) {
       return _Result(score: 0, errorMs: abs, isEarly: early,
           label: S.missed, isMiss: true);
     }
+    if (inGreen && abs > 140) abs = 140; // in the green → at least a solid hit
 
     final String label;
     final int base;

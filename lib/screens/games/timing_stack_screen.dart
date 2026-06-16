@@ -29,7 +29,7 @@ class _StackPainter extends CustomPainter {
   final bool gameOver;
   final int score;
   static const double bh = 22.0;
-  static const int maxVisible = 12;
+  static const int maxVisible = 22;
 
   const _StackPainter({
     required this.placedBlocks,
@@ -139,7 +139,7 @@ class _TimingStackScreenState extends State<TimingStackScreen>
   static const _xpReward = 30;
   static const _gameName = 'Timing Stack';
   static const _blockHeight = 22.0;
-  static const _maxVisible  = 12;
+  static const _maxVisible  = 22;
 
   static const List<Color> _palette = [
     Color(0xFF00B4FF), Color(0xFF03DAC6), Color(0xFF00C853),

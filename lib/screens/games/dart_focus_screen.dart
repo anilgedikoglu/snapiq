@@ -64,8 +64,8 @@ class _DartFocusScreenState extends State<DartFocusScreen>
     if (dt <= 0) return;
     final dtSec = dt / 1000.0;
     _realSec    += dtSec;
-    // Speed oscillates 0.3x … 1.8x, period ≈ 6 s
-    final speedMul = 1.05 + 0.75 * sin(_realSec * 1.05);
+    // Speed oscillates ~0.75x … 1.25x, period ≈ 6 s (peak lowered further)
+    final speedMul = 1.0 + 0.25 * sin(_realSec * 1.05);
     _elapsedSec += dtSec * speedMul;
 
     final t = _elapsedSec;

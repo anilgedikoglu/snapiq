@@ -636,4 +636,176 @@ class S {
         'Ağırlıklı ortalama ile final skoru hesaplanır.\n'
         'SnapIQ ≈ 60 - 150 arası değişir.\n'
         'Bilişsel yaş formülü tamamen eğlence amaçlıdır.';
+
+  // ═══════════════════════════════════════════════════════════
+  // ACHIEVEMENTS (localized by id)
+  // ═══════════════════════════════════════════════════════════
+  static String achTitle(String id) {
+    switch (id) {
+      case 'first_game':     return _e ? 'First Step'    : 'İlk Adım';
+      case 'games_10':       return _e ? '10 Games'      : '10 Oyun';
+      case 'games_50':       return _e ? '50 Games'      : '50 Oyun';
+      case 'games_100':      return _e ? 'Century'       : 'Yüzlük';
+      case 'reaction_200':   return _e ? 'Lightning'     : 'Şimşek';
+      case 'stroop_perfect': return _e ? 'Color Master'  : 'Renk Ustası';
+      case 'memory_perfect': return _e ? 'Memory Genius' : 'Hafıza Dehası';
+      case 'beat_friend':    return _e ? 'Friend Slayer' : 'Arkadaş Katili';
+      case 'daily_done':     return _e ? 'Daily Quest'   : 'Günlük Görev';
+      case 'endless_60':     return _e ? 'Endless Power' : 'Sonsuz Güç';
+      case 'snapiq_100':     return _e ? 'Elite Club'    : 'Seçkinler Kulübü';
+      case 'snapiq_130':     return _e ? 'Mind Lord'     : 'Zihin Efendisi';
+      case 'tap_master':     return 'Tap Master';
+      case 'focus_beast':    return 'Focus Beast';
+      case 'math_demon':     return 'Math Demon';
+      case 'reflex_monster': return 'Reflex Monster';
+      case 'pattern_king':   return 'Pattern King';
+      default:               return id;
+    }
+  }
+
+  static String achDesc(String id) {
+    switch (id) {
+      case 'first_game':     return _e ? 'Complete your first test'         : 'İlk testi tamamla';
+      case 'games_10':       return _e ? 'Complete 10 tests'                : '10 test tamamla';
+      case 'games_50':       return _e ? 'Complete 50 tests'                : '50 test tamamla';
+      case 'games_100':      return _e ? 'Complete 100 tests'               : '100 test tamamla';
+      case 'reaction_200':   return _e ? 'Reaction under 200ms'             : '200ms altı reaksiyon';
+      case 'stroop_perfect': return _e ? 'Finish Stroop test perfectly'     : 'Stroop testini tam doğru bitir';
+      case 'memory_perfect': return _e ? 'Finish memory test perfectly'     : 'Hafıza testini tam doğru bitir';
+      case 'beat_friend':    return _e ? 'Beat your friend in VS mode'      : 'VS modda arkadaşını yen';
+      case 'daily_done':     return _e ? 'Complete the daily challenge'     : 'Günlük challenge tamamla';
+      case 'endless_60':     return _e ? 'Last 60 seconds in Endless'       : 'Endless modda 60 saniye dayan';
+      case 'snapiq_100':     return _e ? 'Score over SnapIQ 100'            : 'SnapIQ 100 üzeri al';
+      case 'snapiq_130':     return _e ? 'Score over SnapIQ 130'            : 'SnapIQ 130 üzeri al';
+      case 'tap_master':     return _e ? 'Hit 20 targets in Tap Target'     : "Tap Target'da 20 hedef vur";
+      case 'focus_beast':    return _e ? 'Win 10 rounds in Focus Hunter'    : "Focus Hunter'da 10 tur kazan";
+      case 'math_demon':     return _e ? 'Get 10/10 in Speed Math'          : "Speed Math'ta 10/10 al";
+      case 'reflex_monster': return _e ? 'Score 20 in Color Panic'          : "Color Panic'te 20 puan al";
+      case 'pattern_king':   return _e ? 'Perfect score in Pattern Master'  : "Pattern Master'da tam puan";
+      default:               return '';
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // RESULT ANALYSIS — combinatorial pool (TR + EN)
+  // Built from: tier opener (6 tiers × 3) + strength line (×3)
+  // + weakness line (×3), with 5 domain labels → wide variety.
+  // ═══════════════════════════════════════════════════════════
+  static String domainLabel(String key) {
+    switch (key) {
+      case 'reflex': return _e ? 'reflexes'              : 'refleksler';
+      case 'focus':  return _e ? 'focus & attention'     : 'odak ve dikkat';
+      case 'memory': return _e ? 'memory'                : 'hafıza';
+      case 'logic':  return _e ? 'logic & problem-solving': 'mantık ve problem çözme';
+      case 'coord':  return _e ? 'hand-eye coordination' : 'el-göz koordinasyonu';
+      default:       return key;
+    }
+  }
+
+  static String resultAnalysis(int snapIQ, String bestKey, String worstKey) {
+    // Deterministic per-result variation (stable across rebuilds).
+    final seed = snapIQ;
+    final best = domainLabel(bestKey);
+    final worst = domainLabel(worstKey);
+
+    // ── Tier openers ────────────────────────────────────────
+    final List<List<String>> openersEn = [
+      // 0 genius (>=130)
+      ['Exceptional result — your cognitive profile is in the top tier.',
+       'Outstanding. Your brain fired on nearly all cylinders today.',
+       'Elite-level performance across the board.'],
+      // 1 superior (115-129)
+      ['Very strong result — well above the typical range.',
+       'Impressive cognitive performance overall.',
+       'A sharp, high-scoring run.'],
+      // 2 high (105-114)
+      ['Solid, above-average performance.',
+       'A good result — your mind is in good shape.',
+       'You scored above the curve on most tests.'],
+      // 3 average (95-104)
+      ['A balanced, average result.',
+       'Right around the typical range — steady work.',
+       'A fair performance with room to climb.'],
+      // 4 belowAvg (85-94)
+      ['A slightly below-average run today.',
+       'A bit under your potential — maybe an off day.',
+       'Room to grow, but the fundamentals are there.'],
+      // 5 low (<85)
+      ['A tough run today — everyone has them.',
+       'Below your usual range; a rested retry could help.',
+       'Plenty of headroom to improve from here.'],
+    ];
+    final List<List<String>> openersTr = [
+      ['Olağanüstü bir sonuç — bilişsel profilin en üst seviyede.',
+       'Muhteşem. Bugün beynin neredeyse tam kapasite çalıştı.',
+       'Baştan sona elit seviyede bir performans.'],
+      ['Çok güçlü bir sonuç — tipik aralığın belirgin şekilde üstünde.',
+       'Genel olarak etkileyici bir bilişsel performans.',
+       'Keskin ve yüksek puanlı bir tur.'],
+      ['Sağlam, ortalamanın üzerinde bir performans.',
+       'İyi bir sonuç — zihnin formda.',
+       'Testlerin çoğunda çıtanın üzerindesin.'],
+      ['Dengeli, ortalama bir sonuç.',
+       'Tipik aralığın hemen civarında — istikrarlı.',
+       'İdare eder bir performans, yükselmeye açık.'],
+      ['Bugün ortalamanın biraz altında bir tur.',
+       'Potansiyelinin biraz altında — belki kötü bir gün.',
+       'Gelişime açık, ama temeller yerinde.'],
+      ['Bugün zorlu bir tur — herkesin başına gelir.',
+       'Her zamanki aralığının altında; dinlenip tekrar dene.',
+       'Buradan itibaren gelişmek için bolca alan var.'],
+    ];
+
+    // ── Strength lines ──────────────────────────────────────
+    final strengthEn = [
+      'Your $best stood out as your strongest area.',
+      'Your $best was the clear highlight.',
+      '$best was your standout strength.',
+    ];
+    final strengthTr = [
+      'En güçlü alanın $best olarak öne çıktı.',
+      'Bu turun parlayan yanı $best oldu.',
+      '$best belirgin gücündü.',
+    ];
+
+    // ── Weakness / advice lines ─────────────────────────────
+    final weakEn = [
+      'Your $worst has the most room to improve.',
+      'Focus your practice on $worst for the biggest gains.',
+      '$worst lagged a little — a good target for next time.',
+    ];
+    final weakTr = [
+      'En çok gelişime açık alanın $worst.',
+      'En büyük kazanım için $worst alanına çalış.',
+      '$worst biraz geride kaldı — bir sonraki için iyi bir hedef.',
+    ];
+
+    int tier;
+    if (snapIQ >= 130) {
+      tier = 0;
+    } else if (snapIQ >= 115) {
+      tier = 1;
+    } else if (snapIQ >= 105) {
+      tier = 2;
+    } else if (snapIQ >= 95) {
+      tier = 3;
+    } else if (snapIQ >= 85) {
+      tier = 4;
+    } else {
+      tier = 5;
+    }
+
+    final openers = _e ? openersEn[tier] : openersTr[tier];
+    final opener = openers[seed % openers.length];
+    final strengths = _e ? strengthEn : strengthTr;
+    final weaks = _e ? weakEn : weakTr;
+    final strength = strengths[(seed ~/ 3) % strengths.length];
+
+    // If best == worst (flat profile), drop the weakness line.
+    if (bestKey == worstKey) {
+      return '$opener $strength';
+    }
+    final weak = weaks[(seed ~/ 7) % weaks.length];
+    return '$opener $strength $weak';
+  }
 }
