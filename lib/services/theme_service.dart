@@ -73,12 +73,6 @@ class ThemeService {
       ),
       scaffoldBackgroundColor: appTheme.bgColor,
       fontFamily: 'Roboto',
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-        },
-      ),
     );
   }
 }
