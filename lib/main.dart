@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app.dart';
 import 'services/locale_service.dart';
+import 'services/ad_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,4 +23,10 @@ void main() async {
   ));
 
   runApp(const SnapIQApp());
+
+  // Initialize AdMob (+ iOS ATT prompt) after the first frame so the
+  // tracking permission dialog appears with the app in the foreground.
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    AdService().initialize();
+  });
 }

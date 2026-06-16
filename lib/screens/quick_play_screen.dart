@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
+import '../services/ad_service.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/neon_button.dart';
 import '../widgets/cin_host.dart';
@@ -71,13 +72,16 @@ class QuickPlayScreen extends StatelessWidget {
                   text: S.start,
                   onPressed: () {
                     final session = GameSession();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            ReactionTestScreen(session: session),
-                      ),
-                    );
+                    AdService().showInterstitialThen(() {
+                      if (!context.mounted) return;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              ReactionTestScreen(session: session),
+                        ),
+                      );
+                    });
                   },
                   color: const Color(0xFF00B4FF),
                   width: double.infinity,

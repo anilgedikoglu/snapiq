@@ -1,46 +1,110 @@
-import 'dart:developer' as developer;
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
-/// AdService — reklam altyapısı.
-/// Debug modda gerçek reklam gösterilmez, sadece log yazılır.
-/// Gerçek AdMob entegrasyonu için TODO alanlarını doldurun.
+/// AdService — Google AdMob interstitial integration.
+///
+/// AdMob App IDs (set in AndroidManifest.xml / Info.plist):
+///   Android: ca-app-pub-6470338276121414~4617708917
+///   iOS:     ca-app-pub-6470338276121414~7069741737
+///
+/// An interstitial is shown right before a test starts (see [showInterstitialThen]).
 class AdService {
   static final AdService _instance = AdService._();
   factory AdService() => _instance;
   AdService._();
 
-  int _completedGames = 0;
+  // ── Ad unit IDs (platform-specific) ────────────────────────────────────────
+  static String get _interstitialUnitId => Platform.isIOS
+      ? 'ca-app-pub-6470338276121414/9614884728' // iOS interstitial
+      : 'ca-app-pub-6470338276121414/8542605504'; // Android interstitial
 
-  // TODO: Gerçek AdMob uygulama ID'sini AndroidManifest.xml'e ekleyin
-  // TODO: Aşağıdaki test ID'lerini gerçek ID'lerle değiştirin
-  static const String _interstitialAdUnitId =
-      'ca-app-pub-3940256099942544/1033173712'; // Test ID
+  /// Rewarded unit IDs — reserved for future use (not wired yet).
+  static String get rewardedUnitId => Platform.isIOS
+      ? 'ca-app-pub-6470338276121414/1047258868' // iOS rewarded
+      : 'ca-app-pub-6470338276121414/6605578004'; // Android rewarded
 
+  InterstitialAd? _interstitial;
+  bool _initDone = false;
+
+  // ── Init ────────────────────────────────────────────────────────────────────
   Future<void> initialize() async {
-    developer.log('AdService: initialize() çağrıldı (debug modu — gerçek reklam yok)');
-    // TODO: await MobileAds.instance.initialize();
-    // TODO: loadInterstitial();
-  }
-
-  Future<void> loadInterstitial() async {
-    developer.log('AdService: loadInterstitial() — Unit ID: $_interstitialAdUnitId');
-    // TODO: InterstitialAd.load(
-    //   adUnitId: _interstitialAdUnitId,
-    //   request: const AdRequest(),
-    //   adLoadCallback: InterstitialAdLoadCallback(...),
-    // );
-  }
-
-  Future<void> showInterstitialIfNeeded() async {
-    developer.log('AdService: Interstitial would be shown here');
-    // TODO: _interstitialAd?.show();
-    await loadInterstitial();
-  }
-
-  Future<void> incrementGameCountAndMaybeShow() async {
-    _completedGames++;
-    developer.log('AdService: completedGames=$_completedGames');
-    if (_completedGames % 2 == 0) {
-      await showInterstitialIfNeeded();
+    if (_initDone) return;
+    _initDone = true;
+    try {
+      // iOS: App Tracking Transparency prompt before using the advertising id.
+      if (Platform.isIOS) {
+        final status =
+            await AppTrackingTransparency.trackingAuthorizationStatus;
+        if (status == TrackingStatus.notDetermined) {
+          await Future.delayed(const Duration(milliseconds: 300));
+          await AppTrackingTransparency.requestTrackingAuthorization();
+        }
+      }
+      await MobileAds.instance.initialize();
+      _loadInterstitial();
+    } catch (e) {
+      debugPrint('AdService init error: $e');
     }
   }
+
+  // ── Interstitial ─────────────────────────────────────────────────────────────
+  void _loadInterstitial() {
+    InterstitialAd.load(
+      adUnitId: _interstitialUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) => _interstitial = ad,
+        onAdFailedToLoad: (err) {
+          debugPrint('Interstitial failed to load: $err');
+          _interstitial = null;
+        },
+      ),
+    );
+  }
+
+  /// Shows the interstitial (if ready), then always runs [onDone].
+  /// If no ad is ready, [onDone] runs immediately and a new ad is preloaded.
+  Future<void> showInterstitialThen(VoidCallback onDone) async {
+    final ad = _interstitial;
+    if (ad == null) {
+      _loadInterstitial();
+      onDone();
+      return;
+    }
+    _interstitial = null;
+
+    bool proceeded = false;
+    void go() {
+      if (proceeded) return;
+      proceeded = true;
+      onDone();
+    }
+
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        _loadInterstitial();
+        go();
+      },
+      onAdFailedToShowFullScreenContent: (ad, err) {
+        ad.dispose();
+        _loadInterstitial();
+        go();
+      },
+    );
+
+    try {
+      ad.show();
+    } catch (_) {
+      go();
+    }
+  }
+
+  /// Kept for backward compatibility with existing call sites.
+  /// Interstitials now appear only at the start of a test, so these are no-ops
+  /// (prevents showing many ads during the 29-test chain / arcade games).
+  Future<void> incrementGameCountAndMaybeShow() async {}
+  Future<void> showInterstitialIfNeeded() async {}
 }

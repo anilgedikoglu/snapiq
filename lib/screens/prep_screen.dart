@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_strings.dart';
 import '../models/game_session.dart';
+import '../services/ad_service.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/neon_button.dart';
 import '../widgets/cin_host.dart';
@@ -198,12 +199,15 @@ class _PrepScreenState extends State<PrepScreen>
                 padding: const EdgeInsets.fromLTRB(28, 14, 28, 14),
                 child: NeonButton(
                   text: S.start,
-                  onPressed: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ReactionTestScreen(session: session),
-                    ),
-                  ),
+                  onPressed: () => AdService().showInterstitialThen(() {
+                    if (!context.mounted) return;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ReactionTestScreen(session: session),
+                      ),
+                    );
+                  }),
                   color: const Color(0xFF00B4FF),
                   width: double.infinity,
                   height: 60,
