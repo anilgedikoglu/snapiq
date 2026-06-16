@@ -24,7 +24,7 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
       final rand = Random();
       // Total "players": base 21 000, varies ±3 000 every open
       final total = 18000 + rand.nextInt(6001); // 18 000–24 000
-      final rank  = _fakeRank(s.bestReflexIQ, total, rand);
+      final rank  = _fakeRank(s.bestSnapIQ, total, rand);
       setState(() {
         _storage      = s;
         _totalPlayers = total;
@@ -113,7 +113,7 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
             children: [
               _BigStat(
                 label: S.bestSnapIQ,
-                value: s.bestReflexIQ == 0 ? '--' : '${s.bestReflexIQ}',
+                value: s.bestSnapIQ == 0 ? '--' : '${s.bestSnapIQ}',
                 color: const Color(0xFF00B4FF),
               ),
               const SizedBox(width: 12),
@@ -189,7 +189,7 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            S.scoreRowLabel(r.reflexIQ, r.cognitiveAge),
+                            S.scoreRowLabel(r.snapIQ, r.cognitiveAge),
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -219,7 +219,7 @@ class _BestScoresScreenState extends State<BestScoresScreen> {
           const SizedBox(height: 28),
 
           // ── Global ranking section ──────────────────────────────
-          _buildGlobalRanking(s.bestReflexIQ),
+          _buildGlobalRanking(s.bestSnapIQ),
 
           const SizedBox(height: 24),
         ],

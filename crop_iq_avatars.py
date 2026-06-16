@@ -16,8 +16,8 @@ NAMES = [
     'iq_dusuk',
 ]
 
-SRC     = r"C:\src\reflexiq_app\iq_source.png"
-OUT_DIR = r"C:\src\reflexiq_app\assets\iq_avatars"
+SRC     = r"C:\src\snapiq\iq_source.png"
+OUT_DIR = r"C:\src\snapiq\assets\iq_avatars"
 COLS, ROWS = 4, 2
 
 os.makedirs(OUT_DIR, exist_ok=True)

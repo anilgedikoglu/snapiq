@@ -166,7 +166,7 @@ class _VsFriendScreenState extends State<VsFriendScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  S.yourSnapIQ(_p1Result?.reflexIQ ?? 0),
+                  S.yourSnapIQ(_p1Result?.snapIQ ?? 0),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: Color(0xFFBB86FC), fontSize: 14),

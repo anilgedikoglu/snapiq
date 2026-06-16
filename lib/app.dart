@@ -4,8 +4,8 @@ import 'screens/home_screen.dart';
 import 'screens/language_select_screen.dart';
 import 'services/locale_service.dart';
 
-class ReflexIQApp extends StatelessWidget {
-  const ReflexIQApp({super.key});
+class SnapIQApp extends StatelessWidget {
+  const SnapIQApp({super.key});
 
   @override
   Widget build(BuildContext context) {

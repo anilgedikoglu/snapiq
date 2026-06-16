@@ -42,7 +42,7 @@ import 'games/target_lock_screen.dart';
 import 'games/split_second_screen.dart';
 import 'games/swipe_dodge_screen.dart';
 
-// ── IQ Avatar helper (bestReflexIQ skoruna göre) ────────────────────────────
+// ── IQ Avatar helper (bestSnapIQ skoruna göre) ────────────────────────────
 class _IQInfo {
   final String asset;
   final String label;
@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   // ── Avatar section ───────────────────────────────────────────────────────
   Widget _buildAvatarSection() {
-    final score = _storage?.bestReflexIQ ?? 0;
+    final score = _storage?.bestSnapIQ ?? 0;
     final level = _storage?.level ?? 1;
     final xp = _storage?.xp ?? 0;
     final info = _iqInfoForScore(score);

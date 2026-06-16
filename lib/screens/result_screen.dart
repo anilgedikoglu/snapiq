@@ -154,7 +154,7 @@ class _ResultScreenState extends State<ResultScreen>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    S.snapIqScore(r.reflexIQ),
+                    S.snapIqScore(r.snapIQ),
                     style: const TextStyle(
                         color: Color(0xFFBB86FC),
                         fontSize: 20,
@@ -394,7 +394,7 @@ class _ResultScreenState extends State<ResultScreen>
       if (v > domains[bestKey]!) bestKey = k;
       if (v < domains[worstKey]!) worstKey = k;
     });
-    final text = S.resultAnalysis(r.reflexIQ, bestKey, worstKey);
+    final text = S.resultAnalysis(r.snapIQ, bestKey, worstKey);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -490,7 +490,7 @@ class _ResultScreenState extends State<ResultScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${S.yourSnapIQ(widget.result.reflexIQ)}  •  ${S.vsAge(widget.result.cognitiveAge)}',
+                  '${S.yourSnapIQ(widget.result.snapIQ)}  •  ${S.vsAge(widget.result.cognitiveAge)}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: Color(0xFFBB86FC), fontSize: 14),

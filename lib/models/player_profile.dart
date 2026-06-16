@@ -29,7 +29,7 @@ class PlayerProfile {
       xp: s.xp,
       totalGames: s.totalGames,
       avgSnapIQ: s.avgSnapIQ,
-      bestSnapIQ: s.bestReflexIQ,
+      bestSnapIQ: s.bestSnapIQ,
       bestReactionMs: s.bestReactionMs,
       unlockedAchievements: s.unlockedAchievements,
       unlockedThemes: s.unlockedThemes,

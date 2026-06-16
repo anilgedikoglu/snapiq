@@ -1,4 +1,4 @@
-package com.reflexiq.reflexiq
+package com.snapiq.snapiq
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.reflexiq" "\0"
-            VALUE "FileDescription", "reflexiq" "\0"
+            VALUE "CompanyName", "com.snapiq" "\0"
+            VALUE "FileDescription", "snapiq" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "reflexiq" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.reflexiq. All rights reserved." "\0"
-            VALUE "OriginalFilename", "reflexiq.exe" "\0"
-            VALUE "ProductName", "reflexiq" "\0"
+            VALUE "InternalName", "snapiq" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.snapiq. All rights reserved." "\0"
+            VALUE "OriginalFilename", "snapiq.exe" "\0"
+            VALUE "ProductName", "snapiq" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

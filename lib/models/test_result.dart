@@ -94,7 +94,7 @@ class TestResult {
            patternMasterScore * 0.04;
   }
 
-  int get reflexIQ {
+  int get snapIQ {
     return (58 + finalScore * 0.75).round().clamp(58, 133);
   }
 
@@ -150,7 +150,7 @@ class TestResult {
         'numberHunterScore':  numberHunterScore,
         'patternMasterScore': patternMasterScore,
         'finalScore':         finalScore,
-        'reflexIQ':       reflexIQ,
+        'snapIQ':       snapIQ,
         'cognitiveAge':   cognitiveAge,
       };
 

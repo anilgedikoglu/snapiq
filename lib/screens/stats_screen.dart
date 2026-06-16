@@ -126,7 +126,7 @@ class _StatsScreenState extends State<StatsScreen> {
           const SizedBox(height: 12),
           _infoRow(S.statsTotalGames, '${s.totalGames}'),
           _infoRow(S.statsBestIQ,
-              s.bestReflexIQ > 0 ? '${s.bestReflexIQ}' : '--'),
+              s.bestSnapIQ > 0 ? '${s.bestSnapIQ}' : '--'),
           _infoRow(S.statsBestCogAge,
               s.bestCognitiveAge > 0 ? '${s.bestCognitiveAge}' : '--'),
           _infoRow(S.statsBestReaction,

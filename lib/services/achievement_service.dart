@@ -59,13 +59,13 @@ class AchievementService {
     }
 
     // snapiq_100
-    if (result.reflexIQ >= 100) {
+    if (result.snapIQ >= 100) {
       await tryUnlock(
           Achievement.all.firstWhere((a) => a.id == 'snapiq_100'));
     }
 
     // snapiq_130
-    if (result.reflexIQ >= 130) {
+    if (result.snapIQ >= 130) {
       await tryUnlock(
           Achievement.all.firstWhere((a) => a.id == 'snapiq_130'));
     }

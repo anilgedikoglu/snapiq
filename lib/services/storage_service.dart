@@ -4,7 +4,7 @@ import '../models/test_result.dart';
 
 class StorageService {
   static const _keyBestFinalScore = 'bestFinalScore';
-  static const _keyBestReflexIQ = 'bestReflexIQ';
+  static const _keyBestSnapIQ = 'bestSnapIQ';
   static const _keyBestCognitiveAge = 'bestCognitiveAge';
   static const _keyTotalGames = 'totalGamesPlayed';
   static const _keyLastScores = 'lastScores';
@@ -40,7 +40,7 @@ class StorageService {
   }
 
   double get bestFinalScore => _prefs.getDouble(_keyBestFinalScore) ?? 0;
-  int get bestReflexIQ => _prefs.getInt(_keyBestReflexIQ) ?? 0;
+  int get bestSnapIQ => _prefs.getInt(_keyBestSnapIQ) ?? 0;
   int get bestCognitiveAge => _prefs.getInt(_keyBestCognitiveAge) ?? 0;
   int get totalGames => _prefs.getInt(_keyTotalGames) ?? 0;
 
@@ -105,8 +105,8 @@ class StorageService {
     if (result.finalScore > bestFinalScore) {
       await _prefs.setDouble(_keyBestFinalScore, result.finalScore);
     }
-    if (result.reflexIQ > bestReflexIQ) {
-      await _prefs.setInt(_keyBestReflexIQ, result.reflexIQ);
+    if (result.snapIQ > bestSnapIQ) {
+      await _prefs.setInt(_keyBestSnapIQ, result.snapIQ);
     }
     // Lower cognitive age is "better"
     final prevAge = bestCognitiveAge;
@@ -121,7 +121,7 @@ class StorageService {
 
     // Update SnapIQ history (last 20)
     final iqHistory = _prefs.getStringList(_keySnapIQHistory) ?? [];
-    iqHistory.insert(0, result.reflexIQ.toString());
+    iqHistory.insert(0, result.snapIQ.toString());
     await _prefs.setStringList(
         _keySnapIQHistory, iqHistory.take(20).toList());
 
@@ -130,7 +130,7 @@ class StorageService {
     final dateStr =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     final entry = jsonEncode({
-      'snapiq': result.reflexIQ,
+      'snapiq': result.snapIQ,
       'cogAge': result.cognitiveAge,
       'date': dateStr,
       'finalScore': result.finalScore,

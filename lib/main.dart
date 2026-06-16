@@ -21,5 +21,5 @@ void main() async {
     statusBarIconBrightness: Brightness.light,
   ));
 
-  runApp(const ReflexIQApp());
+  runApp(const SnapIQApp());
 }

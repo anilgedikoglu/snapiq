@@ -37,7 +37,7 @@ class _VsFriendResultScreenState extends State<VsFriendResultScreen>
   }
 
   Future<void> _checkAchievements() async {
-    final p1Wins = widget.p1Result.reflexIQ > widget.p2Result.reflexIQ;
+    final p1Wins = widget.p1Result.snapIQ > widget.p2Result.snapIQ;
     if (p1Wins) {
       final s = await StorageService.getInstance();
       await AchievementService.unlockBeatFriend(s);
@@ -51,16 +51,16 @@ class _VsFriendResultScreenState extends State<VsFriendResultScreen>
   }
 
   bool get _p1Wins =>
-      widget.p1Result.reflexIQ >= widget.p2Result.reflexIQ;
+      widget.p1Result.snapIQ >= widget.p2Result.snapIQ;
 
   String get _celebrationText {
-    final diff = (widget.p1Result.reflexIQ - widget.p2Result.reflexIQ).abs();
+    final diff = (widget.p1Result.snapIQ - widget.p2Result.snapIQ).abs();
     return S.vsCelebration(_p1Wins ? 1 : 2, diff);
   }
 
   String get _speedComparison {
-    final iq1 = widget.p1Result.reflexIQ;
-    final iq2 = widget.p2Result.reflexIQ;
+    final iq1 = widget.p1Result.snapIQ;
+    final iq2 = widget.p2Result.snapIQ;
     if (iq1 == iq2) return S.vsTie;
     final winner = _p1Wins ? iq1 : iq2;
     final loser = _p1Wins ? iq2 : iq1;
@@ -252,7 +252,7 @@ class _PlayerCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 13)),
           const SizedBox(height: 6),
-          Text('${result.reflexIQ}',
+          Text('${result.snapIQ}',
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 32,

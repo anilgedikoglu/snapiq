@@ -1,4 +1,4 @@
-# reflexiq
+# snapiq
 
 A new Flutter project.
 

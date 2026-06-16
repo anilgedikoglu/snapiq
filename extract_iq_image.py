@@ -1,7 +1,7 @@
 import json, base64, os
 
 fname = r"C:\Users\AG\.claude\projects\C--src-akinator\ce67a7dc-42a3-4950-aac6-8458376271cf.jsonl"
-out_path = r"C:\src\reflexiq_app\iq_source.png"
+out_path = r"C:\src\snapiq\iq_source.png"
 
 found = []
 with open(fname, 'r', encoding='utf-8') as f:
