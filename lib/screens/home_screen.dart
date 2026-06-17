@@ -461,10 +461,10 @@ class _HomeScreenState extends State<HomeScreen>
                 style: const TextStyle(color: Colors.white54, fontSize: 13, letterSpacing: 0.5)),
           ),
           _buildMoreRow([
-            _MoreBtn(label:S.gridEndless,    icon:Icons.all_inclusive_rounded,         color:const Color(0xFF00C853),  onTap:()=>_navigate(const EndlessReflexScreen())),
+            _MoreBtn(label:S.gridEndless,    icon:Icons.all_inclusive_rounded,         color:const Color(0xFF00C853),  onTap:()=>AdService().showRewardedThen((){ if(mounted) _navigate(const EndlessReflexScreen()); })),
             _MoreBtn(label:S.gridUltraHard,  icon:Icons.local_fire_department_rounded,  color:const Color(0xFFFF7043),  onTap:()=>AdService().showRewardedThen((){ if(mounted) _navigate(const UltraHardScreen()); })),
             _MoreBtn(label:S.gridVsFriend,   icon:Icons.people_rounded,                 color:const Color(0xFFBB86FC),  onTap:()=>AdService().showRewardedThen((){ if(mounted) _navigate(const VsFriendScreen()); })),
-            _MoreBtn(label:S.gridSpinWheel,  icon:Icons.casino_rounded,                 color:const Color(0xFFE91E63),  onTap:()=>_navigate(const SpinWheelScreen())),
+            _MoreBtn(label:S.gridSpinWheel,  icon:Icons.casino_rounded,                 color:const Color(0xFFE91E63),  onTap:()=>AdService().showRewardedThen((){ if(mounted) _navigate(const SpinWheelScreen()); })),
           ]),
           const SizedBox(height: 10),
           _buildMoreRow([
