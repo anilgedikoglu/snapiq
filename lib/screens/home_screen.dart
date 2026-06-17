@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_strings.dart';
 import '../models/mini_game.dart';
+import '../services/ad_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/animated_background.dart';
 import '../widgets/horizontal_game_list.dart';
@@ -461,8 +462,8 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           _buildMoreRow([
             _MoreBtn(label:S.gridEndless,    icon:Icons.all_inclusive_rounded,         color:const Color(0xFF00C853),  onTap:()=>_navigate(const EndlessReflexScreen())),
-            _MoreBtn(label:S.gridUltraHard,  icon:Icons.local_fire_department_rounded,  color:const Color(0xFFFF7043),  onTap:()=>_navigate(const UltraHardScreen())),
-            _MoreBtn(label:S.gridVsFriend,   icon:Icons.people_rounded,                 color:const Color(0xFFBB86FC),  onTap:()=>_navigate(const VsFriendScreen())),
+            _MoreBtn(label:S.gridUltraHard,  icon:Icons.local_fire_department_rounded,  color:const Color(0xFFFF7043),  onTap:()=>AdService().showRewardedThen((){ if(mounted) _navigate(const UltraHardScreen()); })),
+            _MoreBtn(label:S.gridVsFriend,   icon:Icons.people_rounded,                 color:const Color(0xFFBB86FC),  onTap:()=>AdService().showRewardedThen((){ if(mounted) _navigate(const VsFriendScreen()); })),
             _MoreBtn(label:S.gridSpinWheel,  icon:Icons.casino_rounded,                 color:const Color(0xFFE91E63),  onTap:()=>_navigate(const SpinWheelScreen())),
           ]),
           const SizedBox(height: 10),

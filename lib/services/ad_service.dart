@@ -26,6 +26,7 @@ class AdService {
       : 'ca-app-pub-6470338276121414/6605578004'; // Android rewarded
 
   InterstitialAd? _interstitial;
+  RewardedAd? _rewarded;
   bool _initDone = false;
 
   // ── Init ────────────────────────────────────────────────────────────────────
@@ -44,6 +45,7 @@ class AdService {
       }
       await MobileAds.instance.initialize();
       _loadInterstitial();
+      _loadRewarded();
     } catch (e) {
       debugPrint('AdService init error: $e');
     }
@@ -97,6 +99,60 @@ class AdService {
 
     try {
       ad.show();
+    } catch (_) {
+      go();
+    }
+  }
+
+  // ── Rewarded ─────────────────────────────────────────────────────────────────
+  void _loadRewarded() {
+    RewardedAd.load(
+      adUnitId: rewardedUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) => _rewarded = ad,
+        onAdFailedToLoad: (err) {
+          debugPrint('Rewarded failed to load: $err');
+          _rewarded = null;
+        },
+      ),
+    );
+  }
+
+  /// Shows the rewarded ad (if ready) at a mode entrance, then always runs
+  /// [onDone] (to enter the mode). If no ad is ready, [onDone] runs immediately.
+  /// Users are never blocked from entering if the ad fails or is closed early.
+  Future<void> showRewardedThen(VoidCallback onDone) async {
+    final ad = _rewarded;
+    if (ad == null) {
+      _loadRewarded();
+      onDone();
+      return;
+    }
+    _rewarded = null;
+
+    bool proceeded = false;
+    void go() {
+      if (proceeded) return;
+      proceeded = true;
+      onDone();
+    }
+
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        _loadRewarded();
+        go();
+      },
+      onAdFailedToShowFullScreenContent: (ad, err) {
+        ad.dispose();
+        _loadRewarded();
+        go();
+      },
+    );
+
+    try {
+      ad.show(onUserEarnedReward: (ad, reward) {});
     } catch (_) {
       go();
     }
